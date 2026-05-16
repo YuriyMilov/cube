@@ -14,8 +14,8 @@ android {
         applicationId = "com.quicklydone.nt"
         minSdk = 24
         targetSdk = 36
-        versionCode = 12
-        versionName = "12"
+        versionCode = 14
+        versionName = "14"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -50,6 +50,15 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.compose.ui.geometry)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.ui)
+    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.ui.graphics)
+    implementation(libs.androidx.ui.geometry)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
