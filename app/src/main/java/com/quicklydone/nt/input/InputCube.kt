@@ -1,11 +1,13 @@
 package com.quicklydone.nt.input
 
+import android.util.Log
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import com.quicklydone.nt.common.Vec3
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -14,6 +16,10 @@ object InputCube {
     private const val CUBE_SIZE = 2f
     private const val CAMERA_DISTANCE = 12f
     private const val SCALE = 1000f
+
+    // 2x2 сейчас
+    // потом 3x3
+    private const val GRID = 2
 
     private val s = CUBE_SIZE
 
@@ -30,10 +36,26 @@ object InputCube {
         BOTTOM
     }
 
-    data class PickResult(
+    enum class SwipeDirection {
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN
+    }
+
+    data class InputCell(
         val face: Face,
-        val u: Float,
-        val v: Float
+        val row: Int,
+        val col: Int,
+        val poly: List<Offset>,
+        val depth: Float
+    )
+
+    data class InputAction(
+        val face: Face,
+        val row: Int,
+        val col: Int,
+        val swipe: SwipeDirection
     )
 
     // =========================================================
@@ -66,7 +88,7 @@ object InputCube {
     )
 
     // =========================================================
-    // FIXED NORMALS
+    // NORMALS
     // =========================================================
 
     private val faceNormals = mapOf(
@@ -107,15 +129,11 @@ object InputCube {
         pitch: Float
     ): Vec3 {
 
-        // pitch (X)
-
         val cp = cos(pitch)
         val sp = sin(pitch)
 
         val y1 = p.y * cp - p.z * sp
         val z1 = p.y * sp + p.z * cp
-
-        // yaw (Y)
 
         val cy = cos(yaw)
         val sy = sin(yaw)
@@ -176,56 +194,24 @@ object InputCube {
     }
 
     // =========================================================
-    // FACE DATA
+    // BUILD CELLS
     // =========================================================
 
-    private data class FaceData(
-        val face: Face,
-        val poly: List<Offset>,
-        val depth: Float,
-        //val visible: Boolean
-    )
-
-    // =========================================================
-    // BUILD
-    // =========================================================
-
-    private fun buildFaces(
+    private fun buildCells(
         yaw: Float,
         pitch: Float,
         w: Float,
         h: Float
-    ): List<FaceData> {
+    ): List<InputCell> {
 
         val rotated =
             cubePoints.map {
-                rotate(
-                    it,
-                    yaw,
-                    pitch
-                )
+                rotate(it, yaw, pitch)
             }
 
-        return faces.map { (face, indices) ->
+        val result = mutableListOf<InputCell>()
 
-            val verts =
-                indices.map {
-                    rotated[it]
-                }
-
-            val poly =
-                indices.map { i ->
-
-                    project(
-                        rotated[i],
-                        w / 2f,
-                        h / 2f
-                    )
-                }
-
-            // =================================================
-            // ROTATED NORMAL
-            // =================================================
+        faces.forEach { (face, indices) ->
 
             val rotatedNormal =
                 rotateNormal(
@@ -234,26 +220,87 @@ object InputCube {
                     pitch
                 )
 
-            val visible =
-                rotatedNormal.z > 0f
+            // backface culling
+            // if (rotatedNormal.z <= 0f) {
+            //    return@forEach
+            //}
 
-            // =================================================
-            // DEPTH
-            // =================================================
+            val p0 = project(rotated[indices[0]], w / 2f, h / 2f)
+            val p1 = project(rotated[indices[1]], w / 2f, h / 2f)
+            val p2 = project(rotated[indices[2]], w / 2f, h / 2f)
+            val p3 = project(rotated[indices[3]], w / 2f, h / 2f)
 
-            val depth =
-                verts
-                    .map { it.z }
-                    .average()
-                    .toFloat()
+            for (row in 0 until GRID) {
 
-            FaceData(
-                face = face,
-                poly = poly,
-                depth = depth,
-               // visible = visible
-            )
+                for (col in 0 until GRID) {
+
+                    val u0 = col.toFloat() / GRID
+                    val v0 = row.toFloat() / GRID
+
+                    val u1 = (col + 1f) / GRID
+                    val v1 = (row + 1f) / GRID
+
+                    val q0 = bilerp(p0, p1, p2, p3, u0, v0)
+                    val q1 = bilerp(p0, p1, p2, p3, u1, v0)
+                    val q2 = bilerp(p0, p1, p2, p3, u1, v1)
+                    val q3 = bilerp(p0, p1, p2, p3, u0, v1)
+
+                    val poly = listOf(
+                        q0,
+                        q1,
+                        q2,
+                        q3
+                    )
+
+                    val depth =
+                        indices
+                            .map { rotated[it].z }
+                            .average()
+                            .toFloat()
+
+                    result += InputCell(
+                        face = face,
+                        row = row,
+                        col = col,
+                        poly = poly,
+                        depth = depth
+                    )
+                }
+            }
         }
+
+        return result
+    }
+
+    // =========================================================
+    // BILERP
+    // =========================================================
+
+    private fun lerp(
+        a: Offset,
+        b: Offset,
+        t: Float
+    ): Offset {
+
+        return Offset(
+            a.x + (b.x - a.x) * t,
+            a.y + (b.y - a.y) * t
+        )
+    }
+
+    private fun bilerp(
+        p0: Offset,
+        p1: Offset,
+        p2: Offset,
+        p3: Offset,
+        u: Float,
+        v: Float
+    ): Offset {
+
+        val top = lerp(p0, p1, u)
+        val bottom = lerp(p3, p2, u)
+
+        return lerp(top, bottom, v)
     }
 
     // =========================================================
@@ -268,34 +315,31 @@ object InputCube {
         h: Float
     ) {
 
-        val visibleFaces =
-            buildFaces(
+        val cells =
+            buildCells(
                 yaw,
                 pitch,
                 w,
                 h
             )
-               // .filter { it.visible }
-
-                // far -> near
                 .sortedBy { it.depth }
 
         with(drawScope) {
 
-            visibleFaces.forEach { f ->
+            cells.forEach { cell ->
 
                 val path = Path().apply {
 
                     moveTo(
-                        f.poly[0].x,
-                        f.poly[0].y
+                        cell.poly[0].x,
+                        cell.poly[0].y
                     )
 
-                    for (i in 1 until f.poly.size) {
+                    for (i in 1 until 4) {
 
                         lineTo(
-                            f.poly[i].x,
-                            f.poly[i].y
+                            cell.poly[i].x,
+                            cell.poly[i].y
                         )
                     }
 
@@ -304,7 +348,7 @@ object InputCube {
 
                 drawPath(
                     path = path,
-                    color = faceColors[f.face]
+                    color = faceColors[cell.face]
                         ?: Color.Magenta
                 )
 
@@ -318,106 +362,70 @@ object InputCube {
     }
 
     // =========================================================
-    // PICK
+    // PICK CELL
     // =========================================================
 
-    fun pickFace(
+    fun pickCell(
         touch: Offset,
         yaw: Float,
         pitch: Float,
         w: Float,
         h: Float
-    ): PickResult? {
+    ): InputCell? {
 
-        val faceData =
-            buildFaces(
+        val cells =
+            buildCells(
                 yaw,
                 pitch,
                 w,
                 h
             )
-              //  .filter { it.visible }
-
-                // near first
                 .sortedByDescending { it.depth }
 
-        for (data in faceData) {
+        return cells.firstOrNull {
 
-            if (
-                pointInPolygon(
-                    touch,
-                    data.poly
-                )
-            ) {
-
-                val uv =
-                    computeUV(
-                        touch,
-                        data.poly
-                    )
-
-                return if (uv != null) {
-
-                    PickResult(
-                        data.face,
-                        uv.first,
-                        uv.second
-                    )
-
-                } else {
-
-                    PickResult(
-                        data.face,
-                        0.5f,
-                        0.5f
-                    )
-                }
-            }
+            pointInPolygon(
+                touch,
+                it.poly
+            )
         }
-
-        return null
     }
 
-    fun detectFace(
-        touch: Offset,
-        yaw: Float,
-        pitch: Float,
-        w: Float,
-        h: Float
-    ): Face? {
+    // =========================================================
+    // SWIPE
+    // =========================================================
 
-        val faceData =
-            buildFaces(
-                yaw,
-                pitch,
-                w,
-                h
-            )
-            //    .filter { it.visible }
+    fun detectSwipe(
+        start: Offset,
+        end: Offset
+    ): SwipeDirection {
 
-                // near first
-                .sortedByDescending { it.depth }
+        val dx = end.x - start.x
+        val dy = end.y - start.y
 
-        for (data in faceData) {
+        return if (abs(dx) > abs(dy)) {
 
-            if (
-                pointInPolygon(
-                    touch,
-                    data.poly
-                )
-            ) {
-                return data.face
+            if (dx > 0f) {
+                SwipeDirection.RIGHT
+            } else {
+                SwipeDirection.LEFT
+            }
+
+        } else {
+
+            if (dy > 0f) {
+                SwipeDirection.DOWN
+            } else {
+                SwipeDirection.UP
             }
         }
-
-        return null
     }
 
     // =========================================================
     // POLYGON
     // =========================================================
 
-    fun pointInPolygon(
+    private fun pointInPolygon(
         p: Offset,
         poly: List<Offset>
     ): Boolean {
@@ -455,108 +463,115 @@ object InputCube {
         return inside
     }
 
-    // =========================================================
-    // UV
-    // =========================================================
 
-    fun computeUV(
-        p: Offset,
-        quad: List<Offset>
-    ): Pair<Float, Float>? {
+    fun detectFace(
+        touch: Offset,
+        yaw: Float,
+        pitch: Float,
+        w: Float,
+        h: Float
+    ): Face? {
 
-        val p0 = quad[0]
-        val p1 = quad[1]
-        val p2 = quad[2]
-        val p3 = quad[3]
+       //  Log.d("qq", "yaw  = ${yaw}     pitch  = ${pitch}" )
 
-        // triangle 1
+        val cell = pickCell(
+            touch = touch,
+            yaw = yaw,
+            pitch = pitch,
+            w = w,
+            h = h
+        )
 
-        barycentric(
-            p,
-            p0,
-            p1,
-            p2
-        )?.let { (_, v, w) ->
-
-            val u = v + w
-            val vv = w
-
-            return u to vv
-        }
-
-        // triangle 2
-
-        barycentric(
-            p,
-            p0,
-            p2,
-            p3
-        )?.let { (_, v, w) ->
-
-            val u = v
-            val vv = v + w
-
-            return u to vv
-        }
-
-        return null
+        return cell?.face
     }
 
-    // =========================================================
-    // BARYCENTRIC
-    // =========================================================
+    data class FaceAxes(
+        val right: Vec3,
+        val up: Vec3
+    )
+    private val faceAxes = mapOf(
 
-    infix fun Offset.dot(
-        o: Offset
-    ): Float {
+        Face.FRONT to FaceAxes(
+            right = Vec3(1f, 0f, 0f),
+            up = Vec3(0f, -1f, 0f)
+        ),
 
-        return x * o.x + y * o.y
-    }
+        Face.BACK to FaceAxes(
+            right = Vec3(-1f, 0f, 0f),
+            up = Vec3(0f, -1f, 0f)
+        ),
 
-    fun barycentric(
-        p: Offset,
-        a: Offset,
-        b: Offset,
-        c: Offset
-    ): Triple<Float, Float, Float>? {
+        Face.RIGHT to FaceAxes(
+            right = Vec3(0f, 0f, -1f),
+            up = Vec3(0f, -1f, 0f)
+        ),
 
-        val v0 = b - a
-        val v1 = c - a
-        val v2 = p - a
+        Face.LEFT to FaceAxes(
+            right = Vec3(0f, 0f, 1f),
+            up = Vec3(0f, -1f, 0f)
+        ),
 
-        val d00 = v0 dot v0
-        val d01 = v0 dot v1
-        val d11 = v1 dot v1
+        Face.TOP to FaceAxes(
+            right = Vec3(1f, 0f, 0f),
+            up = Vec3(0f, 0f, 1f)
+        ),
 
-        val d20 = v2 dot v0
-        val d21 = v2 dot v1
+        Face.BOTTOM to FaceAxes(
+            right = Vec3(1f, 0f, 0f),
+            up = Vec3(0f, 0f, -1f)
+        )
+    )
+    fun detectFaceSwipe(
+        face: Face,
+        dx: Float,
+        dy: Float,
+        yaw: Float,
+        pitch: Float
+    ): SwipeDirection {
 
-        val denom =
-            d00 * d11 - d01 * d01
+        val axes = faceAxes[face]!!
 
-        if (denom == 0f) {
-            return null
-        }
+        // вращаем локальные оси
+        val right3 = rotateNormal(axes.right, yaw, pitch)
+        val up3 = rotateNormal(axes.up, yaw, pitch)
 
-        val v =
-            (d11 * d20 - d01 * d21) / denom
+        // проекция на экран
+        val right2 = Vec2(right3.x, -right3.y)
+        val up2 = Vec2(up3.x, -up3.y)
 
-        val w =
-            (d00 * d21 - d01 * d20) / denom
+        // свайп
+        val swipe = Vec2(dx, dy)
 
-        val u =
-            1f - v - w
+        // dot product
+        val dotRight =
+            swipe.x * right2.x +
+                    swipe.y * right2.y
 
-        return if (
-            u >= 0f &&
-            v >= 0f &&
-            w >= 0f
-        ) {
+        val dotUp =
+            swipe.x * up2.x +
+                    swipe.y * up2.y
 
-            Triple(u, v, w)
+        return if (abs(dotRight) > abs(dotUp)) {
+
+            if (dotRight > 0f) {
+                SwipeDirection.RIGHT
+            } else {
+                SwipeDirection.LEFT
+            }
 
         } else {
-            null
+
+            if (dotUp > 0f) {
+                SwipeDirection.DOWN
+            } else {
+                SwipeDirection.UP
+            }
         }
     }
+
+    data class Vec2(
+        val x: Float,
+        val y: Float
+    )
+
 }
