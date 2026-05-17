@@ -33,7 +33,7 @@ object CubeRenderer {
 
             val scale = 1000f
             val cameraDistance = 12f
-            val cubeSize = 1.8f
+            val cubeSize = 1.85f
 
             val facesToDraw =
                 mutableListOf<Triple<List<Offset>, Float, Color>>()

@@ -10,8 +10,7 @@ import com.quicklydone.nt.input.InputCube
 import com.quicklydone.nt.model.Vec3
 
 fun Modifier.cubeGestures(
-    state: GestureState,
-    canvasSize: IntSize
+    state: GestureState, canvasSize: IntSize
 ): Modifier {
 
     return pointerInput(state) {
@@ -38,7 +37,7 @@ fun Modifier.cubeGestures(
                         h = canvasSize.height.toFloat()
                     )
                 //Log.d("qq", "${state.selectedCell}" )
-              //  Log.d("qq", "face (${state.selectedCell?.face})  cell (${state.selectedCell?.row}) -${state.selectedCell?.col}" )
+                //  Log.d("qq", "face (${state.selectedCell?.face})  cell (${state.selectedCell?.row}) -${state.selectedCell?.col}" )
 
                 /*
                 state.selectedFace = InputCube.detectFace(
@@ -51,7 +50,7 @@ fun Modifier.cubeGestures(
 
                  */
 
-               // Log.d("qq", "${state.selectedFace}" )
+                // Log.d("qq", "${state.selectedFace}" )
             },
 
             // =====================================================
@@ -86,29 +85,24 @@ fun Modifier.cubeGestures(
                     return@detectDragGestures
                 }
 
-                val horizontal =
-                    kotlin.math.abs(dx) >
-                            kotlin.math.abs(dy)
+                kotlin.math.abs(dx) > kotlin.math.abs(dy)
 
                 val swipe = InputCube.detectFaceSwipe(
-                    face = cell.face,
-                    dx = dx,
-                    dy = dy,
-                    yaw = state.yaw,
-                    pitch = state.pitch
+                    face = cell.face, dx = dx, dy = dy, yaw = state.yaw, pitch = state.pitch
                 )
 
 
-    //val (axis, layer, dir) = mapInputToRotation(cell = cell,dx = dx,dy = dy,horizontal = horizontal)
-    // state.startRotation(Vec3(1f, 0f, 0f), layer, dir)
+                //val (axis, layer, dir) = mapInputToRotation(cell = cell,dx = dx,dy = dy,horizontal = horizontal)
+                // state.startRotation(Vec3(1f, 0f, 0f), layer, dir)
 
-                Log.d("qq", "${state.selectedCell?.face}  ${state.selectedCell?.row}:${state.selectedCell?.col} (${swipe}) ")
+                Log.d(
+                    "qq",
+                    "${state.selectedCell?.face}  ${state.selectedCell?.row}:${state.selectedCell?.col} (${swipe}) "
+                )
                 //Log.d("qq", "---------- $${swipe}  {cell.face} layer ${cell.row} dir ${cell.col} swipe  ")
 
 
-
-                val (axis, layer, dir) =
-                    mapInputToRotation(cell, swipe)
+                val (axis, layer, dir) = mapInputToRotation(cell, swipe)
 
                 state.startRotation(axis, layer, dir)
 
@@ -124,16 +118,16 @@ fun Modifier.cubeGestures(
                 state.selectedCell = null
                 state.dragStart = null
                 state.dragLocked = false
-            }
-        )
+            })
     }
 }
+
 fun mapInputToRotation(
-    cell: InputCube.InputCell,
-    swipe: InputCube.SwipeDirection
+    cell: InputCube.InputCell, swipe: InputCube.SwipeDirection
 ): Triple<Vec3, Float, Float> {
 
     return when (cell.face) {
+
 
         // =====================================================
         // FRONT
@@ -143,33 +137,21 @@ fun mapInputToRotation(
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
-                    Triple(
-                        Vec3(0f, 1f, 0f),
-                        if (cell.row == 0) -1f else 1f,
-                        1f
-                    )
+                InputCube.SwipeDirection.RIGHT -> Triple(
+                    Vec3(0f, 1f, 0f), if (cell.row == 0) -1f else 1f, 1f
+                )
 
-                InputCube.SwipeDirection.LEFT ->
-                    Triple(
-                        Vec3(0f, 1f, 0f),
-                        if (cell.row == 0) -1f else 1f,
-                        -1f
-                    )
+                InputCube.SwipeDirection.LEFT -> Triple(
+                    Vec3(0f, 1f, 0f), if (cell.row == 0) -1f else 1f, -1f
+                )
 
-                InputCube.SwipeDirection.UP ->
-                    Triple(
-                        Vec3(1f, 0f, 0f),
-                        if (cell.col == 0) -1f else 1f,
-                        -1f
-                    )
+                InputCube.SwipeDirection.UP -> Triple(
+                    Vec3(1f, 0f, 0f), if (cell.col == 0) -1f else 1f, -1f
+                )
 
-                InputCube.SwipeDirection.DOWN ->
-                    Triple(
-                        Vec3(1f, 0f, 0f),
-                        if (cell.col == 0) -1f else 1f,
-                        1f
-                    )
+                InputCube.SwipeDirection.DOWN -> Triple(
+                    Vec3(1f, 0f, 0f), if (cell.col == 0) -1f else 1f, 1f
+                )
             }
         }
 
@@ -181,33 +163,21 @@ fun mapInputToRotation(
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
-                    Triple(
-                        Vec3(0f, 1f, 0f),
-                        if (cell.row == 0) -1f else 1f,
-                        1f
-                    )
+                InputCube.SwipeDirection.RIGHT -> Triple(
+                    Vec3(0f, 1f, 0f), if (cell.row == 0) -1f else 1f, 1f
+                )
 
-                InputCube.SwipeDirection.LEFT ->
-                    Triple(
-                        Vec3(0f, 1f, 0f),
-                        if (cell.row == 0) -1f else 1f,
-                        -1f
-                    )
+                InputCube.SwipeDirection.LEFT -> Triple(
+                    Vec3(0f, 1f, 0f), if (cell.row == 0) -1f else 1f, -1f
+                )
 
-                InputCube.SwipeDirection.UP ->
-                    Triple(
-                        Vec3(1f, 0f, 0f),
-                        if (cell.col == 0) 1f else -1f,
-                        1f
-                    )
+                InputCube.SwipeDirection.UP -> Triple(
+                    Vec3(1f, 0f, 0f), if (cell.col == 0) 1f else -1f, 1f
+                )
 
-                InputCube.SwipeDirection.DOWN ->
-                    Triple(
-                        Vec3(1f, 0f, 0f),
-                        if (cell.col == 0) 1f else -1f,
-                        -1f
-                    )
+                InputCube.SwipeDirection.DOWN -> Triple(
+                    Vec3(1f, 0f, 0f), if (cell.col == 0) 1f else -1f, -1f
+                )
             }
         }
 
@@ -216,36 +186,93 @@ fun mapInputToRotation(
         // =====================================================
 
         InputCube.Face.RIGHT -> {
+            var layer = 1f
+            var dir = 1f
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
-                    Triple(
-                        Vec3(0f, 1f, 0f),
-                        1f,
-                        1f
-                    )
+                InputCube.SwipeDirection.RIGHT -> {
 
-                InputCube.SwipeDirection.LEFT ->
-                    Triple(
-                        Vec3(0f, 1f, 0f),
-                        1f,
-                        -1f
-                    )
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = 1f
+                        dir = 1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = 1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = -1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = -1f
+                        dir = 1f
+                    }
 
-                InputCube.SwipeDirection.UP ->
-                    Triple(
-                        Vec3(0f, 0f, 1f),
-                        -1f,
-                        1f
-                    )
 
-                InputCube.SwipeDirection.DOWN ->
                     Triple(
-                        Vec3(0f, 0f, 1f),
-                        -1f,
-                        -1f
+                        Vec3(0f, 1f, 0f), layer, dir
                     )
+                }
+
+                InputCube.SwipeDirection.LEFT -> {
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = 1f
+                        dir = -1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = 1f
+                        dir = -1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = -1f
+                        dir = -1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = -1f
+                        dir = -1f
+                    }
+                    Triple(
+                        Vec3(0f, 1f, 0f), layer, dir
+                    )
+                }
+
+
+                InputCube.SwipeDirection.UP -> {
+
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = 1f
+                        dir = 1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = -1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = 1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = -1f
+                        dir = 1f
+                    }
+                    Triple(
+                        Vec3(0f, 0f, 1f), layer, dir
+                    )
+                }
+
+
+                InputCube.SwipeDirection.DOWN -> {
+
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = 1f
+                        dir = -1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = -1f
+                        dir = -1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = 1f
+                        dir = -1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = -1f
+                        dir = -1f
+                    }
+                    Triple(
+                        Vec3(0f, 0f, 1f), layer, dir
+                    )
+                }
             }
         }
 
@@ -255,35 +282,94 @@ fun mapInputToRotation(
 
         InputCube.Face.LEFT -> {
 
+
+            var layer = 1f
+            var dir = 1f
+
+
+
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
-                    Triple(
-                        Vec3(0f, 1f, 0f),
-                        1f,
-                        1f
-                    )
 
-                InputCube.SwipeDirection.LEFT ->
-                    Triple(
-                        Vec3(0f, 1f, 0f),
-                        1f,
-                        -1f
-                    )
+                InputCube.SwipeDirection.RIGHT -> {
 
-                InputCube.SwipeDirection.UP ->
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = 1f
+                        dir = 1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = 1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = -1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = -1f
+                        dir = 1f
+                    }
                     Triple(
-                        Vec3(0f, 0f, 1f),
-                        -1f,
-                        -1f
+                        Vec3(0f, 1f, 0f), layer, dir
                     )
+                }
 
-                InputCube.SwipeDirection.DOWN ->
+                InputCube.SwipeDirection.LEFT -> {
+
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = 1f
+                        dir = -1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = 1f
+                        dir = -1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = -1f
+                        dir = -1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = -1f
+                        dir = -1f
+                    }
                     Triple(
-                        Vec3(0f, 0f, 1f),
-                        -1f,
-                        1f
+                        Vec3(0f, 1f, 0f), layer, dir
                     )
+                }
+
+                InputCube.SwipeDirection.UP -> {
+
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = -1f
+                        dir = -1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = 1f
+                        dir = -1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = -1f
+                        dir = -1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = 1f
+                        dir = -1f
+                    }
+                    Triple(
+                        Vec3(0f, 0f, 1f), layer, dir
+                    )
+                }
+
+                InputCube.SwipeDirection.DOWN -> {
+
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = -1f
+                        dir = 1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = 1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = -1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = 1f
+                        dir = 1f
+                    }
+                    Triple(
+                        Vec3(0f, 0f, 1f), layer, dir
+                    )
+                }
             }
         }
 
@@ -293,35 +379,91 @@ fun mapInputToRotation(
 
         InputCube.Face.TOP -> {
 
+            var layer = 1f
+            var dir = 1f
+
+
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
-                    Triple(
-                        Vec3(0f, 0f, 1f),
-                        1f,
-                        1f
-                    )
 
-                InputCube.SwipeDirection.LEFT ->
-                    Triple(
-                        Vec3(0f, 0f, 1f),
-                        1f,
-                        -1f
-                    )
+                    InputCube.SwipeDirection.RIGHT -> {
+                        if (cell.row == 1 && cell.col == 0) {
+                            layer = -1f
+                            dir = -1f
+                        } else if (cell.row == 1 && cell.col == 1) {
+                            layer = -1f
+                            dir = -1f
+                        } else if (cell.row == 0 && cell.col == 0) {
+                            layer = 1f
+                            dir = -1f
+                        } else if (cell.row == 0 && cell.col == 1) {
+                            layer = 1f
+                            dir = -1f
+                        }
 
-                InputCube.SwipeDirection.UP ->
-                    Triple(
-                        Vec3(1f, 0f, 0f),
-                        1f,
-                        -1f
+                        Triple(
+                    Vec3(0f, 0f, 1f), layer, dir
                     )
+                }
 
-                InputCube.SwipeDirection.DOWN ->
+
+                InputCube.SwipeDirection.LEFT -> {
+
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = -1f
+                        dir = 1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = -1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = 1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = 1f
+                        dir = 1f
+                    }
+
                     Triple(
-                        Vec3(1f, 0f, 0f),
-                        1f,
-                        1f
+                    Vec3(0f, 0f, 1f), layer, dir
+                )}
+
+                InputCube.SwipeDirection.UP -> {
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = -1f
+                        dir = -1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = 1f
+                        dir = -1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = -1f
+                        dir = -1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = 1f
+                        dir = -1f
+                    }
+                    Triple(
+                        Vec3(1f, 0f, 0f), layer, dir
                     )
+                }
+
+                InputCube.SwipeDirection.DOWN -> {
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = -1f
+                        dir = 1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = 1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = -1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = 1f
+                        dir = 1f
+                    }
+                    Triple(
+                        Vec3(1f, 0f, 0f), layer, dir
+                    )
+                }
             }
         }
 
@@ -331,35 +473,87 @@ fun mapInputToRotation(
 
         InputCube.Face.BOTTOM -> {
 
+            var layer = 1f
+            var dir = 1f
+
+
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
+                InputCube.SwipeDirection.RIGHT -> {
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = 1f
+                        dir = 1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = 1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = -1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = -1f
+                        dir = 1f
+                    }
                     Triple(
-                        Vec3(0f, 0f, 1f),
-                        -1f,
-                        1f
+                        Vec3(0f, 0f, 1f), layer, dir
                     )
+                }
 
-                InputCube.SwipeDirection.LEFT ->
+                InputCube.SwipeDirection.LEFT -> {
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = 1f
+                        dir = -1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = 1f
+                        dir = -1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = -1f
+                        dir = -1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = -1f
+                        dir = -1f
+                    }
                     Triple(
-                        Vec3(0f, 0f, 1f),
-                        -1f,
-                        -1f
+                        Vec3(0f, 0f, 1f), layer, dir
                     )
+                }
 
-                InputCube.SwipeDirection.UP ->
+                InputCube.SwipeDirection.UP -> {
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = -1f
+                        dir = -1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = 1f
+                        dir = -1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = -1f
+                        dir = -1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = 1f
+                        dir = -1f
+                    }
                     Triple(
-                        Vec3(1f, 0f, 0f),
-                        -1f,
-                        -1f
+                        Vec3(1f, 0f, 0f), layer, dir
                     )
+                }
 
-                InputCube.SwipeDirection.DOWN ->
+                InputCube.SwipeDirection.DOWN -> {
+                    if (cell.row == 1 && cell.col == 0) {
+                        layer = -1f
+                        dir = 1f
+                    } else if (cell.row == 1 && cell.col == 1) {
+                        layer = 1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 0) {
+                        layer = -1f
+                        dir = 1f
+                    } else if (cell.row == 0 && cell.col == 1) {
+                        layer = 1f
+                        dir = 1f
+                    }
                     Triple(
-                        Vec3(1f, 0f, 0f),
-                        -1f,
-                        1f
+                        Vec3(1f, 0f, 0f), layer, dir
                     )
+                }
             }
         }
     }
