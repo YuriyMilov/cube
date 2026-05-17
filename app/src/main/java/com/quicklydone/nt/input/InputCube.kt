@@ -15,7 +15,7 @@ object InputCube {
 
     private const val CUBE_SIZE = 2f
     private const val CAMERA_DISTANCE = 12f
-    private const val SCALE = 1000f
+    private const val SCALE = 1200f
 
     // 2x2 сейчас
     // потом 3x3

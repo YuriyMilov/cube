@@ -27,12 +27,12 @@ fun AppRoot() {
         "menu" -> Column(Modifier.fillMaxSize()) {
             Spacer(Modifier.width(18.dp))
             Button(onClick = { screen = "Cublets" }) {
-                Text("--- CubletsScreen ---")
-            }
-            Spacer(Modifier.width(18.dp))
-            Button(onClick = { screen = "Cube2" }) {
                 Text("2x2")
             }
+            //Spacer(Modifier.width(18.dp))
+            //Button(onClick = { screen = "Cube2" }) {
+            //    Text("2x2")
+            //}
             Spacer(Modifier.width(18.dp))
             Button(onClick = { screen = "Cube3" }) {
                 Text("3x3")

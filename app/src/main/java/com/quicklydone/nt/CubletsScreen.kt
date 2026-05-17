@@ -224,7 +224,7 @@ fun CubletsScreen(
         // BUTTONS
         // -------------------------
 
-        Column(
+        /*Column(
             Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
@@ -250,7 +250,7 @@ fun CubletsScreen(
                 Button(onClick = { startRotation(Vec3(0f, 0f, 1f), -1f, -1f) }) { Text("B") }
                 Button(onClick = { startRotation(Vec3(0f, 0f, 1f), -1f, 1f) }) { Text("B'") }
             }
-        }
+        }*/
     }
 }
 

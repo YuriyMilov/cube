@@ -31,7 +31,7 @@ object CubeRenderer {
             val cx = size.width / 2f
             val cy = size.height / 2f
 
-            val scale = 1000f
+            val scale = 1200f
             val cameraDistance = 12f
             val cubeSize = 1.85f
 
