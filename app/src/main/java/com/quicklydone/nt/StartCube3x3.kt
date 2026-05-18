@@ -20,7 +20,6 @@ goMenu: () -> Unit
         Cube3x3Screen(
             cube = cube.value,
         )
-
         Button(
             onClick = goMenu,
             modifier = Modifier

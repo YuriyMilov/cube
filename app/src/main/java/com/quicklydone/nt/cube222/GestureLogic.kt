@@ -1,11 +1,9 @@
 package com.quicklydone.nt.gesture
 
 import androidx.compose.ui.geometry.Offset
-import com.quicklydone.nt.math.pointInPolygon
-import com.quicklydone.nt.model.Face
-import com.quicklydone.nt.model.Vec3
+import com.quicklydone.nt.common.Vec3
+import com.quicklydone.nt.common.pointInPolygon
 import com.quicklydone.nt.render.VisibleFace
-import kotlin.math.abs
 import kotlin.math.sqrt
 
 
@@ -23,7 +21,7 @@ data class HitFace(
 
      //screen-space axes
     val screenU: Offset,
-   val screenV: Offset
+    val screenV: Offset
 )
 
 enum class Side {

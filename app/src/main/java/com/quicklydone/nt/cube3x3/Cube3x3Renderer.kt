@@ -1,6 +1,5 @@
 package com.quicklydone.nt.render3x3
 
-import android.util.Log
 import androidx.compose.ui.geometry.Offset
 import com.quicklydone.nt.common.Vec3
 import kotlin.math.cos

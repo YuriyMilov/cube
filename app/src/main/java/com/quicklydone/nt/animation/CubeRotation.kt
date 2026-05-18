@@ -1,10 +1,10 @@
 package com.quicklydone.nt.animation
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.quicklydone.nt.math.rotateAroundAxis
-import com.quicklydone.nt.math.snap
-import com.quicklydone.nt.model.Cubelet
-import com.quicklydone.nt.model.Vec3
+import com.quicklydone.nt.common.Vec3
+import com.quicklydone.nt.common.rotateAroundAxis
+import com.quicklydone.nt.common.snap
+import com.quicklydone.nt.render.Cubelet
 import kotlinx.coroutines.delay
 import kotlin.math.PI
 
