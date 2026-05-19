@@ -4,7 +4,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.quicklydone.nt.common.Vec3
 import com.quicklydone.nt.common.rotateAroundAxis
 import com.quicklydone.nt.common.snap
-import com.quicklydone.nt.render.Cubelet
+import com.quicklydone.nt.cube222.Cubelet
 import kotlinx.coroutines.delay
 import kotlin.math.PI
 

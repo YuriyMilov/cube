@@ -1,12 +1,14 @@
-package com.quicklydone.nt.cube222
+package com.quicklydone.nt.cube333
 
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntSize
 import com.quicklydone.nt.common.GestureState
+import com.quicklydone.nt.cube222.InputCube
+import com.quicklydone.nt.cube222.mapInputToRotation
 
-fun Modifier.cubeGestures(
+fun Modifier.cubeGestures333(
     state: GestureState,
     canvasSize: IntSize
 ): Modifier {

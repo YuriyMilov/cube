@@ -14,6 +14,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.quicklydone.nt.cube333.Cube333Screen
+
 // ======================================================
 // APP ROOT
 // ======================================================
@@ -49,7 +51,8 @@ fun AppRoot() {
         }
 
         Screen.CUBE_3 -> {
-            StartCube3x3(
+           // StartCube3x3(
+            Cube333Screen(
                 goMenu = {
                     screen = Screen.MENU
                 }
@@ -71,12 +74,14 @@ private fun MenuScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
-        Button(onClick = open3x3) {
-            Text("3x3")
-        }
 
         Button(onClick = open2x2) {
             Text("2x2")
         }
+
+        Button(onClick = open3x3) {
+            Text("3x3")
+        }
+
     }
 }
