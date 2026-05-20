@@ -1,0 +1,10 @@
+package com.quicklydone.nt.cube
+
+data class CubeConfig333(
+
+    val size: Int,
+
+    val layers: List<Float>,
+
+    val cubeletSpacing: Float = 1f
+)

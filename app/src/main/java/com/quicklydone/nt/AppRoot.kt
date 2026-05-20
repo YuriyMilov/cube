@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.quicklydone.nt.cube333.Cube333Screen
+import com.quicklydone.nt.cube444.Cube444Screen
 
 // ======================================================
 // APP ROOT
@@ -23,7 +24,8 @@ import com.quicklydone.nt.cube333.Cube333Screen
 private enum class Screen {
     MENU,
     CUBE_2,
-    CUBE_3
+    CUBE_3,
+    CUBE_4
 }
 
 @Composable
@@ -38,7 +40,8 @@ fun AppRoot() {
         Screen.MENU -> {
             MenuScreen(
                 open2x2 = { screen = Screen.CUBE_2 },
-                open3x3 = { screen = Screen.CUBE_3 }
+                open3x3 = { screen = Screen.CUBE_3 },
+                open4x4 = { screen = Screen.CUBE_4 }
             )
         }
 
@@ -58,13 +61,26 @@ fun AppRoot() {
                 }
             )
         }
+
+        Screen.CUBE_4 -> {
+            // StartCube3x3(
+            Cube444Screen(
+                goMenu = {
+                    screen = Screen.MENU
+                }
+            )
+        }
+
+
     }
 }
 
 @Composable
 private fun MenuScreen(
     open2x2: () -> Unit,
-    open3x3: () -> Unit
+    open3x3: () -> Unit,
+    open4x4: () -> Unit
+
 ) {
 
     Column(
@@ -81,6 +97,10 @@ private fun MenuScreen(
 
         Button(onClick = open3x3) {
             Text("3x3")
+        }
+
+        Button(onClick = open4x4) {
+            Text("4x4")
         }
 
     }

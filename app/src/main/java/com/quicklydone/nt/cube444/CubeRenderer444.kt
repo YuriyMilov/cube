@@ -1,4 +1,4 @@
-package com.quicklydone.nt.render
+package com.quicklydone.nt.cube444
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
@@ -12,13 +12,13 @@ import com.quicklydone.nt.common.project
 import com.quicklydone.nt.common.rotateAroundAxis
 import com.quicklydone.nt.common.rotateX
 import com.quicklydone.nt.common.rotateY
+import com.quicklydone.nt.cube444.Cubelet
+import com.quicklydone.nt.cube444.Face
+import com.quicklydone.nt.cube444.VisibleFace
 
-import com.quicklydone.nt.cube222.Cubelet
-//import com.quicklydone.nt.cube222.Face
-//import com.quicklydone.nt.cube222.VisibleFace
 import kotlin.math.sqrt
 
-object CubeRenderer333 {
+object CubeRenderer444 {
 
     // =====================================================
     // CONFIG
@@ -32,7 +32,7 @@ object CubeRenderer333 {
         Color(0xFF444444)
 
 
-    enum class Side333 {
+    enum class Side444 {
         FRONT, BACK, LEFT, RIGHT, TOP, BOTTOM
     }
 
@@ -92,7 +92,7 @@ object CubeRenderer333 {
                     .forEach { face ->
 
                         val worldVerts =
-                            faceWorldVertices333(
+                            faceWorldVertices444(
                                 face = face,
                                 position = position,
                                 orientation = orientation
@@ -262,7 +262,7 @@ object CubeRenderer333 {
     // FACE TRANSFORMS
     // =====================================================
 
-    private fun faceWorldVertices333(
+    private fun faceWorldVertices444(
         face: Face,
         position: Vec3,
         orientation: OrientationAxes
@@ -403,7 +403,7 @@ object CubeRenderer333 {
                 ),
                 normal = Vec3(0f, 0f, 1f),
                 color = cube.front ?: HIDDEN_COLOR,
-                side = Side333.FRONT
+                side = Side444.FRONT
             ),
 
             Face(
@@ -415,7 +415,7 @@ object CubeRenderer333 {
                 ),
                 normal = Vec3(0f, 0f, -1f),
                 color = cube.back ?: HIDDEN_COLOR,
-                side = Side333.BACK
+                side = Side444.BACK
             ),
 
             Face(
@@ -427,7 +427,7 @@ object CubeRenderer333 {
                 ),
                 normal = Vec3(-1f, 0f, 0f),
                 color = cube.left ?: HIDDEN_COLOR,
-                side = Side333.LEFT
+                side = Side444.LEFT
             ),
 
             Face(
@@ -439,7 +439,7 @@ object CubeRenderer333 {
                 ),
                 normal = Vec3(1f, 0f, 0f),
                 color = cube.right ?: HIDDEN_COLOR,
-                side = Side333.RIGHT
+                side = Side444.RIGHT
             ),
 
             Face(
@@ -451,7 +451,7 @@ object CubeRenderer333 {
                 ),
                 normal = Vec3(0f, 1f, 0f),
                 color = cube.up ?: HIDDEN_COLOR,
-                side = Side333.TOP
+                side = Side444.TOP
             ),
 
             Face(
@@ -463,7 +463,7 @@ object CubeRenderer333 {
                 ),
                 normal = Vec3(0f, -1f, 0f),
                 color = cube.down ?: HIDDEN_COLOR,
-                side = Side333.BOTTOM
+                side = Side444.BOTTOM
             )
         )
     }
@@ -519,6 +519,10 @@ private data class OrientationAxes(
 // PUBLIC MODEL
 // =====================================================
 
+enum class Side444 {
+    FRONT, BACK, LEFT, RIGHT, TOP, BOTTOM
+}
+
 data class VisibleFace(
     val polygon: List<Offset>,
     val normal: Vec3,
@@ -526,7 +530,7 @@ data class VisibleFace(
 
     val cubePos: Vec3,
 
-    val side: CubeRenderer333.Side333,
+    val side: CubeRenderer444.Side444,
 
     val uAxis: Vec3,
     val vAxis: Vec3,
@@ -535,12 +539,13 @@ data class VisibleFace(
     val screenV: Offset,
 )
 
+
 data class Face(
     val verts: List<Vec3>,
     val normal: Vec3,
     val color: Color,
 
-    val side: CubeRenderer333.Side333
+    val side: CubeRenderer444.Side444
 )
 
 data class Cubelet(
@@ -558,3 +563,6 @@ data class Cubelet(
     var axisY: Vec3 = Vec3(0f,1f,0f),
     var axisZ: Vec3 = Vec3(0f,0f,1f),
 )
+
+
+

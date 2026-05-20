@@ -22,4 +22,15 @@ object CubeConfigs {
             1f
         )
     )
+
+    val Cube444 = CubeConfig444(
+
+        size = 3,
+
+        layers = listOf(
+            -1f,
+            0f,
+            1f
+        )
+    )
 }

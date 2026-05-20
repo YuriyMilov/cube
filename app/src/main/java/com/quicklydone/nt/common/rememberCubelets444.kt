@@ -1,22 +1,20 @@
-package com.quicklydone.nt.common
+package com.quicklydone.nt.cube
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import com.quicklydone.nt.cube.CubeConfig
-import com.quicklydone.nt.cube.CubeFactory
-import com.quicklydone.nt.cube222.Cubelet
+import com.quicklydone.nt.cube444.Cubelet
 
 @Composable
-fun rememberCubelets(
-    config: CubeConfig
+fun rememberCubelets444(
+    config: CubeConfig444
 ) =
     remember {
 
         mutableStateListOf<Cubelet>().apply {
 
             addAll(
-                CubeFactory.createCubelets(config)
+                CubeFactory444.createCubelets444(config)
             )
         }
     }

@@ -13,36 +13,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
-import com.quicklydone.nt.cube222.CubeRenderer.createInitialCubelets
-import com.quicklydone.nt.cube222.Cubelet
-import com.quicklydone.nt.cube222.InputCube
+import com.quicklydone.nt.cube444.CubeRenderer444.createInitialCubelets
+import com.quicklydone.nt.cube444.Cubelet
+import com.quicklydone.nt.cube444.InputCube444
+
 
 @Composable
-fun TopBar(
-    goMenu: () -> Unit,
-    onReset: () -> Unit
-) {
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-
-        Button(onClick = goMenu) {
-            Text("MENU")
-        }
-
-        Button(onClick = onReset) {
-            Text("RESET")
-        }
-    }
-}
-
-@Composable
-fun rememberCubelets() =
+fun rememberCubelets444() =
     remember {
         mutableStateListOf<Cubelet>().apply {
             addAll(createInitialCubelets())
@@ -55,10 +32,10 @@ fun rememberCubelets() =
 // ======================================================
 
 @Immutable
-data class GestureState(
+data class GestureState444(
 
-    var selectedCell: InputCube.InputCell? = null,
-    var selectedFace: InputCube.Face? = null,
+    var selectedCell: InputCube444.InputCell? = null,
+    var selectedFace: InputCube444.Face? = null,
 
     var dragStart: Offset? = null,
     var dragLocked: Boolean = false,
@@ -70,7 +47,7 @@ data class GestureState(
     var pitch: Float = 0f,
 )
 
-fun cubeCenter(
+fun cubeCenter444(
     pos: Vec3
 ): Vec3 {
 
