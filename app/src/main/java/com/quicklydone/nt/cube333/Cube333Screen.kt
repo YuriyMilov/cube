@@ -160,7 +160,7 @@ fun Cube333Screen(
                         canvasSize = it
                     }
 
-                    .cubeGestures(
+                    .cubeGestures333(
                         state = gestureState,
                         canvasSize = canvasSize
                     )
@@ -189,8 +189,8 @@ fun Cube333Screen(
                                    pitch = rotX,
                                    w = size.width,
                                    h = size.height
-                               )*/
-
+                               )
+*/
 
             }
         }

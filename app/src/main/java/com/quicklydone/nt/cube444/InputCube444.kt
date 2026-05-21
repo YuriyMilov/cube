@@ -16,10 +16,10 @@ object InputCube444 {
     // CONFIG
     // =========================================================
 
-    private const val GRID_SIZE = 2
+    private const val GRID_SIZE = 4
 
-    private const val CUBE_SIZE = 2f
-    private const val CAMERA_DISTANCE = 12f
+    private const val CUBE_SIZE = 4f
+    private const val CAMERA_DISTANCE = 24f
     private const val SCALE = 1200f
 
     // =========================================================
@@ -55,6 +55,13 @@ object InputCube444 {
         val row: Int,
         val col: Int,
         val swipe: SwipeDirection
+    )
+
+    data class LayerSwipe(
+        val face: Face,
+        val layer: Int,        // row или col
+        val axis: Vec3,        // ось вращения в 3D
+        val direction: Int     // +1 / -1
     )
 
     data class FaceAxes(
@@ -356,7 +363,7 @@ object InputCube444 {
         pitch: Float,
         w: Float,
         h: Float
-    ): InputCell? {
+    ): InputCube444.InputCell? {
 
         val cells =
             buildCells(
@@ -487,6 +494,51 @@ object InputCube444 {
         }
     }
 
+
+    fun buildLayerSwipe(
+        face: Face,
+        cell: InputCell,
+        dx: Float,
+        dy: Float,
+        yaw: Float,
+        pitch: Float
+    ): LayerSwipe {
+
+        val geometry = faceGeometry.first { it.face == face }
+        val axes = geometry.axes
+
+        val right3 = rotate(axes.right, yaw, pitch)
+        val up3 = rotate(axes.up, yaw, pitch)
+
+        val right2 = Vec2(right3.x, -right3.y)
+        val up2 = Vec2(up3.x, -up3.y)
+
+        val swipe = Vec2(dx, dy)
+
+        val dotRight = swipe.x * right2.x + swipe.y * right2.y
+        val dotUp = swipe.x * up2.x + swipe.y * up2.y
+
+        val useRow = kotlin.math.abs(dotUp) > kotlin.math.abs(dotRight)
+
+        return if (useRow) {
+
+            LayerSwipe(
+                face = face,
+                layer = cell.row,
+                axis = axes.right,
+                direction = if (dotUp > 0f) 1 else -1
+            )
+
+        } else {
+
+            LayerSwipe(
+                face = face,
+                layer = cell.col,
+                axis = axes.up,
+                direction = if (dotRight > 0f) 1 else -1
+            )
+        }
+    }
     // =========================================================
     // POLYGON
     // =========================================================

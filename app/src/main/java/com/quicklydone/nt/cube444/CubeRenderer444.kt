@@ -5,7 +5,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import com.quicklydone.nt.animation.onLayer
+import com.quicklydone.nt.animation.onLayer444
 import com.quicklydone.nt.common.Vec3
 import com.quicklydone.nt.common.cubeCenter
 import com.quicklydone.nt.common.project
@@ -24,7 +24,7 @@ object CubeRenderer444 {
     // CONFIG
     // =====================================================
 
-    private const val CAMERA_DISTANCE = 18f
+    private const val CAMERA_DISTANCE = 24f
     private const val SCALE = 1200f
     private const val CUBELET_SIZE = 1.85f
 
@@ -66,7 +66,7 @@ object CubeRenderer444 {
 
                 val inAnimatedLayer =
                     animAxis != null &&
-                            onLayer(
+                            onLayer444(
                                 cube.pos,
                                 animAxis,
                                 animLayer
@@ -215,7 +215,7 @@ object CubeRenderer444 {
     // ANIMATION
     // =====================================================
 
-    private fun animatedPosition(
+    fun animatedPosition(
         cube: Cubelet,
         inLayer: Boolean,
         animAxis: Vec3?,
@@ -232,7 +232,7 @@ object CubeRenderer444 {
         )
     }
 
-    private fun animatedOrientation(
+     fun animatedOrientation(
         cube: Cubelet,
         inLayer: Boolean,
         animAxis: Vec3?,
@@ -262,7 +262,7 @@ object CubeRenderer444 {
     // FACE TRANSFORMS
     // =====================================================
 
-    private fun faceWorldVertices444(
+     fun faceWorldVertices444(
         face: Face,
         position: Vec3,
         orientation: OrientationAxes
@@ -292,7 +292,7 @@ object CubeRenderer444 {
         }
     }
 
-    private fun rotateNormal(
+     fun rotateNormal(
         normal: Vec3,
         orientation: OrientationAxes
     ): Vec3 {
@@ -316,7 +316,7 @@ object CubeRenderer444 {
     // CAMERA
     // =====================================================
 
-    private fun cameraRotate(
+     fun cameraRotate(
         v: Vec3,
         rotX: Float,
         rotY: Float
@@ -474,22 +474,25 @@ object CubeRenderer444 {
 
         val result = mutableListOf<Cubelet>()
 
-        for (x in listOf(-1f, 1f))
-            for (y in listOf(-1f, 1f))
-                for (z in listOf(-1f, 1f)) {
+        val coords =
+            listOf(-1.5f, -0.5f, 0.5f, 1.5f)
+
+        for (x in coords)
+            for (y in coords)
+                for (z in coords) {
 
                     result.add(
                         Cubelet(
                             pos = Vec3(x, y, z),
 
-                            up = if (y == 1f) Color.White else null,
-                            down = if (y == -1f) Color.Yellow else null,
+                            up = if (y == 1.5f) Color.White else null,
+                            down = if (y == -1.5f) Color.Yellow else null,
 
-                            left = if (x == -1f) Color(0xFFFFA500) else null,
-                            right = if (x == 1f) Color.Red else null,
+                            left = if (x == -1.5f) Color(0xFFFFA500) else null,
+                            right = if (x == 1.5f) Color.Red else null,
 
-                            front = if (z == 1f) Color.Green else null,
-                            back = if (z == -1f) Color.Blue else null,
+                            front = if (z == 1.5f) Color.Green else null,
+                            back = if (z == -1.5f) Color.Blue else null,
                         )
                     )
                 }
@@ -503,13 +506,13 @@ object CubeRenderer444 {
 // INTERNAL MODELS
 // =====================================================
 
-private data class DrawFace(
+ data class DrawFace(
     val points: List<Offset>,
     val depth: Float,
     val color: Color
 )
 
-private data class OrientationAxes(
+ data class OrientationAxes(
     val x: Vec3,
     val y: Vec3,
     val z: Vec3

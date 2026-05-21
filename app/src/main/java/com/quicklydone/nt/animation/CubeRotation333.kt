@@ -4,6 +4,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.quicklydone.nt.common.Vec3
 import com.quicklydone.nt.common.rotateAroundAxis
 import com.quicklydone.nt.common.snap
+import com.quicklydone.nt.common.snap333
 import com.quicklydone.nt.cube333.Cubelet
 import kotlinx.coroutines.delay
 import kotlin.math.PI
@@ -43,7 +44,7 @@ suspend fun rotateLayer333(
 
         if (onLayer(cube.pos, axis, layer)) {
 
-            cube.pos = snap(
+            cube.pos = snap333(
                 rotateAroundAxis(
                     cube.pos,
                     axis,

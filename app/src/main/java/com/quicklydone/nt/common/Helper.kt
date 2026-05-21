@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.quicklydone.nt.cube222.CubeRenderer.createInitialCubelets
 import com.quicklydone.nt.cube222.Cubelet
 import com.quicklydone.nt.cube222.InputCube
+import com.quicklydone.nt.cube444.InputCube444
 
 @Composable
 fun TopBar(
@@ -69,6 +70,24 @@ data class GestureState(
     var yaw: Float = 0f,
     var pitch: Float = 0f,
 )
+
+@Immutable
+data class GestureState444(
+
+    var selectedCell: InputCube444.InputCell? = null,
+    var selectedFace: InputCube444.Face? = null,
+
+    var dragStart: Offset? = null,
+    var dragLocked: Boolean = false,
+
+    val rotateAll: (Float, Float) -> Unit,
+    val startRotation: (Vec3, Float, Float) -> Unit,
+
+    var yaw: Float = 0f,
+    var pitch: Float = 0f,
+)
+
+
 
 fun cubeCenter(
     pos: Vec3

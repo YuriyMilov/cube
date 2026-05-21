@@ -1,5 +1,6 @@
 package com.quicklydone.nt.cube222
 
+import android.util.Log
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -80,7 +81,7 @@ fun Modifier.cubeGestures(
                         cell,
                         swipe
                     )
-
+//Log.d("qq","${move.axis} ${move.layer} ${move.dir} ")
                 state.startRotation(
                     move.axis,
                     move.layer,

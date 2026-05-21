@@ -16,10 +16,10 @@ object InputCube333 {
     // CONFIG
     // =========================================================
 
-    private const val GRID_SIZE = 2
+    private const val GRID_SIZE = 3
 
-    private const val CUBE_SIZE = 2f
-    private const val CAMERA_DISTANCE = 12f
+    private const val CUBE_SIZE = 3f
+    private const val CAMERA_DISTANCE = 18f
     private const val SCALE = 1200f
 
     // =========================================================

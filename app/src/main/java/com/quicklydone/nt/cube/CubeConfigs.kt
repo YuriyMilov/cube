@@ -25,12 +25,12 @@ object CubeConfigs {
 
     val Cube444 = CubeConfig444(
 
-        size = 3,
+        size = 4, //size нигде не применяется
 
         layers = listOf(
-            -1f,
-            0f,
-            1f
+          -1.5f,-0.5f,0.5f,1.5f
+           // -2f,-1f,0f,1f,2f
+           // -1f,0f,1f
         )
     )
 }

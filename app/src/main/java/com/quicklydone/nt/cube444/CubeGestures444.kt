@@ -1,15 +1,16 @@
 package com.quicklydone.nt.cube444
 
+import android.util.Log
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntSize
-import com.quicklydone.nt.common.GestureState
-import com.quicklydone.nt.cube222.InputCube
+import com.quicklydone.nt.common.GestureState444
+import com.quicklydone.nt.cube444.InputCube444
 import com.quicklydone.nt.cube222.mapInputToRotation
 
 fun Modifier.cubeGestures444(
-    state: GestureState,
+    state: GestureState444,
     canvasSize: IntSize
 ): Modifier {
 
@@ -28,7 +29,7 @@ fun Modifier.cubeGestures444(
 
                 state.selectedCell =
 
-                    InputCube.pickCell(
+                    InputCube444.pickCell(
                         touch = offset,
                         yaw = state.yaw,
                         pitch = state.pitch,
@@ -68,8 +69,7 @@ fun Modifier.cubeGestures444(
                 }
 
                 val swipe =
-
-                    InputCube.detectFaceSwipe(
+                    InputCube444.detectFaceSwipe(
                         face = cell.face,
                         dx = dx,
                         dy = dy,
@@ -77,11 +77,21 @@ fun Modifier.cubeGestures444(
                         pitch = state.pitch
                     )
 
+                val layerSwipe = InputCube444.buildLayerSwipe(
+                    face = cell.face,
+                    cell = cell,
+                    dx = dx,
+                    dy = dy,
+                    yaw = state.yaw,
+                    pitch = state.pitch
+                )
+
+                Log.d("qq-layer",
+                    "${layerSwipe.face} layer=${layerSwipe.layer} dir=${layerSwipe.direction}"
+                )
+
                 val move =
-                    mapInputToRotation(
-                        cell,
-                        swipe
-                    )
+                    mapInputToRotation444(cell, swipe)
 
                 state.startRotation(
                     move.axis,

@@ -1,12 +1,15 @@
 package com.quicklydone.nt.animation
 
+import android.util.Log
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.quicklydone.nt.common.Vec3
 import com.quicklydone.nt.common.rotateAroundAxis
 import com.quicklydone.nt.common.snap
+import com.quicklydone.nt.common.snap444
 import com.quicklydone.nt.cube444.Cubelet
 import kotlinx.coroutines.delay
 import kotlin.math.PI
+import kotlin.math.abs
 
 /**
  * Анимация поворота слоя куба
@@ -41,9 +44,9 @@ suspend fun rotateLayer444(
 
     cubelets.forEach { cube ->
 
-        if (onLayer(cube.pos, axis, layer)) {
+        if (onLayer444(cube.pos, axis, layer)) {
 
-            cube.pos = snap(
+            cube.pos = snap444(
                 rotateAroundAxis(
                     cube.pos,
                     axis,
@@ -70,9 +73,14 @@ fun onLayer444(
     axis: Vec3,
     layer: Float
 ): Boolean {
-    return when {
-        axis.x != 0f -> pos.x == layer
-        axis.y != 0f -> pos.y == layer
-        else -> pos.z == layer
-    }
+
+    //Log.d("qq", "pos=${pos.x} layer=$layer")
+    val value =
+        when {
+            axis.x != 0f -> pos.x
+            axis.y != 0f -> pos.y
+            else -> pos.z
+        }
+
+    return abs(value - layer) < 0.01f
 }
