@@ -4,12 +4,12 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntSize
-import com.quicklydone.nt.common.GestureState
-import com.quicklydone.nt.cube222.InputCube
-import com.quicklydone.nt.cube222.mapInputToRotation
+import com.quicklydone.nt.common.GestureState333
+import com.quicklydone.nt.cube333.InputCube333
+import com.quicklydone.nt.cube333.mapInputToRotation333
 
 fun Modifier.cubeGestures333(
-    state: GestureState,
+    state: GestureState333,
     canvasSize: IntSize
 ): Modifier {
 
@@ -28,7 +28,7 @@ fun Modifier.cubeGestures333(
 
                 state.selectedCell =
 
-                    InputCube.pickCell(
+                    InputCube333.pickCell(
                         touch = offset,
                         yaw = state.yaw,
                         pitch = state.pitch,
@@ -69,7 +69,7 @@ fun Modifier.cubeGestures333(
 
                 val swipe =
 
-                    InputCube.detectFaceSwipe(
+                    InputCube333.detectFaceSwipe(
                         face = cell.face,
                         dx = dx,
                         dy = dy,
@@ -78,7 +78,7 @@ fun Modifier.cubeGestures333(
                     )
 
                 val move =
-                    mapInputToRotation(
+                    mapInputToRotation333(
                         cell,
                         swipe
                     )

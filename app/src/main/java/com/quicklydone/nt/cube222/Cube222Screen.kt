@@ -1,4 +1,4 @@
-package com.quicklydone.nt
+package com.quicklydone.nt.cube222
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -18,41 +18,46 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
-import com.quicklydone.nt.animation.rotateLayer
-import com.quicklydone.nt.common.GestureState
+import com.quicklydone.nt.animation.rotateLayer222
+import com.quicklydone.nt.common.GestureState222
 import com.quicklydone.nt.common.TopBar
 import com.quicklydone.nt.common.Vec3
 import com.quicklydone.nt.common.rememberCubelets
-import com.quicklydone.nt.cube222.CubeRenderer
-import com.quicklydone.nt.cube222.CubeRenderer.createInitialCubelets
-import com.quicklydone.nt.cube222.InputCube
-import com.quicklydone.nt.cube222.VisibleFace
-import com.quicklydone.nt.cube222.cubeGestures
+import com.quicklydone.nt.cube.CubeConfig
+import com.quicklydone.nt.cube.CubeFactory.createCubelets
+import com.quicklydone.nt.cube_new.CubeRendererNew
+import com.quicklydone.nt.cube_new.VisibleFaceNew
 import kotlinx.coroutines.launch
-
-
-// ======================================================
-// 2x2 SCREEN
-// ======================================================
-
 @Composable
 fun Cube222Screen(
     goMenu: () -> Unit
 ) {
 
-    val cubelets = rememberCubelets()
+    val config = CubeConfig(2)
+
+    val cubelets = rememberCubelets(config)
 
     var rotX by remember { mutableStateOf(0.8f) }
     var rotY by remember { mutableStateOf(-0.8f) }
 
-    var canvasSize by remember { mutableStateOf(IntSize.Zero) }
+    var canvasSize by remember {
+        mutableStateOf(IntSize.Zero)
+    }
 
-    var animAxis by remember { mutableStateOf<Vec3?>(null) }
-    var animLayer by remember { mutableStateOf(0f) }
-    var animAngle by remember { mutableStateOf(0f) }
+    var animAxis by remember {
+        mutableStateOf<Vec3?>(null)
+    }
+
+    var animLayer by remember {
+        mutableStateOf(0f)
+    }
+
+    var animAngle by remember {
+        mutableStateOf(0f)
+    }
 
     val visibleFaces = remember {
-        mutableStateListOf<VisibleFace>()
+        mutableStateListOf<VisibleFaceNew>()
     }
 
     val scope = rememberCoroutineScope()
@@ -60,7 +65,10 @@ fun Cube222Screen(
     fun resetCube() {
 
         cubelets.clear()
-        cubelets.addAll(createInitialCubelets())
+
+        cubelets.addAll(
+            createCubelets(config)
+        )
 
         rotX = 0.8f
         rotY = -0.8f
@@ -76,13 +84,14 @@ fun Cube222Screen(
 
         scope.launch {
 
-            rotateLayer(
+            rotateLayer222(
                 cubelets = cubelets,
                 axis = axis,
                 layer = layer,
                 dir = dir,
 
                 onStart = {
+
                     animAxis = axis
                     animLayer = layer
                 },
@@ -92,6 +101,7 @@ fun Cube222Screen(
                 },
 
                 onEnd = {
+
                     animAxis = null
                     animLayer = 0f
                     animAngle = 0f
@@ -102,15 +112,21 @@ fun Cube222Screen(
 
     val gestureState = remember {
 
-        GestureState(
+        GestureState222(
 
             rotateAll = { dx, dy ->
+
                 rotY += dx * 0.01f
                 rotX -= dy * 0.01f
             },
 
             startRotation = { axis, layer, dir ->
-                startRotation(axis, layer, dir)
+
+                startRotation(
+                    axis,
+                    layer,
+                    dir
+                )
             }
         )
     }
@@ -133,6 +149,7 @@ fun Cube222Screen(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth(),
+
             contentAlignment = Alignment.Center
         ) {
 
@@ -144,30 +161,37 @@ fun Cube222Screen(
                         canvasSize = it
                     }
 
-                    .cubeGestures(
+                    .cubeGestures222(
                         state = gestureState,
                         canvasSize = canvasSize
                     )
             ) {
 
-                CubeRenderer.draw(
+                CubeRendererNew.drawNew(
+                    config=config,
                     cubelets = cubelets,
+
                     rotX = rotX,
                     rotY = rotY,
+
                     animAxis = animAxis,
                     animLayer = animLayer,
                     animAngle = animAngle,
+
                     visibleFaces = visibleFaces,
+
                     drawScope = this
                 )
 
-           /*     InputCube.drawInputCube(
-                    drawScope = this,
-                    yaw = rotY,
-                    pitch = rotX,
-                    w = size.width,
-                    h = size.height
-                )*/
+
+
+                /*InputCube.drawInputCube(
+                              drawScope = this,
+                              yaw = rotY,
+                              pitch = rotX,
+                              w = size.width,
+                              h = size.height
+                          )*/
 
             }
         }

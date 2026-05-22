@@ -1,8 +1,6 @@
 package com.quicklydone.nt.gestures3x3
 
-import android.util.Log
 import androidx.compose.ui.geometry.Offset
-
 import com.quicklydone.nt.model3x3.Cube3x3
 import com.quicklydone.nt.model3x3.Cube3x3Rotator
 import com.quicklydone.nt.model3x3.Move3x3
@@ -68,10 +66,6 @@ class CubeGestureController3x3(
 
                 val pick = Cube3x3Renderer.pickFace(offset, yaw, pitch, w, h)
 
-                Log.d("qq", "------------> $pick")
-
-
-                // ❗ фиксируем движение только внутри той же грани, с которой стартовали
                 val startFace = touchedPick?.face
 
                 if (pick != null && startFace != null && pick.face == startFace) {

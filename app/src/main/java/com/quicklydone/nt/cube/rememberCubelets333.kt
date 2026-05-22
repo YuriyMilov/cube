@@ -3,7 +3,8 @@ package com.quicklydone.nt.cube
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import com.quicklydone.nt.cube333.Cubelet
+import com.quicklydone.nt.cube.Cubelet
+import com.quicklydone.nt.cube_new.CubeletNew
 
 @Composable
 fun rememberCubelets333(
@@ -11,10 +12,10 @@ fun rememberCubelets333(
 ) =
     remember {
 
-        mutableStateListOf<Cubelet>().apply {
+        mutableStateListOf<CubeletNew>().apply {
 
             addAll(
-                CubeFactory333.createCubelets(config)
+                CubeFactory.createCubelets(config)
             )
         }
     }

@@ -111,27 +111,27 @@ fun mapInputToRotation444(
                     RotationMove444(
                         axis = Y_AXIS,
                         layer = rowToLayer(cell.row),
-                        dir = -1f
+                        dir = 1f
                     )
 
                 InputCube444.SwipeDirection.LEFT ->
                     RotationMove444(
                         axis = Y_AXIS,
                         layer = rowToLayer(cell.row),
-                        dir = 1f
+                        dir = -1f
                     )
 
                 InputCube444.SwipeDirection.UP ->
                     RotationMove444(
                         axis = X_AXIS,
-                        layer = colToLayer(cell.col),
+                        layer = -colToLayer(cell.col),
                         dir = 1f
                     )
 
                 InputCube444.SwipeDirection.DOWN ->
                     RotationMove444(
                         axis = X_AXIS,
-                        layer = colToLayer(cell.col),
+                        layer = -colToLayer(cell.col),
                         dir = -1f
                     )
             }
@@ -162,14 +162,14 @@ fun mapInputToRotation444(
                 InputCube444.SwipeDirection.UP ->
                     RotationMove444(
                         axis = Z_AXIS,
-                        layer = colToLayer(cell.col),
+                        layer = -colToLayer(cell.col),
                         dir = 1f
                     )
 
                 InputCube444.SwipeDirection.DOWN ->
                     RotationMove444(
                         axis = Z_AXIS,
-                        layer = colToLayer(cell.col),
+                        layer = -colToLayer(cell.col),
                         dir = -1f
                     )
             }

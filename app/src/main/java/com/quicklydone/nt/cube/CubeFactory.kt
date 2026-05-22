@@ -2,15 +2,15 @@ package com.quicklydone.nt.cube
 
 import androidx.compose.ui.graphics.Color
 import com.quicklydone.nt.common.Vec3
-import com.quicklydone.nt.cube222.Cubelet
+import com.quicklydone.nt.cube_new.CubeletNew
 
 object CubeFactory {
 
     fun createCubelets(
         config: CubeConfig
-    ): List<Cubelet> {
+    ): List<CubeletNew> {
 
-        val result = mutableListOf<Cubelet>()
+        val result = mutableListOf<CubeletNew>()
 
         for (x in config.layers)
             for (y in config.layers)
@@ -18,7 +18,7 @@ object CubeFactory {
 
                     result.add(
 
-                        Cubelet(
+                        CubeletNew(
 
                             pos = Vec3(x, y, z),
 

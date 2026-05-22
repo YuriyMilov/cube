@@ -3,7 +3,6 @@ package com.quicklydone.nt.cube333
 import com.quicklydone.nt.common.Vec3
 import com.quicklydone.nt.cube222.InputCube
 
-
 // =========================================================
 // MOVE MODEL
 // =========================================================
@@ -19,8 +18,8 @@ data class RotationMove(
 // =========================================================
 
 fun mapInputToRotation333(
-    cell: InputCube.InputCell,
-    swipe: InputCube.SwipeDirection
+    cell: InputCube333.InputCell,
+    swipe: InputCube333.SwipeDirection
 ): RotationMove {
 
     return when (cell.face) {
@@ -29,32 +28,32 @@ fun mapInputToRotation333(
         // FRONT
         // =====================================================
 
-        InputCube.Face.FRONT -> {
+        InputCube333.Face.FRONT -> {
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
+                InputCube333.SwipeDirection.RIGHT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = rowToLayer(cell.row),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.LEFT ->
+                InputCube333.SwipeDirection.LEFT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = rowToLayer(cell.row),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.UP ->
+                InputCube333.SwipeDirection.UP ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = colToLayer(cell.col),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.DOWN ->
+                InputCube333.SwipeDirection.DOWN ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = colToLayer(cell.col),
@@ -67,32 +66,32 @@ fun mapInputToRotation333(
         // BACK
         // =====================================================
 
-        InputCube.Face.BACK -> {
+        InputCube333.Face.BACK -> {
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
+                InputCube333.SwipeDirection.RIGHT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = rowToLayer(cell.row),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.LEFT ->
+                InputCube333.SwipeDirection.LEFT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = rowToLayer(cell.row),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.UP ->
+                InputCube333.SwipeDirection.UP ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = -colToLayer(cell.col),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.DOWN ->
+                InputCube333.SwipeDirection.DOWN ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = -colToLayer(cell.col),
@@ -105,32 +104,32 @@ fun mapInputToRotation333(
         // RIGHT
         // =====================================================
 
-        InputCube.Face.RIGHT -> {
+        InputCube333.Face.RIGHT -> {
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
+                InputCube333.SwipeDirection.RIGHT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = rowToLayer(cell.row),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.LEFT ->
+                InputCube333.SwipeDirection.LEFT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = rowToLayer(cell.row),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.UP ->
+                InputCube333.SwipeDirection.UP ->
                     RotationMove(
                         axis = Z_AXIS,
                         layer = rightFaceZLayer(cell.col),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.DOWN ->
+                InputCube333.SwipeDirection.DOWN ->
                     RotationMove(
                         axis = Z_AXIS,
                         layer = rightFaceZLayer(cell.col),
@@ -143,32 +142,32 @@ fun mapInputToRotation333(
         // LEFT
         // =====================================================
 
-        InputCube.Face.LEFT -> {
+        InputCube333.Face.LEFT -> {
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
+                InputCube333.SwipeDirection.RIGHT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = rowToLayer(cell.row),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.LEFT ->
+                InputCube333.SwipeDirection.LEFT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = rowToLayer(cell.row),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.UP ->
+                InputCube333.SwipeDirection.UP ->
                     RotationMove(
                         axis = Z_AXIS,
                         layer = leftFaceZLayer(cell.col),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.DOWN ->
+                InputCube333.SwipeDirection.DOWN ->
                     RotationMove(
                         axis = Z_AXIS,
                         layer = leftFaceZLayer(cell.col),
@@ -181,32 +180,32 @@ fun mapInputToRotation333(
         // TOP
         // =====================================================
 
-        InputCube.Face.TOP -> {
+        InputCube333.Face.TOP -> {
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
+                InputCube333.SwipeDirection.RIGHT ->
                     RotationMove(
                         axis = Z_AXIS,
                         layer = topBottomLayer(cell.row),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.LEFT ->
+                InputCube333.SwipeDirection.LEFT ->
                     RotationMove(
                         axis = Z_AXIS,
                         layer = topBottomLayer(cell.row),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.UP ->
+                InputCube333.SwipeDirection.UP ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = leftRightLayer(cell.col),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.DOWN ->
+                InputCube333.SwipeDirection.DOWN ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = leftRightLayer(cell.col),
@@ -219,32 +218,32 @@ fun mapInputToRotation333(
         // BOTTOM
         // =====================================================
 
-        InputCube.Face.BOTTOM -> {
+        InputCube333.Face.BOTTOM -> {
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
+                InputCube333.SwipeDirection.RIGHT ->
                     RotationMove(
                         axis = Z_AXIS,
-                        layer = rowToLayer(cell.row),
+                        layer = -topBottomLayer(cell.row),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.LEFT ->
+                InputCube333.SwipeDirection.LEFT ->
                     RotationMove(
                         axis = Z_AXIS,
-                        layer = rowToLayer(cell.row),
+                        layer = -topBottomLayer(cell.row),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.UP ->
+                InputCube333.SwipeDirection.UP ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = leftRightLayer(cell.col),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.DOWN ->
+                InputCube333.SwipeDirection.DOWN ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = leftRightLayer(cell.col),
@@ -256,7 +255,7 @@ fun mapInputToRotation333(
 }
 
 // =========================================================
-// HELPERS
+// AXES
 // =========================================================
 
 private val X_AXIS =
@@ -268,62 +267,72 @@ private val Y_AXIS =
 private val Z_AXIS =
     Vec3(0f, 0f, 1f)
 
+// =========================================================
+// HELPERS
+// =========================================================
+
 private fun rowToLayer(
     row: Int
 ): Float {
 
-    return if (row == 0)
-        -1f
-    else
-        1f
+    return when (row) {
+        0 -> -1f
+        1 -> 0f
+        else -> 1f
+    }
 }
 
 private fun colToLayer(
     col: Int
 ): Float {
 
-    return if (col == 0)
-        -1f
-    else
-        1f
+    return when (col) {
+        0 -> -1f
+        1 -> 0f
+        else -> 1f
+    }
 }
 
 private fun rightFaceZLayer(
     col: Int
 ): Float {
 
-    return if (col == 0)
-        1f
-    else
-        -1f
+    return when (col) {
+        0 -> 1f
+        1 -> 0f
+        else -> -1f
+    }
 }
 
 private fun leftFaceZLayer(
     col: Int
 ): Float {
 
-    return if (col == 0)
-        -1f
-    else
-        1f
+    return when (col) {
+        0 -> -1f
+        1 -> 0f
+        else -> 1f
+    }
 }
 
 private fun leftRightLayer(
     col: Int
 ): Float {
 
-    return if (col == 0)
-        -1f
-    else
-        1f
+    return when (col) {
+        0 -> -1f
+        1 -> 0f
+        else -> 1f
+    }
 }
 
 private fun topBottomLayer(
     row: Int
 ): Float {
 
-    return if (row == 0)
-        1f
-    else
-        -1f
+    return when (row) {
+        0 -> 1f
+        1 -> 0f
+        else -> -1f
+    }
 }

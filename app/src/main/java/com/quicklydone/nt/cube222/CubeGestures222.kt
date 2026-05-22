@@ -1,14 +1,13 @@
 package com.quicklydone.nt.cube222
 
-import android.util.Log
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntSize
-import com.quicklydone.nt.common.GestureState
+import com.quicklydone.nt.common.GestureState222
 
-fun Modifier.cubeGestures(
-    state: GestureState,
+fun Modifier.cubeGestures222(
+    state: GestureState222,
     canvasSize: IntSize
 ): Modifier {
 
@@ -61,7 +60,6 @@ fun Modifier.cubeGestures(
                     return@detectDragGestures
                 }
 
-                // already handled
                 if (state.dragLocked) {
                     return@detectDragGestures
                 }
@@ -77,16 +75,18 @@ fun Modifier.cubeGestures(
                     )
 
                 val move =
-                    mapInputToRotation(
+                    mapInputToRotation222(
                         cell,
                         swipe
                     )
-//Log.d("qq","${move.axis} ${move.layer} ${move.dir} ")
+
+
                 state.startRotation(
                     move.axis,
                     move.layer,
                     move.dir
                 )
+
 
                 state.dragLocked = true
             },

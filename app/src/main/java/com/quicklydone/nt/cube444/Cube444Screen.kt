@@ -18,20 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
-import com.quicklydone.nt.animation.rotateLayer
 import com.quicklydone.nt.animation.rotateLayer444
-import com.quicklydone.nt.common.GestureState
 import com.quicklydone.nt.common.GestureState444
 import com.quicklydone.nt.common.TopBar
 import com.quicklydone.nt.common.Vec3
-//import com.quicklydone.nt.common.rememberCubelets
-import com.quicklydone.nt.cube.rememberCubelets444
-//import com.quicklydone.nt.common.rememberCubelets444
-import com.quicklydone.nt.cube.CubeConfigs
-import com.quicklydone.nt.cube.CubeFactory444
-//import com.quicklydone.nt.cube.rememberCubelets444
-//import com.quicklydone.nt.cube.rememberCubelets
-import com.quicklydone.nt.cube222.cubeGestures
+import com.quicklydone.nt.common.rememberCubelets
+import com.quicklydone.nt.cube.CubeConfig
+import com.quicklydone.nt.cube.CubeFactory
+import com.quicklydone.nt.cube_new.CubeRendererNew
+import com.quicklydone.nt.cube_new.VisibleFaceNew
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,9 +34,9 @@ fun Cube444Screen(
     goMenu: () -> Unit
 ) {
 
-    val config = CubeConfigs.Cube444
+    val config = CubeConfig(4)
 
-    val cubelets = rememberCubelets444(config)
+    val cubelets = rememberCubelets(config)
 
     var rotX by remember { mutableStateOf(0.8f) }
     var rotY by remember { mutableStateOf(-0.8f) }
@@ -63,7 +58,7 @@ fun Cube444Screen(
     }
 
     val visibleFaces = remember {
-        mutableStateListOf<VisibleFace>()
+        mutableStateListOf<VisibleFaceNew>()
     }
 
     val scope = rememberCoroutineScope()
@@ -73,8 +68,8 @@ fun Cube444Screen(
         cubelets.clear()
 
         cubelets.addAll(
-            CubeFactory444
-                .createCubelets444(config)
+            CubeFactory
+                .createCubelets(config)
         )
 
         rotX = 0.8f
@@ -174,7 +169,8 @@ fun Cube444Screen(
                     )
             ) {
 
-                CubeRenderer444.draw(
+                CubeRendererNew.drawNew(
+                    config=config,
                     cubelets = cubelets,
 
                     rotX = rotX,

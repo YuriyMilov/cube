@@ -97,7 +97,6 @@ object Cube3x3Renderer {
         }.sortedByDescending { it.third }
 
         for ((face, poly, _) in faceData) {
-           // Log.d("qq", "$face")
 
             if (pointInPolygon(touch, poly)) {
 

@@ -1,13 +1,12 @@
 package com.quicklydone.nt.cube444
 
-import android.util.Log
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntSize
 import com.quicklydone.nt.common.GestureState444
 import com.quicklydone.nt.cube444.InputCube444
-import com.quicklydone.nt.cube222.mapInputToRotation
+import com.quicklydone.nt.cube444.mapInputToRotation444
 
 fun Modifier.cubeGestures444(
     state: GestureState444,
@@ -86,9 +85,7 @@ fun Modifier.cubeGestures444(
                     pitch = state.pitch
                 )
 
-                Log.d("qq-layer",
-                    "${layerSwipe.face} layer=${layerSwipe.layer} dir=${layerSwipe.direction}"
-                )
+
 
                 val move =
                     mapInputToRotation444(cell, swipe)
