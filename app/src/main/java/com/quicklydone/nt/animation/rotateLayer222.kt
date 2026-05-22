@@ -1,19 +1,20 @@
 package com.quicklydone.nt.animation
 
+import android.util.Log
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.quicklydone.nt.common.Vec3
+import com.quicklydone.nt.common.onLayer
 import com.quicklydone.nt.common.rotateAroundAxis
-import com.quicklydone.nt.common.snap
-import com.quicklydone.nt.common.snap333
-import com.quicklydone.nt.cube333.Cubelet
+import com.quicklydone.nt.common.snap222
+import com.quicklydone.nt.cube_new.CubeletNew
 import kotlinx.coroutines.delay
 import kotlin.math.PI
 
 /**
  * Анимация поворота слоя куба
  */
-suspend fun rotateLayer333(
-    cubelets: SnapshotStateList<Cubelet>,
+suspend fun rotateLayer222(
+    cubelets: SnapshotStateList<CubeletNew>,
     axis: Vec3,
     layer: Float,
     dir: Float,
@@ -42,9 +43,13 @@ suspend fun rotateLayer333(
 
     cubelets.forEach { cube ->
 
+        Log.d(
+            "qq",
+            "axis=$axis layer=$layer pos=${cube.pos}"
+        )
         if (onLayer(cube.pos, axis, layer)) {
 
-            cube.pos = snap333(
+            cube.pos = snap222(
                 rotateAroundAxis(
                     cube.pos,
                     axis,
@@ -65,15 +70,34 @@ suspend fun rotateLayer333(
 
     onEnd()
 }
+/*
 
-fun onLayer333(
+fun onLayer444(
     pos: Vec3,
     axis: Vec3,
     layer: Float
 ): Boolean {
-    return when {
-        axis.x != 0f -> pos.x == layer
-        axis.y != 0f -> pos.y == layer
-        else -> pos.z == layer
-    }
+
+    //Log.d("qq", "pos=${pos.x} layer=$layer")
+    val value =
+        when {
+            axis.x != 0f -> pos.x
+            axis.y != 0f -> pos.y
+            else -> pos.z
+        }
+
+
+    */
+/*
+        val value =
+            when {
+                kotlin.math.abs(axis.x) > 0.9f -> pos.x
+                kotlin.math.abs(axis.y) > 0.9f -> pos.y
+                else -> pos.z
+            }
+    *//*
+
+
+    return abs(value - layer) < 0.01f
 }
+*/

@@ -19,22 +19,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
 import com.quicklydone.nt.animation.rotateLayer333
-import com.quicklydone.nt.common.GestureState
+import com.quicklydone.nt.common.GestureState333
 import com.quicklydone.nt.common.TopBar
 import com.quicklydone.nt.common.Vec3
-import com.quicklydone.nt.cube.CubeConfigs
-import com.quicklydone.nt.cube.CubeFactory333.createCubelets
-import com.quicklydone.nt.cube.rememberCubelets333
-import com.quicklydone.nt.cube222.cubeGestures
+import com.quicklydone.nt.common.rememberCubelets
+import com.quicklydone.nt.cube.CubeConfig
+import com.quicklydone.nt.cube.CubeFactory.createCubelets
+import com.quicklydone.nt.cube_new.CubeRendererNew
+import com.quicklydone.nt.cube_new.VisibleFaceNew
 import kotlinx.coroutines.launch
 @Composable
 fun Cube333Screen(
     goMenu: () -> Unit
 ) {
 
-    val config = CubeConfigs.Cube333
+    val config = CubeConfig(3)
 
-    val cubelets = rememberCubelets333(config)
+    val cubelets = rememberCubelets(config)
 
     var rotX by remember { mutableStateOf(0.8f) }
     var rotY by remember { mutableStateOf(-0.8f) }
@@ -56,7 +57,7 @@ fun Cube333Screen(
     }
 
     val visibleFaces = remember {
-        mutableStateListOf<VisibleFace>()
+        mutableStateListOf<VisibleFaceNew>()
     }
 
     val scope = rememberCoroutineScope()
@@ -111,7 +112,7 @@ fun Cube333Screen(
 
     val gestureState = remember {
 
-        GestureState(
+        GestureState333(
 
             rotateAll = { dx, dy ->
 
@@ -166,7 +167,8 @@ fun Cube333Screen(
                     )
             ) {
 
-                CubeRenderer333.draw(
+                CubeRendererNew.drawNew(
+                    config=config,
                     cubelets = cubelets,
 
                     rotX = rotX,
@@ -183,14 +185,13 @@ fun Cube333Screen(
 
 
 
-                     /*InputCube333.drawInputCube(
+                    /* InputCube333.drawInputCube(
                                    drawScope = this,
                                    yaw = rotY,
                                    pitch = rotX,
                                    w = size.width,
                                    h = size.height
-                               )
-*/
+                               )*/
 
             }
         }

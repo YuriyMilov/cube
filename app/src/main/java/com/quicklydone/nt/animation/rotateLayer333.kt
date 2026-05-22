@@ -1,20 +1,23 @@
-/*
 package com.quicklydone.nt.animation
+
+
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.quicklydone.nt.common.Vec3
+import com.quicklydone.nt.common.onLayer
 import com.quicklydone.nt.common.rotateAroundAxis
-import com.quicklydone.nt.common.snap
+import com.quicklydone.nt.common.snap333
 import com.quicklydone.nt.cube_new.CubeletNew
 import kotlinx.coroutines.delay
 import kotlin.math.PI
 
-*/
+
 /**
  * Анимация поворота слоя куба
  *//*
+*/
 
-suspend fun rotateLayer(
+suspend fun rotateLayer333(
     cubelets: SnapshotStateList<CubeletNew>,
     axis: Vec3,
     layer: Float,
@@ -46,7 +49,7 @@ suspend fun rotateLayer(
 
         if (onLayer(cube.pos, axis, layer)) {
 
-            cube.pos = snap(
+            cube.pos = snap333(
                 rotateAroundAxis(
                     cube.pos,
                     axis,
@@ -67,8 +70,9 @@ suspend fun rotateLayer(
 
     onEnd()
 }
+/*
 
-fun onLayer(
+fun onLayer333(
     pos: Vec3,
     axis: Vec3,
     layer: Float
@@ -78,4 +82,6 @@ fun onLayer(
         axis.y != 0f -> pos.y == layer
         else -> pos.z == layer
     }
-}*/
+}
+
+*/

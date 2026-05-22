@@ -2,7 +2,7 @@ package com.quicklydone.nt.cube
 
 import androidx.compose.ui.graphics.Color
 import com.quicklydone.nt.common.Vec3
-import com.quicklydone.nt.cube333.Cubelet
+import com.quicklydone.nt.cube_new.CubeletNew
 
 object CubeFactory333 {
 

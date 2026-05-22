@@ -5,10 +5,10 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntSize
-import com.quicklydone.nt.common.GestureState
+import com.quicklydone.nt.common.GestureState222
 
-fun Modifier.cubeGestures(
-    state: GestureState,
+fun Modifier.cubeGestures222(
+    state: GestureState222,
     canvasSize: IntSize
 ): Modifier {
 
@@ -77,16 +77,19 @@ fun Modifier.cubeGestures(
                     )
 
                 val move =
-                    mapInputToRotation(
+                    mapInputToRotation222(
                         cell,
                         swipe
                     )
-//Log.d("qq","${move.axis} ${move.layer} ${move.dir} ")
+
+
                 state.startRotation(
                     move.axis,
                     move.layer,
                     move.dir
                 )
+
+                Log.d("qq"," ${move.axis} \n ${move.layer} \n ${move.dir}")
 
                 state.dragLocked = true
             },

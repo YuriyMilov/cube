@@ -1,21 +1,11 @@
 package com.quicklydone.nt.common
 
-fun snap(v: Vec3): Vec3 {
+import kotlin.math.abs
 
-    fun s(x: Float) =
-        when {
-            x > 0.5f -> 1f
-            x < -0.5f -> -1f
-            else -> 0f
-        }
-
-    return Vec3(
-        s(v.x),
-        s(v.y),
-        s(v.z)
-    )
-}
-
+private val SNAP_222 = listOf(
+    -0.5f,
+    0.5f
+)
 
 private val SNAP_333 = listOf(
     -1f,
@@ -37,6 +27,46 @@ private val SNAP_AXIS = listOf(
 )
 
 // =====================================================
+// BASE
+// =====================================================
+
+private fun snapTo(
+    value: Float,
+    variants: List<Float>
+): Float {
+
+    return variants.minBy {
+        abs(it - value)
+    }
+}
+
+private fun snapVec3(
+    v: Vec3,
+    variants: List<Float>
+): Vec3 {
+
+    return Vec3(
+        snapTo(v.x, variants),
+        snapTo(v.y, variants),
+        snapTo(v.z, variants)
+    )
+}
+
+// =====================================================
+// 2x2
+// =====================================================
+
+fun snap222(
+    v: Vec3
+): Vec3 {
+
+    return snapVec3(
+        v,
+        SNAP_222
+    )
+}
+
+// =====================================================
 // 3x3
 // =====================================================
 
@@ -44,17 +74,9 @@ fun snap333(
     v: Vec3
 ): Vec3 {
 
-    fun s(x: Float): Float {
-
-        return SNAP_333.minBy {
-            kotlin.math.abs(it - x)
-        }
-    }
-
-    return Vec3(
-        s(v.x),
-        s(v.y),
-        s(v.z)
+    return snapVec3(
+        v,
+        SNAP_333
     )
 }
 
@@ -66,17 +88,9 @@ fun snap444(
     v: Vec3
 ): Vec3 {
 
-    fun s(x: Float): Float {
-
-        return SNAP_444.minBy {
-            kotlin.math.abs(it - x)
-        }
-    }
-
-    return Vec3(
-        s(v.x),
-        s(v.y),
-        s(v.z)
+    return snapVec3(
+        v,
+        SNAP_444
     )
 }
 
@@ -88,16 +102,8 @@ fun snapAxis(
     v: Vec3
 ): Vec3 {
 
-    fun s(x: Float): Float {
-
-        return SNAP_AXIS.minBy {
-            kotlin.math.abs(it - x)
-        }
-    }
-
-    return Vec3(
-        s(v.x),
-        s(v.y),
-        s(v.z)
+    return snapVec3(
+        v,
+        SNAP_AXIS
     )
 }
