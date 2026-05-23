@@ -1,3 +1,4 @@
+/*
 package com.quicklydone.nt.cube
 
 import androidx.compose.ui.graphics.Color
@@ -57,4 +58,4 @@ object CubeFactory333 {
 
         return result
     }
-}
+}*/

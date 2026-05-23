@@ -17,6 +17,7 @@ foundationVersion = "1.11.0"
 roomKtx = "2.8.4"
 uiGraphicsVersion = "1.11.0"
 uiGeometryVersion = "1.11.0"
+androidxUi = "1.11.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,6 +43,7 @@ androidx-foundation = { group = "androidx.compose.foundation", name = "foundatio
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphicsVersion" }
 androidx-ui-geometry = { group = "androidx.compose.ui", name = "ui-geometry", version.ref = "uiGeometryVersion" }
+androidx-compose-ui-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "androidxUi" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
