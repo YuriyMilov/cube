@@ -24,9 +24,7 @@ fun Modifier.cubeGestures222(
                 state.dragStart = offset
                 state.dragLocked = false
 
-                state.selectedCell =
-
-                    InputCube.pickCell(
+                state.selectedCell = InputCube222.pickCell(
                         touch = offset,
                         yaw = state.yaw,
                         pitch = state.pitch,
@@ -64,9 +62,7 @@ fun Modifier.cubeGestures222(
                     return@detectDragGestures
                 }
 
-                val swipe =
-
-                    InputCube.detectFaceSwipe(
+                val swipe =  InputCube222.detectFaceSwipe(
                         face = cell.face,
                         dx = dx,
                         dy = dy,

@@ -17,8 +17,8 @@ data class RotationMove(
 // =========================================================
 
 fun mapInputToRotation222(
-    cell: InputCube.InputCell,
-    swipe: InputCube.SwipeDirection
+    cell: InputCube222.InputCell,
+    swipe: InputCube222.SwipeDirection
 ): RotationMove {
 
     return when (cell.face) {
@@ -27,32 +27,32 @@ fun mapInputToRotation222(
         // FRONT
         // =====================================================
 
-        InputCube.Face.FRONT -> {
+        InputCube222.Face.FRONT -> {
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
+                InputCube222.SwipeDirection.RIGHT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = -rowToLayer222(cell.row),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.LEFT ->
+                InputCube222.SwipeDirection.LEFT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = -rowToLayer222(cell.row),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.UP ->
+                InputCube222.SwipeDirection.UP ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = colToLayer222(cell.col),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.DOWN ->
+                InputCube222.SwipeDirection.DOWN ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = colToLayer222(cell.col),
@@ -65,32 +65,32 @@ fun mapInputToRotation222(
         // BACK
         // =====================================================
 
-        InputCube.Face.BACK -> {
+        InputCube222.Face.BACK -> {
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
+                InputCube222.SwipeDirection.RIGHT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = -rowToLayer222(cell.row),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.LEFT ->
+                InputCube222.SwipeDirection.LEFT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = -rowToLayer222(cell.row),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.UP ->
+                InputCube222.SwipeDirection.UP ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = -colToLayer222(cell.col),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.DOWN ->
+                InputCube222.SwipeDirection.DOWN ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = -colToLayer222(cell.col),
@@ -103,32 +103,32 @@ fun mapInputToRotation222(
         // RIGHT
         // =====================================================
 
-        InputCube.Face.RIGHT -> {
+        InputCube222.Face.RIGHT -> {
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
+                InputCube222.SwipeDirection.RIGHT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = -rowToLayer222(cell.row),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.LEFT ->
+                InputCube222.SwipeDirection.LEFT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = -rowToLayer222(cell.row),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.UP ->
+                InputCube222.SwipeDirection.UP ->
                     RotationMove(
                         axis = Z_AXIS,
                         layer = rightFaceZLayer222(cell.col),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.DOWN ->
+                InputCube222.SwipeDirection.DOWN ->
                     RotationMove(
                         axis = Z_AXIS,
                         layer = rightFaceZLayer222(cell.col),
@@ -141,32 +141,32 @@ fun mapInputToRotation222(
         // LEFT
         // =====================================================
 
-        InputCube.Face.LEFT -> {
+        InputCube222.Face.LEFT -> {
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
+                InputCube222.SwipeDirection.RIGHT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = -rowToLayer222(cell.row),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.LEFT ->
+                InputCube222.SwipeDirection.LEFT ->
                     RotationMove(
                         axis = Y_AXIS,
                         layer = -rowToLayer222(cell.row),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.UP ->
+                InputCube222.SwipeDirection.UP ->
                     RotationMove(
                         axis = Z_AXIS,
                         layer = leftFaceZLayer222(cell.col),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.DOWN ->
+                InputCube222.SwipeDirection.DOWN ->
                     RotationMove(
                         axis = Z_AXIS,
                         layer = leftFaceZLayer222(cell.col),
@@ -179,32 +179,32 @@ fun mapInputToRotation222(
         // TOP
         // =====================================================
 
-        InputCube.Face.TOP -> {
+        InputCube222.Face.TOP -> {
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
+                InputCube222.SwipeDirection.RIGHT ->
                     RotationMove(
                         axis = Z_AXIS,
                         layer = topBottomLayer222(cell.row),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.LEFT ->
+                InputCube222.SwipeDirection.LEFT ->
                     RotationMove(
                         axis = Z_AXIS,
                         layer = topBottomLayer222(cell.row),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.UP ->
+                InputCube222.SwipeDirection.UP ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = leftRightLayer222(cell.col),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.DOWN ->
+                InputCube222.SwipeDirection.DOWN ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = leftRightLayer222(cell.col),
@@ -217,32 +217,32 @@ fun mapInputToRotation222(
         // BOTTOM
         // =====================================================
 
-        InputCube.Face.BOTTOM -> {
+        InputCube222.Face.BOTTOM -> {
 
             when (swipe) {
 
-                InputCube.SwipeDirection.RIGHT ->
+                InputCube222.SwipeDirection.RIGHT ->
                     RotationMove(
                         axis = Z_AXIS,
                         layer = -topBottomLayer222(cell.row),
                         dir = 1f
                     )
 
-                InputCube.SwipeDirection.LEFT ->
+                InputCube222.SwipeDirection.LEFT ->
                     RotationMove(
                         axis = Z_AXIS,
                         layer = -topBottomLayer222(cell.row),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.UP ->
+                InputCube222.SwipeDirection.UP ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = leftRightLayer222(cell.col),
                         dir = -1f
                     )
 
-                InputCube.SwipeDirection.DOWN ->
+                InputCube222.SwipeDirection.DOWN ->
                     RotationMove(
                         axis = X_AXIS,
                         layer = leftRightLayer222(cell.col),

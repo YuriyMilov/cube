@@ -1,7 +1,6 @@
 package com.quicklydone.nt.cube333
 
 import com.quicklydone.nt.common.Vec3
-import com.quicklydone.nt.cube222.InputCube
 
 // =========================================================
 // MOVE MODEL

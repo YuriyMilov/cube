@@ -13,7 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
-import com.quicklydone.nt.cube222.InputCube
+import com.quicklydone.nt.cube222.InputCube222
 import com.quicklydone.nt.cube333.InputCube333
 import com.quicklydone.nt.cube444.InputCube444
 import com.quicklydone.nt.cube_new.CubeRendererNew.createInitialCubelets
@@ -58,8 +58,8 @@ fun rememberCubelets() =
 @Immutable
 data class GestureState222(
 
-    var selectedCell: InputCube.InputCell? = null,
-    var selectedFace: InputCube.Face? = null,
+    var selectedCell: InputCube222.InputCell? = null,
+    var selectedFace: InputCube222.Face? = null,
 
     var dragStart: Offset? = null,
     var dragLocked: Boolean = false,

@@ -1,5 +1,13 @@
 package com.quicklydone.nt.cube
 
+object Params {
+
+    const val SCALE = 1200f
+    const val CAMERA_DISTANCE_222 = 12f
+    const val CAMERA_DISTANCE_333 = 18f
+    const val CAMERA_DISTANCE_444 = 24f
+}
+
 data class CubeConfig(
 
     val size: Int,
@@ -24,18 +32,12 @@ data class CubeConfig(
 
     val layers =
         generateLayers(size)
-}
+
+  }
 
 fun generateLayers(
     size: Int
 ): List<Float> {
-
-    if (size == 2) {
-        return listOf(
-            -0.5f,
-            0.5f
-        )
-    }
 
     val offset =
         (size - 1) / 2f
@@ -44,3 +46,4 @@ fun generateLayers(
         i - offset
     }
 }
+

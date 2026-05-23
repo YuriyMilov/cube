@@ -5,8 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntSize
 import com.quicklydone.nt.common.GestureState333
-import com.quicklydone.nt.cube333.InputCube333
-import com.quicklydone.nt.cube333.mapInputToRotation333
 
 fun Modifier.cubeGestures333(
     state: GestureState333,

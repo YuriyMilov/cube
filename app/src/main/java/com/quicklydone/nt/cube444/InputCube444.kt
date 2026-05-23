@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import com.quicklydone.nt.cube.Params
 import com.quicklydone.nt.common.Vec3
 import kotlin.math.abs
 import kotlin.math.cos
@@ -19,8 +20,8 @@ object InputCube444 {
     private const val GRID_SIZE = 4
 
     private const val CUBE_SIZE = 4f
-    private const val CAMERA_DISTANCE = 24f
-    private const val SCALE = 1200f
+    private const val CAMERA_DISTANCE = Params.CAMERA_DISTANCE_444
+    private const val SCALE = Params.SCALE
 
     // =========================================================
     // MODELS
