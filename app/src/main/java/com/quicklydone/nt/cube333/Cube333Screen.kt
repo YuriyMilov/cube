@@ -4,10 +4,14 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,8 +41,8 @@ fun Cube333Screen(
 
     val cubelets = rememberCubelets(config)
 
-    var rotX by remember { mutableStateOf(0.8f) }
-    var rotY by remember { mutableStateOf(-0.8f) }
+    var rotX by remember { mutableFloatStateOf(0.8f) }
+    var rotY by remember { mutableFloatStateOf(-0.8f) }
 
     var canvasSize by remember {
         mutableStateOf(IntSize.Zero)
@@ -49,11 +53,11 @@ fun Cube333Screen(
     }
 
     var animLayer by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
     var animAngle by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
     val visibleFaces = remember {
@@ -138,6 +142,7 @@ fun Cube333Screen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF101010))
+            .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
 
         TopBar(

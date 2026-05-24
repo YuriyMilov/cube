@@ -4,10 +4,16 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,18 +33,19 @@ import com.quicklydone.nt.cube.CubeConfig
 import com.quicklydone.nt.cube.CubeFactory.createCubelets
 import com.quicklydone.nt.cube_new.CubeRendererNew
 import com.quicklydone.nt.cube_new.VisibleFaceNew
+import com.quicklydone.nt.solver.Solver222
 import kotlinx.coroutines.launch
+
 @Composable
 fun Cube222Screen(
     goMenu: () -> Unit
 ) {
-
     val config = CubeConfig(2)
 
     val cubelets = rememberCubelets(config)
 
-    var rotX by remember { mutableStateOf(0.8f) }
-    var rotY by remember { mutableStateOf(-0.8f) }
+    var rotX by remember { mutableFloatStateOf(0.8f) }
+    var rotY by remember { mutableFloatStateOf(-0.8f) }
 
     var canvasSize by remember {
         mutableStateOf(IntSize.Zero)
@@ -49,11 +56,11 @@ fun Cube222Screen(
     }
 
     var animLayer by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
     var animAngle by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
     val visibleFaces = remember {
@@ -75,9 +82,7 @@ fun Cube222Screen(
     }
 
     fun startRotation(
-        axis: Vec3,
-        layer: Float,
-        dir: Float
+        axis: Vec3, layer: Float, dir: Float
     ) {
 
         if (animAxis != null) return
@@ -85,10 +90,7 @@ fun Cube222Screen(
         scope.launch {
 
             rotateLayer222(
-                cubelets = cubelets,
-                axis = axis,
-                layer = layer,
-                dir = dir,
+                cubelets = cubelets, axis = axis, layer = layer, dir = dir,
 
                 onStart = {
 
@@ -105,8 +107,7 @@ fun Cube222Screen(
                     animAxis = null
                     animLayer = 0f
                     animAngle = 0f
-                }
-            )
+                })
         }
     }
 
@@ -123,12 +124,9 @@ fun Cube222Screen(
             startRotation = { axis, layer, dir ->
 
                 startRotation(
-                    axis,
-                    layer,
-                    dir
+                    axis, layer, dir
                 )
-            }
-        )
+            })
     }
 
     gestureState.yaw = rotY
@@ -138,12 +136,24 @@ fun Cube222Screen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF101010))
+            .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
 
         TopBar(
-            goMenu = goMenu,
-            onReset = ::resetCube
+            goMenu = goMenu, onReset = ::resetCube
         )
+
+        Button(
+            onClick = {
+
+                Solver222.makeMove(
+                    cubelets = cubelets,
+                    rotate = ::startRotation
+                )
+            }
+        ) {
+            Text("TEST")
+        }
 
         Box(
             modifier = Modifier
@@ -162,21 +172,15 @@ fun Cube222Screen(
                     }
 
                     .cubeGestures222(
-                        state = gestureState,
-                        canvasSize = canvasSize
-                    )
-            ) {
+                        state = gestureState, canvasSize = canvasSize
+                    )) {
 
                 CubeRendererNew.drawNew(
-                    config=config,
-                    cubelets = cubelets,
+                    config = config, cubelets = cubelets,
 
-                    rotX = rotX,
-                    rotY = rotY,
+                    rotX = rotX, rotY = rotY,
 
-                    animAxis = animAxis,
-                    animLayer = animLayer,
-                    animAngle = animAngle,
+                    animAxis = animAxis, animLayer = animLayer, animAngle = animAngle,
 
                     visibleFaces = visibleFaces,
 
@@ -184,16 +188,13 @@ fun Cube222Screen(
                 )
 
 
-
-               /* InputCube222.drawInputCube(
-                              drawScope = this,
-                              yaw = rotY,
-                              pitch = rotX,
-                              w = size.width,
-                              h = size.height
-                          )*/
+              /*  InputCube222.drawInputCube(
+                    drawScope = this, yaw = rotY, pitch = rotX, w = size.width, h = size.height
+                )*/
 
             }
+
+
         }
     }
 }

@@ -5,8 +5,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
-import com.quicklydone.nt.cube.Params
 import com.quicklydone.nt.common.Vec3
+import com.quicklydone.nt.cube.CubeConfig
+import com.quicklydone.nt.cube.Params
+import com.quicklydone.nt.cube333.InputCube333
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
@@ -18,7 +20,6 @@ object InputCube222 {
     // =========================================================
 
     private const val GRID_SIZE = 2
-
     private const val CUBE_SIZE = 2f
     private const val CAMERA_DISTANCE = Params.CAMERA_DISTANCE_222
     private const val SCALE = Params.SCALE
@@ -26,6 +27,8 @@ object InputCube222 {
     // =========================================================
     // MODELS
     // =========================================================
+
+
 
     enum class Face {
         FRONT,
