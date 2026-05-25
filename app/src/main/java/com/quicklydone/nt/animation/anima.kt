@@ -23,7 +23,7 @@ suspend fun anima(
 ) {
     onStart()
 
-    val steps = 2
+    val steps = 2 //test
     val stepAngle =
         (PI.toFloat() / 2f) / steps * dir
 
