@@ -25,12 +25,12 @@ fun Modifier.cubeGestures222(
                 state.dragLocked = false
 
                 state.selectedCell = InputCube222.pickCell(
-                        touch = offset,
-                        yaw = state.yaw,
-                        pitch = state.pitch,
-                        w = canvasSize.width.toFloat(),
-                        h = canvasSize.height.toFloat()
-                    )
+                    touch = offset,
+                    yaw = state.yaw,
+                    pitch = state.pitch,
+                    w = canvasSize.width.toFloat(),
+                    h = canvasSize.height.toFloat()
+                )
             },
 
             // =====================================================
@@ -63,12 +63,12 @@ fun Modifier.cubeGestures222(
                 }
 
                 val swipe =  InputCube222.detectFaceSwipe(
-                        face = cell.face,
-                        dx = dx,
-                        dy = dy,
-                        yaw = state.yaw,
-                        pitch = state.pitch
-                    )
+                    face = cell.face,
+                    dx = dx,
+                    dy = dy,
+                    yaw = state.yaw,
+                    pitch = state.pitch
+                )
 
                 val move =
                     mapInputToRotation222(

@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
+import com.quicklydone.nt.animation.anima
 import com.quicklydone.nt.animation.rotateLayer222
 import com.quicklydone.nt.common.GestureState222
 import com.quicklydone.nt.common.TopBar
@@ -111,6 +113,36 @@ fun Cube222Screen(
         }
     }
 
+
+    fun bbbaaa(
+        axis: Vec3, layer: Float, dir: Float
+    ) {
+
+        if (animAxis != null) return
+
+        scope.launch {
+
+            anima(
+                cubelets = cubelets, axis = axis, layer = layer, dir = dir,
+
+                onStart = {
+
+                    animAxis = axis
+                    animLayer = layer
+                },
+
+                onStep = {
+                    animAngle = it
+                },
+
+                onEnd = {
+
+                    animAxis = null
+                    animLayer = 0f
+                    animAngle = 0f
+                })
+        }
+    }
     val gestureState = remember {
 
         GestureState222(
@@ -126,7 +158,10 @@ fun Cube222Screen(
                 startRotation(
                     axis, layer, dir
                 )
-            })
+
+            }
+
+        )
     }
 
     gestureState.yaw = rotY
@@ -143,18 +178,23 @@ fun Cube222Screen(
             goMenu = goMenu, onReset = ::resetCube
         )
 
-        Button(
-            onClick = {
+        Row {
 
-                Solver222.makeMove(
-                    cubelets = cubelets,
-                    rotate = ::startRotation
-                )
+            Button(
+                onClick = {
+
+                    Solver222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::bbbaaa
+                    )
+
+
+                }
+            ) {
+                Text(" Test ")
             }
-        ) {
-            Text("TEST")
-        }
 
+        }
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -188,9 +228,9 @@ fun Cube222Screen(
                 )
 
 
-              /*  InputCube222.drawInputCube(
-                    drawScope = this, yaw = rotY, pitch = rotX, w = size.width, h = size.height
-                )*/
+                /*  InputCube222.drawInputCube(
+                      drawScope = this, yaw = rotY, pitch = rotX, w = size.width, h = size.height
+                  )*/
 
             }
 
