@@ -45,10 +45,7 @@ object CubeRendererNew {
 
         drawScope: DrawScope,
 
-////////////////////////////////////////////////////////////////////////////////////////
-
-        markers: List<FaceMarkerNew> = emptyList()   // 👈 вот это
-
+        markers: List<FaceMarkerNew> = emptyList()
     ) {
 
         with(drawScope) {
@@ -60,6 +57,10 @@ object CubeRendererNew {
                 mutableListOf<DrawFaceNew>()
 
             visibleFaces.clear()
+
+            // =====================================================
+            // BUILD FACES
+            // =====================================================
 
             cubelets.forEach { cube ->
 
@@ -121,6 +122,8 @@ object CubeRendererNew {
                             rotY
                         )
 
+                    // BACKFACE CULLING
+
                     if (normal.z <= 0f)
                         return@forEach
 
@@ -174,11 +177,14 @@ object CubeRendererNew {
 
                     visibleFaces +=
                         VisibleFaceNew(
+
                             polygon = projected,
+
                             normal = normal,
+
                             depth = depth,
 
-                            cubePos = position,
+                            cubePos = cube.pos,
 
                             side = face.side,
 
@@ -186,27 +192,28 @@ object CubeRendererNew {
                             vAxis = orientation.y,
 
                             screenU = screenU,
-                            screenV = screenV,
+                            screenV = screenV
                         )
 
                     facesToDraw +=
                         DrawFaceNew(
+
                             points = projected,
+
                             depth = depth,
+
                             color = face.color,
-                            side = face.side
+
+                            side = face.side,
+
+                            cubePos = cube.pos
                         )
                 }
             }
 
-
-
-
-            /////////////////////////////////////////////////////////////////////////////////
-
-
-
-
+            // =====================================================
+            // DRAW SORTED
+            // =====================================================
 
             facesToDraw
                 .sortedBy { it.depth }
@@ -217,29 +224,108 @@ object CubeRendererNew {
                         color = face.color
                     )
 
-                    val marker = markers.firstOrNull { m ->
-                        m.side == face.side
+                    val visibleFace =
+                        visibleFaces.firstOrNull {
+
+                            it.side == face.side &&
+                                    it.cubePos == face.cubePos
+                        }
+
+                    if (visibleFace == null)
+                        return@forEach
+
+                    val faceMarkers =
+                        markers.filter { marker ->
+
+                            marker.side == face.side &&
+
+                                    (
+                                            marker.cubePos == null ||
+                                                    marker.cubePos == face.cubePos
+                                            )
+                        }
+
+                    if (faceMarkers.isNotEmpty()) {
+
+                        val centerX =
+                            face.points
+                                .map { it.x }
+                                .average()
+                                .toFloat()
+
+                        val centerY =
+                            face.points
+                                .map { it.y }
+                                .average()
+                                .toFloat()
+
+                        val uAxis =
+                            edgeDir(
+                                face.points[0],
+                                face.points[1]
+                            )
+
+                        val vAxis =
+                            edgeDir(
+                                face.points[0],
+                                face.points[3]
+                            )
+
+                        faceMarkers.forEach { marker ->
+
+                            if (marker.arrow == null)
+                                return@forEach
+
+                            val chainAxis =
+                                when (marker.arrow) {
+
+                                    ArrowDirNew.POS_U,
+                                    ArrowDirNew.NEG_U -> uAxis
+
+                                    ArrowDirNew.POS_V,
+                                    ArrowDirNew.NEG_V -> vAxis
+                                }
+
+                            repeat(marker.count) { i ->
+
+                                val shift =
+                                    (
+                                            i -
+                                                    (marker.count - 1) / 2f
+                                            ) *
+                                            marker.radius *
+                                            marker.spacing
+
+                                val arrowCenter =
+                                    Offset(
+                                        centerX + chainAxis.x * shift,
+                                        centerY + chainAxis.y * shift
+                                    )
+
+                                drawFaceArrowNew(
+
+                                    center = arrowCenter,
+
+                                    dir = marker.arrow,
+
+                                    uAxis = uAxis,
+                                    vAxis = vAxis,
+
+                                    color = marker.color,
+
+                                    size = marker.radius * 12f
+                                )
+                            }
+                        }
                     }
 
-                    if (marker != null) {
-
-                        val cx =
-                            face.points.map { p -> p.x }.average().toFloat()
-
-                        val cy =
-                            face.points.map { p -> p.y }.average().toFloat()
-
-                        drawCircle(
-                            color = marker.color,
-                            radius = marker.radius,
-                            center = Offset(cx, cy)
-                        )
-                    }
-
+                    // TEST CENTER
+/*
                     if (face.side == SideNew.FRONT) {
 
                         val center =
                             face.points.reduce { acc, p ->
+
                                 Offset(
                                     acc.x + p.x,
                                     acc.y + p.y
@@ -248,24 +334,82 @@ object CubeRendererNew {
 
                         drawCircle(
                             color = Color.Black,
+
                             radius = 12f,
+
                             center = Offset(
                                 center.x / 4f,
                                 center.y / 4f
                             )
                         )
-                    }
+                    }*/
                 }
-
-
-
-
-            /////////////////////////////////////////////////////////////////////////////////
-
-
-
-
         }
+    }
+
+    // =========================================================
+    // DRAW ARROW
+    // =========================================================
+
+    private fun DrawScope.drawFaceArrowNew(
+        center: Offset,
+        dir: ArrowDirNew,
+        uAxis: Offset,
+        vAxis: Offset,
+        color: Color,
+        size: Float
+    ) {
+        val axis = when (dir) {
+            ArrowDirNew.POS_U -> uAxis
+            ArrowDirNew.NEG_U -> Offset(-uAxis.x, -uAxis.y)
+            ArrowDirNew.POS_V -> vAxis
+            ArrowDirNew.NEG_V -> Offset(-vAxis.x, -vAxis.y)
+        }
+
+        val start = Offset(
+            center.x - axis.x * size * 0.5f,
+            center.y - axis.y * size * 0.5f
+        )
+
+        val end = Offset(
+            center.x + axis.x * size * 0.5f,
+            center.y + axis.y * size * 0.5f
+        )
+
+        val stroke = size * 0.08f
+        val headSize = size * 0.22f
+
+        drawLine(
+            color = color,
+            start = start,
+            end = end,
+            strokeWidth = stroke
+        )
+
+        val perp = Offset(
+            -axis.y,
+            axis.x
+        )
+
+        val headLeft = Offset(
+            end.x - axis.x * headSize + perp.x * headSize * 0.55f,
+            end.y - axis.y * headSize + perp.y * headSize * 0.55f
+        )
+
+        val headRight = Offset(
+            end.x - axis.x * headSize - perp.x * headSize * 0.55f,
+            end.y - axis.y * headSize - perp.y * headSize * 0.55f
+        )
+
+        drawPath(
+            path = Path().apply {
+                moveTo(end.x, end.y)
+                lineTo(headLeft.x, headLeft.y)
+                lineTo(headRight.x, headRight.y)
+                close()
+            },
+            color = color
+        )
     }
 
     // =========================================================
@@ -297,7 +441,8 @@ object CubeRendererNew {
         animAngle: Float
     ): Vec3 {
 
-        val center =  cubeCenter(cube.pos)
+        val center =
+            cubeCenter(cube.pos)
 
         if (!inLayer || animAxis == null)
             return center
@@ -347,20 +492,21 @@ object CubeRendererNew {
 
         return face.verts.map { v ->
 
-            val rotated = Vec3(
+            val rotated =
+                Vec3(
 
-                v.x * orientation.x.x +
-                        v.y * orientation.y.x +
-                        v.z * orientation.z.x,
+                    v.x * orientation.x.x +
+                            v.y * orientation.y.x +
+                            v.z * orientation.z.x,
 
-                v.x * orientation.x.y +
-                        v.y * orientation.y.y +
-                        v.z * orientation.z.y,
+                    v.x * orientation.x.y +
+                            v.y * orientation.y.y +
+                            v.z * orientation.z.y,
 
-                v.x * orientation.x.z +
-                        v.y * orientation.y.z +
-                        v.z * orientation.z.z
-            )
+                    v.x * orientation.x.z +
+                            v.y * orientation.y.z +
+                            v.z * orientation.z.z
+                )
 
             Vec3(
                 rotated.x + position.x,
@@ -412,7 +558,8 @@ object CubeRendererNew {
         cube: CubeletNew
     ): List<FaceNew> {
 
-        val s = size / 2f
+        val s =
+            size / 2f
 
         fun v(
             x: Float,
@@ -433,8 +580,11 @@ object CubeRendererNew {
                     v(1f, 1f, 1f),
                     v(-1f, 1f, 1f),
                 ),
+
                 normal = Vec3(0f, 0f, 1f),
+
                 color = cube.front ?: HIDDEN_COLOR,
+
                 side = SideNew.FRONT
             ),
 
@@ -445,8 +595,11 @@ object CubeRendererNew {
                     v(1f, 1f, -1f),
                     v(1f, -1f, -1f)
                 ),
+
                 normal = Vec3(0f, 0f, -1f),
+
                 color = cube.back ?: HIDDEN_COLOR,
+
                 side = SideNew.BACK
             ),
 
@@ -457,8 +610,11 @@ object CubeRendererNew {
                     v(-1f, 1f, 1f),
                     v(-1f, 1f, -1f)
                 ),
+
                 normal = Vec3(-1f, 0f, 0f),
+
                 color = cube.left ?: HIDDEN_COLOR,
+
                 side = SideNew.LEFT
             ),
 
@@ -469,8 +625,11 @@ object CubeRendererNew {
                     v(1f, 1f, 1f),
                     v(1f, -1f, 1f)
                 ),
+
                 normal = Vec3(1f, 0f, 0f),
+
                 color = cube.right ?: HIDDEN_COLOR,
+
                 side = SideNew.RIGHT
             ),
 
@@ -481,8 +640,11 @@ object CubeRendererNew {
                     v(1f, 1f, 1f),
                     v(1f, 1f, -1f)
                 ),
+
                 normal = Vec3(0f, 1f, 0f),
+
                 color = cube.up ?: HIDDEN_COLOR,
+
                 side = SideNew.TOP
             ),
 
@@ -493,8 +655,11 @@ object CubeRendererNew {
                     v(1f, -1f, 1f),
                     v(-1f, -1f, 1f)
                 ),
+
                 normal = Vec3(0f, -1f, 0f),
+
                 color = cube.down ?: HIDDEN_COLOR,
+
                 side = SideNew.BOTTOM
             )
         )
@@ -548,24 +713,54 @@ object CubeRendererNew {
 
     fun createInitialCubelets(): List<CubeletNew> {
 
-        val result = mutableListOf<CubeletNew>()
+        val result =
+            mutableListOf<CubeletNew>()
 
         for (x in listOf(-0.5f, 0.5f))
             for (y in listOf(-0.5f, 0.5f))
                 for (z in listOf(-0.5f, 0.5f)) {
 
                     result.add(
+
                         CubeletNew(
+
                             pos = Vec3(x, y, z),
 
-                            up = if (y == 0.5f) Color.White else null,
-                            down = if (y == -0.5f) Color.Yellow else null,
+                            up =
+                                if (y == 0.5f)
+                                    Color.White
+                                else
+                                    null,
 
-                            left = if (x == -0.5f) Color(0xFFFFA500) else null,
-                            right = if (x == 0.5f) Color.Red else null,
+                            down =
+                                if (y == -0.5f)
+                                    Color.Yellow
+                                else
+                                    null,
 
-                            front = if (z == 0.5f) Color.Green else null,
-                            back = if (z == -0.5f) Color.Blue else null,
+                            left =
+                                if (x == -0.5f)
+                                    Color(0xFFFFA500)
+                                else
+                                    null,
+
+                            right =
+                                if (x == 0.5f)
+                                    Color.Red
+                                else
+                                    null,
+
+                            front =
+                                if (z == 0.5f)
+                                    Color.Green
+                                else
+                                    null,
+
+                            back =
+                                if (z == -0.5f)
+                                    Color.Blue
+                                else
+                                    null,
                         )
                     )
                 }
@@ -574,37 +769,77 @@ object CubeRendererNew {
     }
 }
 
-/*private data class DrawFaceNew(
+// ============================================================
+// DATA
+// ============================================================
 
-    val points: List<Offset>,
+enum class ArrowDirNew {
 
-    val depth: Float,
+    POS_U,
+    NEG_U,
 
-    val color: Color
-)*/
+    POS_V,
+    NEG_V
+}
+
+data class FaceMarkerNew(
+
+    val side: SideNew,
+
+    val cubePos: Vec3? = null,
+
+    val color: Color = Color.Black,
+
+    val radius: Float = 10f,
+
+    val arrow: ArrowDirNew? = null,
+
+    val layer: Float? = null,
+
+    val count: Int = 1,
+
+    val spacing: Float = 1.8f
+)
+
 private data class DrawFaceNew(
 
     val points: List<Offset>,
+
     val depth: Float,
+
     val color: Color,
 
-    val side: SideNew
-)
-
-data class FaceMarkerNew(
     val side: SideNew,
-    val u: Float = 0f,   // -1..1 (позиция на грани)
-    val v: Float = 0f,
-    val color: Color = Color.Black,
-    val radius: Float = 10f
+
+    val cubePos: Vec3
 )
 
+// ============================================================
+// HELPERS
+// ============================================================
 
+private fun edgeDir(
+    a: Offset,
+    b: Offset
+): Offset {
 
-/*
+    val dx =
+        b.x - a.x
 
-FaceMarkerNew(
-side = SideNew.RIGHT,
-color = if (step == 1) Color.Green else Color.Red
-)
-*/
+    val dy =
+        b.y - a.y
+
+    val len =
+        sqrt(
+            dx * dx +
+                    dy * dy
+        )
+
+    if (len < 0.0001f)
+        return Offset.Zero
+
+    return Offset(
+        dx / len,
+        dy / len
+    )
+}

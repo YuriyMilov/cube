@@ -34,6 +34,7 @@ import com.quicklydone.nt.common.Vec3
 import com.quicklydone.nt.common.rememberCubelets
 import com.quicklydone.nt.cube.CubeConfig
 import com.quicklydone.nt.cube.CubeFactory.createCubelets
+import com.quicklydone.nt.cube_new.ArrowDirNew
 import com.quicklydone.nt.cube_new.CubeRendererNew
 import com.quicklydone.nt.cube_new.FaceMarkerNew
 import com.quicklydone.nt.cube_new.SideNew
@@ -128,10 +129,13 @@ fun Cube222Screen(
                 },
 
                 onEnd = {
-
                     animAxis = null
                     animLayer = 0f
                     animAngle = 0f
+
+                    markers.clear() // 👈 сюда
+
+
                 })
         }
     }
@@ -379,7 +383,7 @@ fun Cube222Screen(
                 Text("D'")
             }
 
-            Text("    ")
+            Text(" ")
             Button(
                 onClick = {        markers.clear()
 
@@ -438,6 +442,13 @@ fun Cube222Screen(
             }
 
             Text("    ")
+
+
+
+
+
+
+
             Button(
                 onClick = {
 
@@ -445,13 +456,33 @@ fun Cube222Screen(
 
                     markers += FaceMarkerNew(
                         side = SideNew.RIGHT,
-                        color = Color.Black,
-                        radius = 40f
+                        cubePos = Vec3(0.5f, 0.5f, 0.5f),
+                        arrow = ArrowDirNew.POS_U
+                    )
+
+                    markers += FaceMarkerNew(
+                        side = SideNew.LEFT,
+                        cubePos = Vec3(-0.5f, -0.5f, -0.5f),
+                        arrow = ArrowDirNew.POS_U
+                    )
+
+                    markers += FaceMarkerNew(
+                        side = SideNew.TOP,
+                        cubePos = Vec3(-0.5f, 0.5f, 0.5f),
+                        arrow = ArrowDirNew.POS_V
+                    )
+
+                    markers += FaceMarkerNew(
+                        side = SideNew.FRONT,
+                        cubePos = Vec3(0.5f, 0.5f, 0.5f),
+                        arrow = ArrowDirNew.NEG_U
                     )
                 }
             ) {
-                Text("Test")
+                Text("Show hints")
             }
+
+
 
         }
 
