@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -34,6 +35,8 @@ import com.quicklydone.nt.common.rememberCubelets
 import com.quicklydone.nt.cube.CubeConfig
 import com.quicklydone.nt.cube.CubeFactory.createCubelets
 import com.quicklydone.nt.cube_new.CubeRendererNew
+import com.quicklydone.nt.cube_new.FaceMarkerNew
+import com.quicklydone.nt.cube_new.SideNew
 import com.quicklydone.nt.cube_new.VisibleFaceNew
 import com.quicklydone.nt.solver.Solver222
 import kotlinx.coroutines.launch
@@ -70,7 +73,18 @@ fun Cube222Screen(
     }
 
     val scope = rememberCoroutineScope()
+    val markers = remember {
+        mutableStateListOf<FaceMarkerNew>()
+    }
 
+    LaunchedEffect(Unit) {
+
+        markers += FaceMarkerNew(
+            side = SideNew.RIGHT,
+            color = Color.White,
+            radius = 24f
+        )
+    }
     fun resetCube() {
 
         cubelets.clear()
@@ -81,6 +95,15 @@ fun Cube222Screen(
 
         rotX = 0.8f
         rotY = -0.8f
+
+        markers.clear()
+
+        markers += FaceMarkerNew(
+            side = SideNew.RIGHT,
+            color = Color.White,
+            radius = 24f
+        )
+
     }
 
     fun startRotation(
@@ -113,6 +136,30 @@ fun Cube222Screen(
         }
     }
 
+    val gestureState = remember {
+
+        GestureState222(
+
+            rotateAll = { dx, dy ->
+
+                rotY += dx * 0.01f
+                rotX -= dy * 0.01f
+            },
+
+            startRotation = { axis, layer, dir ->
+
+                startRotation(
+                    axis, layer, dir
+                )
+
+            }
+
+        )
+    }
+    gestureState.yaw = rotY
+    gestureState.pitch = rotX
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     fun bbbaaa(
         axis: Vec3, layer: Float, dir: Float
@@ -143,29 +190,6 @@ fun Cube222Screen(
                 })
         }
     }
-    val gestureState = remember {
-
-        GestureState222(
-
-            rotateAll = { dx, dy ->
-
-                rotY += dx * 0.01f
-                rotX -= dy * 0.01f
-            },
-
-            startRotation = { axis, layer, dir ->
-
-                startRotation(
-                    axis, layer, dir
-                )
-
-            }
-
-        )
-    }
-
-    gestureState.yaw = rotY
-    gestureState.pitch = rotX
 
     Column(
         modifier = Modifier
@@ -175,26 +199,53 @@ fun Cube222Screen(
     ) {
 
         TopBar(
-            goMenu = goMenu, onReset = ::resetCube
+            goMenu = goMenu, onReset = ::resetCube//, goMove = ::onMove
         )
 
         Row {
-
             Button(
                 onClick = {
-
+                    /*Solver222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::bbbaaa
+                    )*/
+                }) {
+                Text("Moves:")
+            }
+            Button(
+                onClick = {
                     Solver222.test(
                         gestureState,// cubelets = cubelets,
                         rotate = ::bbbaaa
                     )
-
-
-                }
-            ) {
-                Text(" Test ")
+                }) {
+                Text("+1")
+            }
+            Button(
+                onClick = {
+                    Solver222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::bbbaaa
+                    )
+                }) {
+                Text("+2")
+            }
+            Button(
+                onClick = {
+                    Solver222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::bbbaaa
+                    )
+                }) {
+                Text("+3")
             }
 
         }
+
+
+
+
+
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -202,7 +253,7 @@ fun Cube222Screen(
 
             contentAlignment = Alignment.Center
         ) {
-
+            1
             Canvas(
                 modifier = Modifier
                     .fillMaxSize()
@@ -216,19 +267,20 @@ fun Cube222Screen(
                     )) {
 
                 CubeRendererNew.drawNew(
-                    config = config, cubelets = cubelets,
-
-                    rotX = rotX, rotY = rotY,
-
-                    animAxis = animAxis, animLayer = animLayer, animAngle = animAngle,
-
+                    config = config,
+                    cubelets = cubelets,
+                    rotX = rotX,
+                    rotY = rotY,
+                    animAxis = animAxis,
+                    animLayer = animLayer,
+                    animAngle = animAngle,
                     visibleFaces = visibleFaces,
-
-                    drawScope = this
+                    drawScope = this,
+                    markers = markers   // 👈 ВОТ ЭТО
                 )
 
 
-                /*  InputCube222.drawInputCube(
+                 /* InputCube222.drawInputCube(
                       drawScope = this, yaw = rotY, pitch = rotX, w = size.width, h = size.height
                   )*/
 
@@ -236,5 +288,173 @@ fun Cube222Screen(
 
 
         }
+
+        Row {
+            Button(
+                onClick = {
+
+                    Solver222.righta(
+                        rotate = ::startRotation
+                    )
+                }) {
+                Text("R")
+            }
+            Button(
+                onClick = {
+
+                    Solver222.rightb(
+                        rotate = ::startRotation
+                    )
+                }) {
+                Text("R'")
+            }
+
+            Button(
+                onClick = {
+
+                    Solver222.lefta(
+                        rotate = ::startRotation
+                    )
+                }) {
+                Text("L")
+            }
+            Button(
+                onClick = {
+
+                    Solver222.leftb(
+                        rotate = ::startRotation
+                    )
+                }) {
+                Text("L'")
+            }
+
+
+            Text("    ")
+            Button(
+                onClick = {}) {
+                Text("Side")
+            }
+
+        }
+
+
+        ////////////////////////////////////////
+
+        Row {
+            Button(
+                onClick = {
+
+                    Solver222.upa(
+                        rotate = ::startRotation
+                    )
+                }) {
+                Text("U")
+            }
+            Button(
+                onClick = {
+
+                    Solver222.upb(
+                        rotate = ::startRotation
+                    )
+                }) {
+                Text("U'")
+            }
+
+            Button(
+                onClick = {
+
+                    Solver222.downa(
+                        rotate = ::startRotation
+                    )
+                }) {
+                Text("D")
+            }
+            Button(
+                onClick = {
+
+                    Solver222.downb(
+                        rotate = ::startRotation
+                    )
+                }) {
+                Text("D'")
+            }
+
+            Text("    ")
+            Button(
+                onClick = {        markers.clear()
+
+                    markers += FaceMarkerNew(
+                        side = SideNew.RIGHT,
+                        color = Color.White,
+                        radius = 24f
+                    )}) {
+                Text("Clear")
+            }
+
+
+        }
+        ///////////////////////////////
+
+        Row {
+
+            Button(
+                onClick = {
+
+                    Solver222.forwarda(
+                        rotate = ::startRotation
+                    )
+                }) {
+                Text("F")
+            }
+
+            Button(
+                onClick = {
+
+                    Solver222.forwardb(
+                        rotate = ::startRotation
+                    )
+                }) {
+                Text("F'")
+            }
+
+            Button(
+                onClick = {
+
+                    Solver222.backa(
+                        rotate = ::startRotation
+                    )
+                }) {
+                Text("B")
+            }
+
+            Button(
+                onClick = {
+
+                    Solver222.backb(
+                        rotate = ::startRotation
+                    )
+                }) {
+                Text("B'")
+            }
+
+            Text("    ")
+            Button(
+                onClick = {
+
+                    markers.clear()
+
+                    markers += FaceMarkerNew(
+                        side = SideNew.RIGHT,
+                        color = Color.Black,
+                        radius = 40f
+                    )
+                }
+            ) {
+                Text("Test")
+            }
+
+        }
+
     }
 }
+

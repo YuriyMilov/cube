@@ -43,7 +43,12 @@ object CubeRendererNew {
 
         visibleFaces: SnapshotStateList<VisibleFaceNew>,
 
-        drawScope: DrawScope
+        drawScope: DrawScope,
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+        markers: List<FaceMarkerNew> = emptyList()   // 👈 вот это
+
     ) {
 
         with(drawScope) {
@@ -188,20 +193,78 @@ object CubeRendererNew {
                         DrawFaceNew(
                             points = projected,
                             depth = depth,
-                            color = face.color
+                            color = face.color,
+                            side = face.side
                         )
                 }
             }
 
+
+
+
+            /////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
             facesToDraw
                 .sortedBy { it.depth }
-                .forEach {
+                .forEach { face ->
 
                     drawPath(
-                        path = buildPathNew(it.points),
-                        color = it.color
+                        path = buildPathNew(face.points),
+                        color = face.color
                     )
+
+                    val marker = markers.firstOrNull { m ->
+                        m.side == face.side
+                    }
+
+                    if (marker != null) {
+
+                        val cx =
+                            face.points.map { p -> p.x }.average().toFloat()
+
+                        val cy =
+                            face.points.map { p -> p.y }.average().toFloat()
+
+                        drawCircle(
+                            color = marker.color,
+                            radius = marker.radius,
+                            center = Offset(cx, cy)
+                        )
+                    }
+
+                    if (face.side == SideNew.FRONT) {
+
+                        val center =
+                            face.points.reduce { acc, p ->
+                                Offset(
+                                    acc.x + p.x,
+                                    acc.y + p.y
+                                )
+                            }
+
+                        drawCircle(
+                            color = Color.Black,
+                            radius = 12f,
+                            center = Offset(
+                                center.x / 4f,
+                                center.y / 4f
+                            )
+                        )
+                    }
                 }
+
+
+
+
+            /////////////////////////////////////////////////////////////////////////////////
+
+
+
+
         }
     }
 
@@ -511,11 +574,37 @@ object CubeRendererNew {
     }
 }
 
-private data class DrawFaceNew(
+/*private data class DrawFaceNew(
 
     val points: List<Offset>,
 
     val depth: Float,
 
     val color: Color
+)*/
+private data class DrawFaceNew(
+
+    val points: List<Offset>,
+    val depth: Float,
+    val color: Color,
+
+    val side: SideNew
 )
+
+data class FaceMarkerNew(
+    val side: SideNew,
+    val u: Float = 0f,   // -1..1 (позиция на грани)
+    val v: Float = 0f,
+    val color: Color = Color.Black,
+    val radius: Float = 10f
+)
+
+
+
+/*
+
+FaceMarkerNew(
+side = SideNew.RIGHT,
+color = if (step == 1) Color.Green else Color.Red
+)
+*/

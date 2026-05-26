@@ -1,14 +1,14 @@
 package com.quicklydone.nt.cube222
 
+//import android.graphics.Paint
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+//import androidx.compose.ui.graphics.nativeCanvas
 import com.quicklydone.nt.common.Vec3
-import com.quicklydone.nt.cube.CubeConfig
 import com.quicklydone.nt.cube.Params
-import com.quicklydone.nt.cube333.InputCube333
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
@@ -308,6 +308,13 @@ object InputCube222 {
     // DRAW
     // =========================================================
 
+ /*   private val textPaint = Paint().apply {
+        color = android.graphics.Color.BLACK
+        textSize = 42f
+        textAlign = Paint.Align.CENTER
+        isAntiAlias = true
+    }
+*/
     fun drawInputCube(
         drawScope: DrawScope,
         yaw: Float,
@@ -346,6 +353,19 @@ object InputCube222 {
                     color = Color.Black,
                     style = Stroke(width = 2f)
                 )
+
+                /*             val centerX =
+                                 cell.poly.map { it.x }.average().toFloat()
+
+                             val centerY =
+                                 cell.poly.map { it.y }.average().toFloat()
+
+                             drawContext.canvas.nativeCanvas.drawText(
+                                 cell.face.name,
+                                 centerX,
+                                 centerY,
+                                 textPaint
+                             )*/
             }
         }
     }
