@@ -31,7 +31,6 @@ import com.quicklydone.nt.animation.rotateLayer222
 import com.quicklydone.nt.common.GestureState222
 import com.quicklydone.nt.common.TopBar
 import com.quicklydone.nt.common.Vec3
-import com.quicklydone.nt.cube.rememberCubelets
 import com.quicklydone.nt.cube.CubeConfig
 import com.quicklydone.nt.cube.CubeFactory.createCubelets
 import com.quicklydone.nt.cube.rememberCubelets
@@ -40,11 +39,10 @@ import com.quicklydone.nt.cube_new.CubeRenderer222
 import com.quicklydone.nt.cube_new.FaceMarkerNew
 import com.quicklydone.nt.cube_new.SideNew
 import com.quicklydone.nt.cube_new.VisibleFaceNew
-import com.quicklydone.nt.cube_new.solveOneStep_R
-import com.quicklydone.nt.cube_new.solveOneStep_R_PRIME
 import com.quicklydone.nt.cube_new.solveOneStep_U
 import com.quicklydone.nt.cube_new.solveOneStep_U_PRIME
 import com.quicklydone.nt.solver.Solver222
+import com.quicklydone.nt.solver.Solver222.addRingHintR
 import kotlinx.coroutines.launch
 
 @Composable
@@ -74,7 +72,7 @@ fun Cube222Screen(
         mutableFloatStateOf(0f)
     }
 
-    val visibleFaces = remember {
+    remember {
         mutableStateListOf<VisibleFaceNew>()
     }
 
@@ -86,9 +84,7 @@ fun Cube222Screen(
     LaunchedEffect(Unit) {
 
         markers += FaceMarkerNew(
-            side = SideNew.RIGHT,
-            color = Color.White,
-            radius = 24f
+            side = SideNew.RIGHT, color = Color.White, radius = 24f
         )
     }
     fun resetCube() {
@@ -105,9 +101,7 @@ fun Cube222Screen(
         markers.clear()
 
         markers += FaceMarkerNew(
-            side = SideNew.RIGHT,
-            color = Color.White,
-            radius = 24f
+            side = SideNew.RIGHT, color = Color.White, radius = 24f
         )
 
     }
@@ -289,7 +283,7 @@ fun Cube222Screen(
                 )
 
 
-                 /* InputCube222.drawInputCube(
+                /* InputCube222.drawInputCube(
                       drawScope = this, yaw = rotY, pitch = rotX, w = size.width, h = size.height
                   )*/
 
@@ -300,76 +294,44 @@ fun Cube222Screen(
 
         Row {
             Button(
-                onClick = {/*( onClick = {Solver222.righta( rotate = ::startRotation)})*/
-                    solveOneStep_R(
-                        cubelets,
-                        markers
-                    )
-                }
-            )
-            {
+
+                onClick = {
+
+                    addRingHintR(markers)
+                }) {
+
                 Text("R")
             }
             Button(
-                onClick = {//Solver222.rightb(rotate = ::startRotation)
-                    solveOneStep_R_PRIME(
-                        cubelets,
-                        markers)
+                onClick = {
+                    addRingHintR(markers)
                 }) {
                 Text("R'")
             }
 
             Button(
                 onClick = {
-
-                    Solver222.lefta(
-                        rotate = ::startRotation
-                    )
+                    addRingHintR(markers)
                 }) {
                 Text("L")
             }
             Button(
                 onClick = {
-
-                    Solver222.leftb(
-                        rotate = ::startRotation
-                    )
+                    addRingHintR(markers)
                 }) {
                 Text("L'")
             }
-
-
-            Text("    ")
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-            Button(
-                onClick = {
-                    solveOneStep_R_PRIME(cubelets,markers)
-                }
-            ) {
-                Text("Show R")
-            }
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         }
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+        ///////////////////////////////
 
 
         Row {
             Button(
                 onClick = {
-                    solveOneStep_U(cubelets,markers)
-                   // Solver222.upa(
+                    solveOneStep_U(cubelets, markers)
+                    // Solver222.upa(
                     //    rotate = ::startRotation
                     //)
                 }) {
@@ -377,9 +339,9 @@ fun Cube222Screen(
             }
             Button(
                 onClick = {
-                    solveOneStep_U_PRIME(cubelets,markers)
+                    solveOneStep_U_PRIME(cubelets, markers)
                     //Solver222.upb(
-                     //   rotate = ::startRotation
+                    //   rotate = ::startRotation
                     //)
                 }) {
                 Text("U'")
@@ -406,17 +368,15 @@ fun Cube222Screen(
 
             Text(" ")
             Button(
-                onClick = {        markers.clear()
+                onClick = {
+                    markers.clear()
 
                     markers += FaceMarkerNew(
-                        side = SideNew.RIGHT,
-                        color = Color.White,
-                        radius = 24f
-                    )}) {
+                        side = SideNew.RIGHT, color = Color.White, radius = 24f
+                    )
+                }) {
                 Text("Clear")
             }
-
-
         }
         ///////////////////////////////
 
@@ -473,28 +433,23 @@ fun Cube222Screen(
 
                     markers += FaceMarkerNew(
 
-                        face = InputCube222.Face.FRONT,
+                        face = InputCube222.Face.RIGHT,
+                        // face = InputCube222.Face.FRONT,
 
-                        row = 0,
-                        col = 0,
+                        row = 1, col = 0,
 
-                        arrow = ArrowDirNew.POS_U,
+                        //arrow = ArrowDirNew.POS_U,
+                        arrow = ArrowDirNew.NEG_V,
 
                         color = Color.Black,
 
                         count = 1
                     )
-                }
-            ) {
+                }) {
 
-                Text("TEST ARROW")
+                Text("Arrow")
             }
-
-
-
-
         }
-
     }
 }
 

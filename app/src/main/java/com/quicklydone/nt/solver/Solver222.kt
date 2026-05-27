@@ -1,8 +1,12 @@
 package com.quicklydone.nt.solver
 
 
+import androidx.compose.ui.graphics.Color
 import com.quicklydone.nt.common.Vec3
 import com.quicklydone.nt.common.GestureState222
+import com.quicklydone.nt.cube222.InputCube222
+import com.quicklydone.nt.cube_new.ArrowDirNew
+import com.quicklydone.nt.cube_new.FaceMarkerNew
 
 
 object Solver222 {
@@ -142,7 +146,80 @@ object Solver222 {
 
         //gestureState.dragLocked = false
     }
+    fun addRingHintR(
+        markers: MutableList<FaceMarkerNew>
+    ) {
 
+        markers.clear()
+
+        // TOP
+        markers += FaceMarkerNew(
+            face = InputCube222.Face.TOP,
+            row = 0,
+            col = 1,
+            arrow = ArrowDirNew.POS_V,
+            color = Color.Black
+        )
+
+        markers += FaceMarkerNew(
+            face = InputCube222.Face.TOP,
+            row = 1,
+            col = 1,
+            arrow = ArrowDirNew.POS_V,
+            color = Color.Black
+        )
+
+        // FRONT
+        markers += FaceMarkerNew(
+            face = InputCube222.Face.FRONT,
+            row = 0,
+            col = 1,
+            arrow = ArrowDirNew.POS_V,
+            color = Color.Black
+        )
+
+        markers += FaceMarkerNew(
+            face = InputCube222.Face.FRONT,
+            row = 1,
+            col = 1,
+            arrow = ArrowDirNew.POS_V,
+            color = Color.Black
+        )
+
+        // BOTTOM
+        markers += FaceMarkerNew(
+            face = InputCube222.Face.BOTTOM,
+            row = 0,
+            col = 1,
+            arrow = ArrowDirNew.POS_V,
+            color = Color.Black
+        )
+
+        markers += FaceMarkerNew(
+            face = InputCube222.Face.BOTTOM,
+            row = 1,
+            col = 1,
+            arrow = ArrowDirNew.POS_V,
+            color = Color.Black
+        )
+
+        // BACK
+        markers += FaceMarkerNew(
+            face = InputCube222.Face.BACK,
+            row = 0,
+            col = 0,
+            arrow = ArrowDirNew.NEG_V,
+            color = Color.Black
+        )
+
+        markers += FaceMarkerNew(
+            face = InputCube222.Face.BACK,
+            row = 1,
+            col = 0,
+            arrow = ArrowDirNew.NEG_V,
+            color = Color.Black
+        )
+    }
 
 }
 

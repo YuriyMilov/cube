@@ -211,6 +211,46 @@ object CubeRenderer222 {
             val face =
                 marker.face ?: return@forEach
 
+            // =========================================
+            // FACE VISIBILITY
+            // =========================================
+
+            val normal =
+                when (face) {
+
+                    InputCube222.Face.FRONT ->
+                        Vec3(0f, 0f, 1f)
+
+                    InputCube222.Face.BACK ->
+                        Vec3(0f, 0f, -1f)
+
+                    InputCube222.Face.LEFT ->
+                        Vec3(-1f, 0f, 0f)
+
+                    InputCube222.Face.RIGHT ->
+                        Vec3(1f, 0f, 0f)
+
+                    InputCube222.Face.TOP ->
+                        Vec3(0f, 1f, 0f)
+
+                    InputCube222.Face.BOTTOM ->
+                        Vec3(0f, -1f, 0f)
+                }
+
+            val rotatedNormal =
+                cameraRotateNew(
+                    normal,
+                    pitch,
+                    yaw
+                )
+
+            // hidden behind cube
+
+            if (rotatedNormal.z <= 0f)
+                return@forEach
+
+            // =========================================
+
             val row =
                 marker.row ?: return@forEach
 
@@ -292,7 +332,12 @@ object CubeRenderer222 {
                     uAxis = uAxis,
                     vAxis = vAxis,
 
-                    color = marker.color,
+                    color =
+                        marker.color.copy(
+                            alpha =
+                                rotatedNormal.z
+                                    .coerceIn(0f, 1f)
+                        ),
 
                     size = marker.radius * 12f
                 )
@@ -742,6 +787,44 @@ object CubeRenderer222 {
                 }
 
         return result
+    }
+
+    private fun isFaceVisible(
+        face: InputCube222.Face,
+        yaw: Float,
+        pitch: Float
+    ): Boolean {
+
+        val normal =
+            when (face) {
+
+                InputCube222.Face.FRONT ->
+                    Vec3(0f, 0f, 1f)
+
+                InputCube222.Face.BACK ->
+                    Vec3(0f, 0f, -1f)
+
+                InputCube222.Face.LEFT ->
+                    Vec3(-1f, 0f, 0f)
+
+                InputCube222.Face.RIGHT ->
+                    Vec3(1f, 0f, 0f)
+
+                InputCube222.Face.TOP ->
+                    Vec3(0f, 1f, 0f)
+
+                InputCube222.Face.BOTTOM ->
+                    Vec3(0f, -1f, 0f)
+            }
+
+        val rotated =
+            cameraRotateNew(
+                normal,
+                pitch,
+                yaw
+            )
+
+        return rotated.z > 0f
     }
 }
 

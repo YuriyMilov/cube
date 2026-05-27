@@ -305,3 +305,4 @@ enum class LogicalMove {
     B,
     B_PRIME
 }
+
