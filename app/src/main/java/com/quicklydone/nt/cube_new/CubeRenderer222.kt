@@ -1,7 +1,3 @@
-// ============================================================
-// FILE: cube_new/CubeRendererNew.kt
-// ============================================================
-
 package com.quicklydone.nt.cube_new
 
 import android.util.Log
@@ -42,7 +38,7 @@ object CubeRenderer222 {
         animLayer: Float,
         animAngle: Float,
 
-        visibleFaces: SnapshotStateList<VisibleFaceNew>,
+      //  visibleFaces: SnapshotStateList<VisibleFaceNew>,
 
         drawScope: DrawScope,
 
@@ -51,19 +47,25 @@ object CubeRenderer222 {
 
         with(drawScope) {
 
+
+
+
+
             val cx = size.width / 2f
             val cy = size.height / 2f
 
             val facesToDraw =
                 mutableListOf<DrawFaceNew>()
 
-            visibleFaces.clear()
+            val visibleFaces = mutableListOf<VisibleFaceNew>()
 
             // =====================================================
             // BUILD FACES
             // =====================================================
 
             cubelets.forEach { cube ->
+
+                Log.d("qq", "222222222222 ${cubelets[0].pos} ${cube.id}")
 
                 val inAnimatedLayer =
                     animAxis != null &&
@@ -195,7 +197,6 @@ object CubeRenderer222 {
                             screenU = screenU,
                             screenV = screenV
                         )
-
                     facesToDraw +=
                         DrawFaceNew(
 
@@ -209,6 +210,7 @@ object CubeRenderer222 {
 
                             cubePos = cube.pos
                         )
+
                 }
             }
 
@@ -219,7 +221,6 @@ object CubeRenderer222 {
             facesToDraw
                 .sortedBy { it.depth }
                 .forEach { face ->
-
                     drawPath(
                         path = buildPathNew(face.points),
                         color = face.color
@@ -245,6 +246,10 @@ object CubeRenderer222 {
                                                     marker.cubePos == face.cubePos
                                             )
                         }
+
+                    /////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
                     if (faceMarkers.isNotEmpty()) {
 
@@ -320,6 +325,7 @@ object CubeRenderer222 {
                         }
                     }
                     // TEST CENTER
+               //     Log.d("qq", "11111111 ${cubelets[0].pos} ${face.side}")
 
 
                     /*

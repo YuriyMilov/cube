@@ -184,7 +184,7 @@ fun Cube333Screen(
                     animLayer = animLayer,
                     animAngle = animAngle,
 
-                    visibleFaces = visibleFaces,
+                    //visibleFaces = visibleFaces,
 
                     drawScope = this
                 )

@@ -36,12 +36,14 @@ import com.quicklydone.nt.cube.CubeConfig
 import com.quicklydone.nt.cube.CubeFactory.createCubelets
 import com.quicklydone.nt.cube.rememberCubelets
 import com.quicklydone.nt.cube_new.ArrowDirNew
-import com.quicklydone.nt.cube_new.CubeRendererNew
-//import com.quicklydone.nt.cube_new.CubeRendererNew
-
+import com.quicklydone.nt.cube_new.CubeRenderer222
 import com.quicklydone.nt.cube_new.FaceMarkerNew
 import com.quicklydone.nt.cube_new.SideNew
 import com.quicklydone.nt.cube_new.VisibleFaceNew
+import com.quicklydone.nt.cube_new.solveOneStep_R
+import com.quicklydone.nt.cube_new.solveOneStep_R_PRIME
+import com.quicklydone.nt.cube_new.solveOneStep_U
+import com.quicklydone.nt.cube_new.solveOneStep_U_PRIME
 import com.quicklydone.nt.solver.Solver222
 import kotlinx.coroutines.launch
 
@@ -273,7 +275,7 @@ fun Cube222Screen(
                         state = gestureState, canvasSize = canvasSize
                     )) {
 
-                CubeRendererNew.drawNew(
+                CubeRenderer222.drawNew(
                     config = config,
                     cubelets = cubelets,
                     rotX = rotX,
@@ -281,7 +283,7 @@ fun Cube222Screen(
                     animAxis = animAxis,
                     animLayer = animLayer,
                     animAngle = animAngle,
-                    visibleFaces = visibleFaces,
+                    //visibleFaces = visibleFaces,
                     drawScope = this,
                     markers = markers   // 👈 ВОТ ЭТО
                 )
@@ -298,20 +300,21 @@ fun Cube222Screen(
 
         Row {
             Button(
-                onClick = {
-
-                    Solver222.righta(
-                        rotate = ::startRotation
+                onClick = {/*( onClick = {Solver222.righta( rotate = ::startRotation)})*/
+                    solveOneStep_R(
+                        cubelets,
+                        markers
                     )
-                }) {
+                }
+            )
+            {
                 Text("R")
             }
             Button(
-                onClick = {
-
-                    Solver222.rightb(
-                        rotate = ::startRotation
-                    )
+                onClick = {//Solver222.rightb(rotate = ::startRotation)
+                    solveOneStep_R_PRIME(
+                        cubelets,
+                        markers)
                 }) {
                 Text("R'")
             }
@@ -337,32 +340,47 @@ fun Cube222Screen(
 
 
             Text("    ")
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
             Button(
-                onClick = {}) {
-                Text("Side")
+                onClick = {
+                    solveOneStep_R_PRIME(cubelets,markers)
+                }
+            ) {
+                Text("Show R")
             }
+
 
         }
 
 
-        ////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
         Row {
             Button(
                 onClick = {
-
-                    Solver222.upa(
-                        rotate = ::startRotation
-                    )
+                    solveOneStep_U(cubelets,markers)
+                   // Solver222.upa(
+                    //    rotate = ::startRotation
+                    //)
                 }) {
                 Text("U")
             }
             Button(
                 onClick = {
-
-                    Solver222.upb(
-                        rotate = ::startRotation
-                    )
+                    solveOneStep_U_PRIME(cubelets,markers)
+                    //Solver222.upb(
+                     //   rotate = ::startRotation
+                    //)
                 }) {
                 Text("U'")
             }

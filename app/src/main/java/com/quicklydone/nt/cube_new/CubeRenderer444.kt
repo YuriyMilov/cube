@@ -2,9 +2,8 @@
 // FILE: cube_new/CubeRendererNew.kt
 // ============================================================
 
-package com.quicklydone.nt.cube444
+package com.quicklydone.nt.cube_new
 
-import android.util.Log
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -17,13 +16,6 @@ import com.quicklydone.nt.common.rotateAroundAxis
 import com.quicklydone.nt.common.rotateX
 import com.quicklydone.nt.common.rotateY
 import com.quicklydone.nt.cube.CubeConfig
-import com.quicklydone.nt.cube_new.CubeletNew
-import com.quicklydone.nt.cube_new.FaceNew
-import com.quicklydone.nt.cube_new.OrientationAxesNew
-import com.quicklydone.nt.cube_new.SideNew
-import com.quicklydone.nt.cube_new.VisibleFaceNew
-import kotlin.collections.forEach
-import kotlin.collections.plusAssign
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -49,7 +41,7 @@ object CubeRenderer444 {
         animLayer: Float,
         animAngle: Float,
 
-        visibleFaces: SnapshotStateList<VisibleFaceNew>,
+        //  visibleFaces: SnapshotStateList<VisibleFaceNew>,
 
         drawScope: DrawScope,
 
@@ -58,13 +50,19 @@ object CubeRenderer444 {
 
         with(drawScope) {
 
+
+
+
+
             val cx = size.width / 2f
             val cy = size.height / 2f
 
             val facesToDraw =
                 mutableListOf<DrawFaceNew>()
 
-            visibleFaces.clear()
+            val visibleFaces = mutableListOf<VisibleFaceNew>()
+
+
 
             // =====================================================
             // BUILD FACES
@@ -183,25 +181,25 @@ object CubeRenderer444 {
                             )
                         )
 
-                   // visibleFaces plusAssign
-                            VisibleFaceNew(
+                    visibleFaces +=
+                        VisibleFaceNew(
 
-                                polygon = projected,
+                            polygon = projected,
 
-                                normal = normal,
+                            normal = normal,
 
-                                depth = depth,
+                            depth = depth,
 
-                                cubePos = cube.pos,
+                            cubePos = cube.pos,
 
-                                side = face.side,
+                            side = face.side,
 
-                                uAxis = orientation.x,
-                                vAxis = orientation.y,
+                            uAxis = orientation.x,
+                            vAxis = orientation.y,
 
-                                screenU = screenU,
-                                screenV = screenV
-                            )
+                            screenU = screenU,
+                            screenV = screenV
+                        )
 
                     facesToDraw +=
                         DrawFaceNew(
@@ -232,7 +230,7 @@ object CubeRenderer444 {
                         color = face.color
                     )
 
-                    /*val visibleFace =
+                    val visibleFace =
                         visibleFaces.firstOrNull {
 
                             it.side == face.side &&
@@ -326,33 +324,32 @@ object CubeRenderer444 {
                             }
                         }
                     }
-*/
                     // TEST CENTER
 
 
-/*
-                    if (face.side == SideNew.FRONT) {
+                    /*
+                                        if (face.side == SideNew.FRONT) {
 
-                        val center =
-                            face.points.reduce { acc, p ->
+                                            val center =
+                                                face.points.reduce { acc, p ->
 
-                                Offset(
-                                    acc.x + p.x,
-                                    acc.y + p.y
-                                )
-                            }
+                                                    Offset(
+                                                        acc.x + p.x,
+                                                        acc.y + p.y
+                                                    )
+                                                }
 
-                        drawCircle(
-                            color = Color.Black,
+                                            drawCircle(
+                                                color = Color.Black,
 
-                            radius = 12f,
+                                                radius = 12f,
 
-                            center = Offset(
-                                center.x / 4f,
-                                center.y / 4f
-                            )
-                        )
-                    }*/
+                                                center = Offset(
+                                                    center.x / 4f,
+                                                    center.y / 4f
+                                                )
+                                            )
+                                        }*/
                 }
         }
     }
@@ -763,6 +760,7 @@ object CubeRenderer444 {
 // ============================================================
 // DATA
 // ============================================================
+/*
 
 enum class ArrowDirNew {
 
@@ -772,7 +770,6 @@ enum class ArrowDirNew {
     POS_V,
     NEG_V
 }
-
 data class FaceMarkerNew(
 
     val side: SideNew,
@@ -804,6 +801,7 @@ private data class DrawFaceNew(
 
     val cubePos: Vec3
 )
+*/
 
 // ============================================================
 // HELPERS

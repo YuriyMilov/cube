@@ -42,7 +42,7 @@ object CubeRendererNew {
         animLayer: Float,
         animAngle: Float,
 
-        visibleFaces: SnapshotStateList<VisibleFaceNew>,
+        //  visibleFaces: SnapshotStateList<VisibleFaceNew>,
 
         drawScope: DrawScope,
 
@@ -51,13 +51,19 @@ object CubeRendererNew {
 
         with(drawScope) {
 
+
+
+
+
             val cx = size.width / 2f
             val cy = size.height / 2f
 
             val facesToDraw =
                 mutableListOf<DrawFaceNew>()
 
-            visibleFaces.clear()
+            val visibleFaces = mutableListOf<VisibleFaceNew>()
+
+
 
             // =====================================================
             // BUILD FACES
