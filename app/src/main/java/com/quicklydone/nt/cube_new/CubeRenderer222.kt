@@ -1,6 +1,5 @@
 package com.quicklydone.nt.cube_new
 
-import android.util.Log
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -13,6 +12,7 @@ import com.quicklydone.nt.common.rotateAroundAxis
 import com.quicklydone.nt.common.rotateX
 import com.quicklydone.nt.common.rotateY
 import com.quicklydone.nt.cube.CubeConfig
+import com.quicklydone.nt.cube222.InputCube222
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -38,8 +38,6 @@ object CubeRenderer222 {
         animLayer: Float,
         animAngle: Float,
 
-      //  visibleFaces: SnapshotStateList<VisibleFaceNew>,
-
         drawScope: DrawScope,
 
         markers: List<FaceMarkerNew> = emptyList()
@@ -47,25 +45,13 @@ object CubeRenderer222 {
 
         with(drawScope) {
 
-
-
-
-
             val cx = size.width / 2f
             val cy = size.height / 2f
 
             val facesToDraw =
                 mutableListOf<DrawFaceNew>()
 
-            val visibleFaces = mutableListOf<VisibleFaceNew>()
-
-            // =====================================================
-            // BUILD FACES
-            // =====================================================
-
             cubelets.forEach { cube ->
-
-                Log.d("qq", "222222222222 ${cubelets[0].pos} ${cube.id}")
 
                 val inAnimatedLayer =
                     animAxis != null &&
@@ -148,55 +134,6 @@ object CubeRenderer222 {
                             .average()
                             .toFloat()
 
-                    val rotatedU =
-                        cameraRotateNew(
-                            orientation.x,
-                            rotX,
-                            rotY
-                        )
-
-                    val rotatedV =
-                        cameraRotateNew(
-                            orientation.y,
-                            rotX,
-                            rotY
-                        )
-
-                    val screenU =
-                        normalize2DNew(
-                            Offset(
-                                rotatedU.x,
-                                -rotatedU.y
-                            )
-                        )
-
-                    val screenV =
-                        normalize2DNew(
-                            Offset(
-                                rotatedV.x,
-                                -rotatedV.y
-                            )
-                        )
-
-                    visibleFaces +=
-                        VisibleFaceNew(
-
-                            polygon = projected,
-
-                            normal = normal,
-
-                            depth = depth,
-
-                            cubePos = cube.pos,
-
-                            side = face.side,
-
-                            uAxis = orientation.x,
-                            vAxis = orientation.y,
-
-                            screenU = screenU,
-                            screenV = screenV
-                        )
                     facesToDraw +=
                         DrawFaceNew(
 
@@ -210,7 +147,6 @@ object CubeRenderer222 {
 
                             cubePos = cube.pos
                         )
-
                 }
             }
 
@@ -221,137 +157,146 @@ object CubeRenderer222 {
             facesToDraw
                 .sortedBy { it.depth }
                 .forEach { face ->
+
                     drawPath(
                         path = buildPathNew(face.points),
                         color = face.color
                     )
-
-                    val visibleFace =
-                        visibleFaces.firstOrNull {
-
-                            it.side == face.side &&
-                                    it.cubePos == face.cubePos
-                        }
-
-                    if (visibleFace == null)
-                        return@forEach
-
-                    val faceMarkers =
-                        markers.filter { marker ->
-
-                            marker.side == face.side &&
-
-                                    (
-                                            marker.cubePos == null ||
-                                                    marker.cubePos == face.cubePos
-                                            )
-                        }
-
-                    /////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-                    if (faceMarkers.isNotEmpty()) {
-
-                        val centerX =
-                            face.points
-                                .map { it.x }
-                                .average()
-                                .toFloat()
-
-                        val centerY =
-                            face.points
-                                .map { it.y }
-                                .average()
-                                .toFloat()
-
-                        val uAxis =
-                            edgeDir(
-                                face.points[0],
-                                face.points[1]
-                            )
-
-                        val vAxis =
-                            edgeDir(
-                                face.points[0],
-                                face.points[3]
-                            )
-
-                        faceMarkers.forEach { marker ->
-
-                            if (marker.arrow == null)
-                                return@forEach
-
-                            val chainAxis =
-                                when (marker.arrow) {
-
-                                    ArrowDirNew.POS_U,
-                                    ArrowDirNew.NEG_U -> uAxis
-
-                                    ArrowDirNew.POS_V,
-                                    ArrowDirNew.NEG_V -> vAxis
-                                }
-
-                            repeat(marker.count) { i ->
-
-                                val shift =
-                                    (
-                                            i -
-                                                    (marker.count - 1) / 2f
-                                            ) *
-                                            marker.radius *
-                                            marker.spacing
-
-                                val arrowCenter =
-                                    Offset(
-                                        centerX + chainAxis.x * shift,
-                                        centerY + chainAxis.y * shift
-                                    )
-
-                                drawFaceArrowNew(
-
-                                    center = arrowCenter,
-
-                                    dir = marker.arrow,
-
-                                    uAxis = uAxis,
-                                    vAxis = vAxis,
-
-                                    color = marker.color,
-
-                                    size = marker.radius * 12f
-                                )
-                            }
-                        }
-                    }
-                    // TEST CENTER
-               //     Log.d("qq", "11111111 ${cubelets[0].pos} ${face.side}")
-
-
-                    /*
-                                        if (face.side == SideNew.FRONT) {
-
-                                            val center =
-                                                face.points.reduce { acc, p ->
-
-                                                    Offset(
-                                                        acc.x + p.x,
-                                                        acc.y + p.y
-                                                    )
-                                                }
-
-                                            drawCircle(
-                                                color = Color.Black,
-
-                                                radius = 12f,
-
-                                                center = Offset(
-                                                    center.x / 4f,
-                                                    center.y / 4f
-                                                )
-                                            )
-                                        }*/
                 }
+
+            // =====================================================
+            // INPUT CUBE ARROWS ONLY
+            // =====================================================
+
+            drawInputCubeArrows(
+
+                markers = markers,
+
+                yaw = rotY,
+                pitch = rotX,
+
+                w = size.width,
+                h = size.height
+            )
+        }
+    }
+
+    // =========================================================
+    // INPUT CUBE ARROWS
+    // =========================================================
+
+    private fun DrawScope.drawInputCubeArrows(
+
+        markers: List<FaceMarkerNew>,
+
+        yaw: Float,
+        pitch: Float,
+
+        w: Float,
+        h: Float
+    ) {
+
+        val cells =
+            InputCube222.buildCells(
+
+                yaw = yaw,
+                pitch = pitch,
+
+                w = w,
+                h = h
+            )
+
+        markers.forEach { marker ->
+
+            val face =
+                marker.face ?: return@forEach
+
+            val row =
+                marker.row ?: return@forEach
+
+            val col =
+                marker.col ?: return@forEach
+
+            val arrow =
+                marker.arrow ?: return@forEach
+
+            val cell =
+                cells.firstOrNull {
+
+                    it.face == face &&
+                            it.row == row &&
+                            it.col == col
+                }
+                    ?: return@forEach
+
+            val center =
+                Offset(
+
+                    x =
+                        cell.poly
+                            .map { it.x }
+                            .average()
+                            .toFloat(),
+
+                    y =
+                        cell.poly
+                            .map { it.y }
+                            .average()
+                            .toFloat()
+                )
+
+            val uAxis =
+                edgeDir(
+                    cell.poly[0],
+                    cell.poly[1]
+                )
+
+            val vAxis =
+                edgeDir(
+                    cell.poly[0],
+                    cell.poly[3]
+                )
+
+            val chainAxis =
+                when (arrow) {
+
+                    ArrowDirNew.POS_U,
+                    ArrowDirNew.NEG_U -> uAxis
+
+                    ArrowDirNew.POS_V,
+                    ArrowDirNew.NEG_V -> vAxis
+                }
+
+            repeat(marker.count) { i ->
+
+                val shift =
+                    (
+                            i -
+                                    (marker.count - 1) / 2f
+                            ) *
+                            marker.radius *
+                            marker.spacing
+
+                val arrowCenter =
+                    Offset(
+                        center.x + chainAxis.x * shift,
+                        center.y + chainAxis.y * shift
+                    )
+
+                drawFaceArrowNew(
+
+                    center = arrowCenter,
+
+                    dir = arrow,
+
+                    uAxis = uAxis,
+                    vAxis = vAxis,
+
+                    color = marker.color,
+
+                    size = marker.radius * 12f
+                )
+            }
         }
     }
 
@@ -360,32 +305,58 @@ object CubeRenderer222 {
     // =========================================================
 
     private fun DrawScope.drawFaceArrowNew(
+
         center: Offset,
+
         dir: ArrowDirNew,
+
         uAxis: Offset,
         vAxis: Offset,
+
         color: Color,
+
         size: Float
     ) {
-        val axis = when (dir) {
-            ArrowDirNew.POS_U -> uAxis
-            ArrowDirNew.NEG_U -> Offset(-uAxis.x, -uAxis.y)
-            ArrowDirNew.POS_V -> vAxis
-            ArrowDirNew.NEG_V -> Offset(-vAxis.x, -vAxis.y)
-        }
 
-        val start = Offset(
-            center.x - axis.x * size * 0.5f,
-            center.y - axis.y * size * 0.5f
-        )
+        val axis =
+            when (dir) {
 
-        val end = Offset(
-            center.x + axis.x * size * 0.5f,
-            center.y + axis.y * size * 0.5f
-        )
+                ArrowDirNew.POS_U ->
+                    uAxis
 
-        val stroke = size * 0.08f
-        val headSize = size * 0.22f
+                ArrowDirNew.NEG_U ->
+                    Offset(
+                        -uAxis.x,
+                        -uAxis.y
+                    )
+
+                ArrowDirNew.POS_V ->
+                    vAxis
+
+                ArrowDirNew.NEG_V ->
+                    Offset(
+                        -vAxis.x,
+                        -vAxis.y
+                    )
+            }
+
+        val start =
+            Offset(
+                center.x - axis.x * size * 0.5f,
+                center.y - axis.y * size * 0.5f
+            )
+
+        val end =
+            Offset(
+                center.x + axis.x * size * 0.5f,
+                center.y + axis.y * size * 0.5f
+            )
+
+        val stroke =
+            size * 0.08f
+
+        val headSize =
+            size * 0.22f
 
         drawLine(
             color = color,
@@ -394,28 +365,43 @@ object CubeRenderer222 {
             strokeWidth = stroke
         )
 
-        val perp = Offset(
-            -axis.y,
-            axis.x
-        )
+        val perp =
+            Offset(
+                -axis.y,
+                axis.x
+            )
 
-        val headLeft = Offset(
-            end.x - axis.x * headSize + perp.x * headSize * 0.55f,
-            end.y - axis.y * headSize + perp.y * headSize * 0.55f
-        )
+        val headLeft =
+            Offset(
+                end.x - axis.x * headSize + perp.x * headSize * 0.55f,
+                end.y - axis.y * headSize + perp.y * headSize * 0.55f
+            )
 
-        val headRight = Offset(
-            end.x - axis.x * headSize - perp.x * headSize * 0.55f,
-            end.y - axis.y * headSize - perp.y * headSize * 0.55f
-        )
+        val headRight =
+            Offset(
+                end.x - axis.x * headSize - perp.x * headSize * 0.55f,
+                end.y - axis.y * headSize - perp.y * headSize * 0.55f
+            )
 
         drawPath(
-            path = Path().apply {
-                moveTo(end.x, end.y)
-                lineTo(headLeft.x, headLeft.y)
-                lineTo(headRight.x, headRight.y)
-                close()
-            },
+            path =
+                Path().apply {
+
+                    moveTo(end.x, end.y)
+
+                    lineTo(
+                        headLeft.x,
+                        headLeft.y
+                    )
+
+                    lineTo(
+                        headRight.x,
+                        headRight.y
+                    )
+
+                    close()
+                },
+
             color = color
         )
     }
@@ -700,58 +686,59 @@ object CubeRenderer222 {
         }
     }
 
-    private fun normalize2DNew(
-        o: Offset
-    ): Offset {
-
-        val len =
-            sqrt(
-                o.x * o.x +
-                        o.y * o.y
-            )
-
-        if (len < 0.0001f)
-            return Offset.Zero
-
-        return Offset(
-            o.x / len,
-            o.y / len
-        )
-    }
     fun createInitialCubelets(): List<CubeletNew> {
 
         val result = mutableListOf<CubeletNew>()
+
         var id = 0
 
         for (x in listOf(-0.5f, 0.5f))
             for (y in listOf(-0.5f, 0.5f))
                 for (z in listOf(-0.5f, 0.5f)) {
 
-                    result.add(
+                    result +=
                         CubeletNew(
+
                             id = id++,
 
                             pos = Vec3(x, y, z),
 
                             up =
-                                if (y == 0.5f) Color.White else null,
+                                if (y == 0.5f)
+                                    Color.White
+                                else
+                                    null,
 
                             down =
-                                if (y == -0.5f) Color.Yellow else null,
+                                if (y == -0.5f)
+                                    Color.Yellow
+                                else
+                                    null,
 
                             left =
-                                if (x == -0.5f) Color(0xFFFFA500) else null,
+                                if (x == -0.5f)
+                                    Color(0xFFFFA500)
+                                else
+                                    null,
 
                             right =
-                                if (x == 0.5f) Color.Red else null,
+                                if (x == 0.5f)
+                                    Color.Red
+                                else
+                                    null,
 
                             front =
-                                if (z == 0.5f) Color.Green else null,
+                                if (z == 0.5f)
+                                    Color.Green
+                                else
+                                    null,
 
                             back =
-                                if (z == -0.5f) Color.Blue else null
+                                if (z == -0.5f)
+                                    Color.Blue
+                                else
+                                    null
                         )
-                    )
                 }
 
         return result
@@ -770,25 +757,6 @@ enum class ArrowDirNew {
     POS_V,
     NEG_V
 }
-
-data class FaceMarkerNew(
-
-    val side: SideNew,
-
-    val cubePos: Vec3? = null,
-
-    val color: Color = Color.Black,
-
-    val radius: Float = 10f,
-
-    val arrow: ArrowDirNew? = null,
-
-    val layer: Float? = null,
-
-    val count: Int = 1,
-
-    val spacing: Float = 1.8f
-)
 
 data class DrawFaceNew(
 

@@ -220,7 +220,7 @@ object InputCube222 {
     // BUILD CELLS
     // =========================================================
 
-    private fun buildCells(
+     fun buildCells(
         yaw: Float,
         pitch: Float,
         w: Float,

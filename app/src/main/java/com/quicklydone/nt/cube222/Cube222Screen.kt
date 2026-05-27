@@ -462,46 +462,34 @@ fun Cube222Screen(
                 Text("B'")
             }
 
-            Text("    ")
-
-
-
-
-
+            Text("")
 
 
             Button(
+
                 onClick = {
 
                     markers.clear()
 
                     markers += FaceMarkerNew(
-                        side = SideNew.RIGHT,
-                        cubePos = Vec3(0.5f, 0.5f, 0.5f),
-                        arrow = ArrowDirNew.POS_U
-                    )
 
-                    markers += FaceMarkerNew(
-                        side = SideNew.LEFT,
-                        cubePos = Vec3(-0.5f, -0.5f, -0.5f),
-                        arrow = ArrowDirNew.POS_U
-                    )
+                        face = InputCube222.Face.FRONT,
 
-                    markers += FaceMarkerNew(
-                        side = SideNew.TOP,
-                        cubePos = Vec3(-0.5f, 0.5f, 0.5f),
-                        arrow = ArrowDirNew.POS_V
-                    )
+                        row = 0,
+                        col = 0,
 
-                    markers += FaceMarkerNew(
-                        side = SideNew.FRONT,
-                        cubePos = Vec3(0.5f, 0.5f, 0.5f),
-                        arrow = ArrowDirNew.NEG_U
+                        arrow = ArrowDirNew.POS_U,
+
+                        color = Color.Black,
+
+                        count = 1
                     )
                 }
             ) {
-                Text("Show hints")
+
+                Text("TEST ARROW")
             }
+
 
 
 
