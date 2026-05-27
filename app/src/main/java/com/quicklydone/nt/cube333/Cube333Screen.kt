@@ -29,6 +29,7 @@ import com.quicklydone.nt.common.Vec3
 import com.quicklydone.nt.common.rememberCubelets
 import com.quicklydone.nt.cube.CubeConfig
 import com.quicklydone.nt.cube.CubeFactory.createCubelets
+import com.quicklydone.nt.cube.rememberCubelets
 import com.quicklydone.nt.cube_new.CubeRendererNew
 import com.quicklydone.nt.cube_new.VisibleFaceNew
 import kotlinx.coroutines.launch

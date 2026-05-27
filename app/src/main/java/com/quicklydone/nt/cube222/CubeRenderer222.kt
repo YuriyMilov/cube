@@ -20,7 +20,7 @@ import com.quicklydone.nt.cube.CubeConfig
 import kotlin.math.abs
 import kotlin.math.sqrt
 
-object CubeRendererNew {
+object CubeRenderer222 {
 
     private val HIDDEN_COLOR =
         Color(0xFF444444)
@@ -322,29 +322,29 @@ object CubeRendererNew {
                     // TEST CENTER
 
 
-/*
-                    if (face.side == SideNew.FRONT) {
+                    /*
+                                        if (face.side == SideNew.FRONT) {
 
-                        val center =
-                            face.points.reduce { acc, p ->
+                                            val center =
+                                                face.points.reduce { acc, p ->
 
-                                Offset(
-                                    acc.x + p.x,
-                                    acc.y + p.y
-                                )
-                            }
+                                                    Offset(
+                                                        acc.x + p.x,
+                                                        acc.y + p.y
+                                                    )
+                                                }
 
-                        drawCircle(
-                            color = Color.Black,
+                                            drawCircle(
+                                                color = Color.Black,
 
-                            radius = 12f,
+                                                radius = 12f,
 
-                            center = Offset(
-                                center.x / 4f,
-                                center.y / 4f
-                            )
-                        )
-                    }*/
+                                                center = Offset(
+                                                    center.x / 4f,
+                                                    center.y / 4f
+                                                )
+                                            )
+                                        }*/
                 }
         }
     }
@@ -755,7 +755,6 @@ object CubeRendererNew {
 // ============================================================
 // DATA
 // ============================================================
-/*
 
 enum class ArrowDirNew {
 
@@ -765,6 +764,7 @@ enum class ArrowDirNew {
     POS_V,
     NEG_V
 }
+
 data class FaceMarkerNew(
 
     val side: SideNew,
@@ -784,7 +784,7 @@ data class FaceMarkerNew(
     val spacing: Float = 1.8f
 )
 
-private data class DrawFaceNew(
+data class DrawFaceNew(
 
     val points: List<Offset>,
 
@@ -796,7 +796,6 @@ private data class DrawFaceNew(
 
     val cubePos: Vec3
 )
-*/
 
 // ============================================================
 // HELPERS

@@ -1,5 +1,6 @@
 package com.quicklydone.nt.cube444
 
+import android.util.Log
 import com.quicklydone.nt.common.Vec3
 
 // =========================================================
@@ -180,6 +181,7 @@ fun mapInputToRotation444(
         // =====================================================
 
         InputCube444.Face.LEFT -> {
+            Log.d("qq","${cell} ")
 
             when (swipe) {
 
@@ -187,14 +189,14 @@ fun mapInputToRotation444(
                     RotationMove444(
                         axis = Y_AXIS,
                         layer = rowToLayer(cell.row),
-                        dir = -1f
+                        dir = 1f
                     )
 
                 InputCube444.SwipeDirection.LEFT ->
                     RotationMove444(
                         axis = Y_AXIS,
                         layer = rowToLayer(cell.row),
-                        dir = 1f
+                        dir = -1f
                     )
 
                 InputCube444.SwipeDirection.UP ->

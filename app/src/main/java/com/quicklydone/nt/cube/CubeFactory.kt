@@ -4,57 +4,59 @@ import androidx.compose.ui.graphics.Color
 import com.quicklydone.nt.common.Vec3
 import com.quicklydone.nt.cube_new.CubeletNew
 
-object CubeFactory {
+    object CubeFactory {
 
-    fun createCubelets(
-        config: CubeConfig
-    ): List<CubeletNew> {
+        fun createCubelets(
+            config: CubeConfig
+        ): List<CubeletNew> {
 
-        val result = mutableListOf<CubeletNew>()
+            val result = mutableListOf<CubeletNew>()
+            var id = 0  // 👈 ВОТ ЭТО НЕ ХВАТАЛО
 
-        for (x in config.layers)
-            for (y in config.layers)
-                for (z in config.layers) {
+            for (x in config.layers)
+                for (y in config.layers)
+                    for (z in config.layers) {
 
-                    result.add(
+                        result.add(
+                            CubeletNew(
+                                id = id++,
 
-                        CubeletNew(
+                                pos = Vec3(x, y, z),
 
-                            pos = Vec3(x, y, z),
+                                up =
+                                    if (y == config.layers.last())
+                                        Color.White
+                                    else null,
 
-                            up =
-                                if (y == config.layers.last())
-                                    Color.White
-                                else null,
+                                down =
+                                    if (y == config.layers.first())
+                                        Color.Yellow
+                                    else null,
 
-                            down =
-                                if (y == config.layers.first())
-                                    Color.Yellow
-                                else null,
+                                left =
+                                    if (x == config.layers.first())
+                                        Color(0xFFFF8800)
+                                    else null,
 
-                            left =
-                                if (x == config.layers.first())
-                                    Color(0xFFFF8800)
-                                else null,
+                                right =
+                                    if (x == config.layers.last())
+                                        Color.Red
+                                    else null,
 
-                            right =
-                                if (x == config.layers.last())
-                                    Color.Red
-                                else null,
+                                front =
+                                    if (z == config.layers.last())
+                                        Color.Green
+                                    else null,
 
-                            front =
-                                if (z == config.layers.last())
-                                    Color.Green
-                                else null,
-
-                            back =
-                                if (z == config.layers.first())
-                                    Color.Blue
-                                else null,
+                                back =
+                                    if (z == config.layers.first())
+                                        Color.Blue
+                                    else null
+                            )
                         )
-                    )
-                }
+                    }
 
-        return result
+            return result
+        }
     }
-}
+

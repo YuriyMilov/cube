@@ -2,7 +2,7 @@
 // FILE: cube_new/CubeRendererNew.kt
 // ============================================================
 
-package com.quicklydone.nt.cube_new
+package com.quicklydone.nt.cube444
 
 import android.util.Log
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -17,10 +17,17 @@ import com.quicklydone.nt.common.rotateAroundAxis
 import com.quicklydone.nt.common.rotateX
 import com.quicklydone.nt.common.rotateY
 import com.quicklydone.nt.cube.CubeConfig
+import com.quicklydone.nt.cube_new.CubeletNew
+import com.quicklydone.nt.cube_new.FaceNew
+import com.quicklydone.nt.cube_new.OrientationAxesNew
+import com.quicklydone.nt.cube_new.SideNew
+import com.quicklydone.nt.cube_new.VisibleFaceNew
+import kotlin.collections.forEach
+import kotlin.collections.plusAssign
 import kotlin.math.abs
 import kotlin.math.sqrt
 
-object CubeRendererNew {
+object CubeRenderer444 {
 
     private val HIDDEN_COLOR =
         Color(0xFF444444)
@@ -176,25 +183,25 @@ object CubeRendererNew {
                             )
                         )
 
-                    visibleFaces +=
-                        VisibleFaceNew(
+                   // visibleFaces plusAssign
+                            VisibleFaceNew(
 
-                            polygon = projected,
+                                polygon = projected,
 
-                            normal = normal,
+                                normal = normal,
 
-                            depth = depth,
+                                depth = depth,
 
-                            cubePos = cube.pos,
+                                cubePos = cube.pos,
 
-                            side = face.side,
+                                side = face.side,
 
-                            uAxis = orientation.x,
-                            vAxis = orientation.y,
+                                uAxis = orientation.x,
+                                vAxis = orientation.y,
 
-                            screenU = screenU,
-                            screenV = screenV
-                        )
+                                screenU = screenU,
+                                screenV = screenV
+                            )
 
                     facesToDraw +=
                         DrawFaceNew(
@@ -225,7 +232,7 @@ object CubeRendererNew {
                         color = face.color
                     )
 
-                    val visibleFace =
+                    /*val visibleFace =
                         visibleFaces.firstOrNull {
 
                             it.side == face.side &&
@@ -319,6 +326,7 @@ object CubeRendererNew {
                             }
                         }
                     }
+*/
                     // TEST CENTER
 
 
@@ -755,7 +763,6 @@ object CubeRendererNew {
 // ============================================================
 // DATA
 // ============================================================
-/*
 
 enum class ArrowDirNew {
 
@@ -765,6 +772,7 @@ enum class ArrowDirNew {
     POS_V,
     NEG_V
 }
+
 data class FaceMarkerNew(
 
     val side: SideNew,
@@ -796,7 +804,6 @@ private data class DrawFaceNew(
 
     val cubePos: Vec3
 )
-*/
 
 // ============================================================
 // HELPERS
