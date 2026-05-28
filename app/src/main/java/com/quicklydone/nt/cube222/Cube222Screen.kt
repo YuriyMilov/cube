@@ -42,7 +42,18 @@ import com.quicklydone.nt.cube_new.VisibleFaceNew
 import com.quicklydone.nt.cube_new.solveOneStep_U
 import com.quicklydone.nt.cube_new.solveOneStep_U_PRIME
 import com.quicklydone.nt.solver.Solver222
+import com.quicklydone.nt.solver.Solver222.addRingHintB
+import com.quicklydone.nt.solver.Solver222.addRingHintBPrime
+import com.quicklydone.nt.solver.Solver222.addRingHintD
+import com.quicklydone.nt.solver.Solver222.addRingHintDPrime
+import com.quicklydone.nt.solver.Solver222.addRingHintF
+import com.quicklydone.nt.solver.Solver222.addRingHintFPrime
+import com.quicklydone.nt.solver.Solver222.addRingHintL
+import com.quicklydone.nt.solver.Solver222.addRingHintLPrime
 import com.quicklydone.nt.solver.Solver222.addRingHintR
+import com.quicklydone.nt.solver.Solver222.addRingHintRPrime
+import com.quicklydone.nt.solver.Solver222.addRingHintU
+import com.quicklydone.nt.solver.Solver222.addRingHintUPrime
 import kotlinx.coroutines.launch
 
 @Composable
@@ -294,31 +305,33 @@ fun Cube222Screen(
 
         Row {
             Button(
-
                 onClick = {
-
                     addRingHintR(markers)
-                }) {
-
+                }
+            ) {
                 Text("R")
             }
+
             Button(
                 onClick = {
-                    addRingHintR(markers)
-                }) {
+                    addRingHintRPrime(markers)
+                }
+            ) {
                 Text("R'")
+            }
+            Button(
+                onClick = {
+                    addRingHintL(markers)
+                }
+            ) {
+                Text("L")
             }
 
             Button(
                 onClick = {
-                    addRingHintR(markers)
-                }) {
-                Text("L")
-            }
-            Button(
-                onClick = {
-                    addRingHintR(markers)
-                }) {
+                    addRingHintLPrime(markers)
+                }
+            ) {
                 Text("L'")
             }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -330,7 +343,7 @@ fun Cube222Screen(
         Row {
             Button(
                 onClick = {
-                    solveOneStep_U(cubelets, markers)
+                    addRingHintU(markers)
                     // Solver222.upa(
                     //    rotate = ::startRotation
                     //)
@@ -339,32 +352,29 @@ fun Cube222Screen(
             }
             Button(
                 onClick = {
-                    solveOneStep_U_PRIME(cubelets, markers)
+                    addRingHintUPrime(markers)
                     //Solver222.upb(
                     //   rotate = ::startRotation
                     //)
                 }) {
                 Text("U'")
             }
-
             Button(
                 onClick = {
-
-                    Solver222.downa(
-                        rotate = ::startRotation
-                    )
-                }) {
+                    addRingHintD(markers)
+                }
+            ) {
                 Text("D")
             }
+
             Button(
                 onClick = {
-
-                    Solver222.downb(
-                        rotate = ::startRotation
-                    )
-                }) {
+                    addRingHintDPrime(markers)
+                }
+            ) {
                 Text("D'")
             }
+
 
             Text(" ")
             Button(
@@ -384,45 +394,37 @@ fun Cube222Screen(
 
             Button(
                 onClick = {
-
-                    Solver222.forwarda(
-                        rotate = ::startRotation
-                    )
-                }) {
+                    addRingHintF(markers)
+                }
+            ) {
                 Text("F")
             }
 
             Button(
                 onClick = {
-
-                    Solver222.forwardb(
-                        rotate = ::startRotation
-                    )
-                }) {
+                    addRingHintFPrime(markers)
+                }
+            ) {
                 Text("F'")
             }
 
             Button(
                 onClick = {
-
-                    Solver222.backa(
-                        rotate = ::startRotation
-                    )
-                }) {
+                    addRingHintB(markers)
+                }
+            ) {
                 Text("B")
             }
 
             Button(
                 onClick = {
-
-                    Solver222.backb(
-                        rotate = ::startRotation
-                    )
-                }) {
+                    addRingHintBPrime(markers)
+                }
+            ) {
                 Text("B'")
             }
 
-            Text("")
+            Text("  ")
 
 
             Button(
