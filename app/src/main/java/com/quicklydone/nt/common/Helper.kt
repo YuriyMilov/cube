@@ -18,7 +18,6 @@ import com.quicklydone.nt.cube333.InputCube333
 import com.quicklydone.nt.cube444.InputCube444
 import com.quicklydone.nt.cube_new.CubeRendererNew.createInitialCubelets
 import com.quicklydone.nt.cube_new.CubeletNew
-import com.quicklydone.nt.solver.Solver222
 
 @Composable
 fun TopBar(

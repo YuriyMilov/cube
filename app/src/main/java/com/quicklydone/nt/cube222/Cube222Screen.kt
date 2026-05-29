@@ -39,21 +39,9 @@ import com.quicklydone.nt.cube_new.CubeRenderer222
 import com.quicklydone.nt.cube_new.FaceMarkerNew
 import com.quicklydone.nt.cube_new.SideNew
 import com.quicklydone.nt.cube_new.VisibleFaceNew
-import com.quicklydone.nt.cube_new.solveOneStep_U
-import com.quicklydone.nt.cube_new.solveOneStep_U_PRIME
+import com.quicklydone.nt.solver.Arrows222
+import com.quicklydone.nt.solver.Moves222
 import com.quicklydone.nt.solver.Solver222
-import com.quicklydone.nt.solver.Solver222.addRingHintB
-import com.quicklydone.nt.solver.Solver222.addRingHintBPrime
-import com.quicklydone.nt.solver.Solver222.addRingHintD
-import com.quicklydone.nt.solver.Solver222.addRingHintDPrime
-import com.quicklydone.nt.solver.Solver222.addRingHintF
-import com.quicklydone.nt.solver.Solver222.addRingHintFPrime
-import com.quicklydone.nt.solver.Solver222.addRingHintL
-import com.quicklydone.nt.solver.Solver222.addRingHintLPrime
-import com.quicklydone.nt.solver.Solver222.addRingHintR
-import com.quicklydone.nt.solver.Solver222.addRingHintRPrime
-import com.quicklydone.nt.solver.Solver222.addRingHintU
-import com.quicklydone.nt.solver.Solver222.addRingHintUPrime
 import kotlinx.coroutines.launch
 
 @Composable
@@ -139,13 +127,19 @@ fun Cube222Screen(
                 },
 
                 onEnd = {
+
                     animAxis = null
                     animLayer = 0f
                     animAngle = 0f
 
-                    markers.clear() // 👈 сюда
+                    markers.clear()
 
+                    // 👇 показать следующий хинт автоматически
+                    Solver222.currentStep++
 
+                    Solver222.showNextHint(
+                        markers
+                    )
                 })
         }
     }
@@ -175,7 +169,7 @@ fun Cube222Screen(
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    fun bbbaaa(
+    fun jumpRotation(
         axis: Vec3, layer: Float, dir: Float
     ) {
 
@@ -219,46 +213,29 @@ fun Cube222Screen(
         Row {
             Button(
                 onClick = {
-                    /*Solver222.test(
+                    Moves222.test(
                         gestureState,// cubelets = cubelets,
-                        rotate = ::bbbaaa
-                    )*/
-                }) {
-                Text("Moves:")
-            }
-            Button(
-                onClick = {
-                    Solver222.test(
-                        gestureState,// cubelets = cubelets,
-                        rotate = ::bbbaaa
+                        rotate = ::jumpRotation
                     )
+                    Solver222.getSolution()
+
                 }) {
-                Text("+1")
-            }
-            Button(
-                onClick = {
-                    Solver222.test(
-                        gestureState,// cubelets = cubelets,
-                        rotate = ::bbbaaa
-                    )
-                }) {
-                Text("+2")
-            }
-            Button(
-                onClick = {
-                    Solver222.test(
-                        gestureState,// cubelets = cubelets,
-                        rotate = ::bbbaaa
-                    )
-                }) {
-                Text("+3")
+                Text("Scramble")
             }
 
+            Button(
+                onClick = {
+
+                    Solver222.showNextHint(
+                        markers
+                    )
+                    // Solver222.currentStep++
+
+                }
+            ) {
+                Text("SOLVE")
+            }
         }
-
-
-
-
 
         Box(
             modifier = Modifier
@@ -267,7 +244,7 @@ fun Cube222Screen(
 
             contentAlignment = Alignment.Center
         ) {
-            1
+
             Canvas(
                 modifier = Modifier
                     .fillMaxSize()
@@ -293,7 +270,6 @@ fun Cube222Screen(
                     markers = markers   // 👈 ВОТ ЭТО
                 )
 
-
                 /* InputCube222.drawInputCube(
                       drawScope = this, yaw = rotY, pitch = rotX, w = size.width, h = size.height
                   )*/
@@ -306,7 +282,7 @@ fun Cube222Screen(
         Row {
             Button(
                 onClick = {
-                    addRingHintR(markers)
+                    Arrows222.addRingHintR(markers)
                 }
             ) {
                 Text("R")
@@ -314,14 +290,14 @@ fun Cube222Screen(
 
             Button(
                 onClick = {
-                    addRingHintRPrime(markers)
+                    Arrows222.addRingHintRPrime(markers)
                 }
             ) {
                 Text("R'")
             }
             Button(
                 onClick = {
-                    addRingHintL(markers)
+                    Arrows222.addRingHintL(markers)
                 }
             ) {
                 Text("L")
@@ -329,10 +305,17 @@ fun Cube222Screen(
 
             Button(
                 onClick = {
-                    addRingHintLPrime(markers)
+                    Arrows222.addRingHintLPrime(markers)
                 }
             ) {
                 Text("L'")
+            }
+            Button(
+                onClick = {
+                    Moves222.upa(rotate = ::startRotation)
+
+                }) {
+                Text("Move")
             }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -343,7 +326,7 @@ fun Cube222Screen(
         Row {
             Button(
                 onClick = {
-                    addRingHintU(markers)
+                    Arrows222.addRingHintU(markers)
                     // Solver222.upa(
                     //    rotate = ::startRotation
                     //)
@@ -352,7 +335,7 @@ fun Cube222Screen(
             }
             Button(
                 onClick = {
-                    addRingHintUPrime(markers)
+                    Arrows222.addRingHintUPrime(markers)
                     //Solver222.upb(
                     //   rotate = ::startRotation
                     //)
@@ -361,7 +344,7 @@ fun Cube222Screen(
             }
             Button(
                 onClick = {
-                    addRingHintD(markers)
+                    Arrows222.addRingHintD(markers)
                 }
             ) {
                 Text("D")
@@ -369,7 +352,7 @@ fun Cube222Screen(
 
             Button(
                 onClick = {
-                    addRingHintDPrime(markers)
+                    Arrows222.addRingHintDPrime(markers)
                 }
             ) {
                 Text("D'")
@@ -394,7 +377,7 @@ fun Cube222Screen(
 
             Button(
                 onClick = {
-                    addRingHintF(markers)
+                    Arrows222.addRingHintF(markers)
                 }
             ) {
                 Text("F")
@@ -402,7 +385,7 @@ fun Cube222Screen(
 
             Button(
                 onClick = {
-                    addRingHintFPrime(markers)
+                    Arrows222.addRingHintFPrime(markers)
                 }
             ) {
                 Text("F'")
@@ -410,7 +393,7 @@ fun Cube222Screen(
 
             Button(
                 onClick = {
-                    addRingHintB(markers)
+                    Arrows222.addRingHintB(markers)
                 }
             ) {
                 Text("B")
@@ -418,7 +401,7 @@ fun Cube222Screen(
 
             Button(
                 onClick = {
-                    addRingHintBPrime(markers)
+                    Arrows222.addRingHintBPrime(markers)
                 }
             ) {
                 Text("B'")

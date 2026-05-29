@@ -15,10 +15,6 @@ fun Modifier.cubeGestures222(
 
         detectDragGestures(
 
-            // =====================================================
-            // START
-            // =====================================================
-
             onDragStart = { offset ->
 
                 state.dragStart = offset
@@ -33,10 +29,6 @@ fun Modifier.cubeGestures222(
                 )
             },
 
-            // =====================================================
-            // DRAG
-            // =====================================================
-
             onDrag = { change, drag ->
 
                 change.consume()
@@ -44,25 +36,17 @@ fun Modifier.cubeGestures222(
                 val dx = drag.x
                 val dy = drag.y
 
-                val cell =
-                    state.selectedCell
+                val cell = state.selectedCell
 
-                // -------------------------------------------------
-                // rotate whole cube
-                // -------------------------------------------------
-
+                // ROTATE WHOLE CUBE
                 if (cell == null) {
-
                     state.rotateAll(dx, dy)
-
                     return@detectDragGestures
                 }
 
-                if (state.dragLocked) {
-                    return@detectDragGestures
-                }
+                if (state.dragLocked) return@detectDragGestures
 
-                val swipe =  InputCube222.detectFaceSwipe(
+                val swipe = InputCube222.detectFaceSwipe(
                     face = cell.face,
                     dx = dx,
                     dy = dy,
@@ -70,26 +54,18 @@ fun Modifier.cubeGestures222(
                     pitch = state.pitch
                 )
 
-                val move =
-                    mapInputToRotation222(
-                        cell,
-                        swipe
-                    )
+                val move = mapInputToRotation222(cell, swipe)
 
-
+                // 👉 запускаем поворот + передаём имя хода
                 state.startRotation(
                     move.axis,
                     move.layer,
-                    move.dir
+                    move.dir,
+                    //move.name
                 )
-
 
                 state.dragLocked = true
             },
-
-            // =====================================================
-            // END
-            // =====================================================
 
             onDragEnd = {
 
