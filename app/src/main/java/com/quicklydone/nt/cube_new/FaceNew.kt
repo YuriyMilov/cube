@@ -1,7 +1,3 @@
-// ============================================================
-// FILE: cube_new/FaceNew.kt
-// ============================================================
-
 package com.quicklydone.nt.cube_new
 
 import androidx.compose.ui.graphics.Color

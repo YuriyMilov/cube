@@ -1,7 +1,3 @@
-// ============================================================
-// FILE: cube_new/CubeletNew.kt
-// ============================================================
-
 package com.quicklydone.nt.cube_new
 
 import androidx.compose.ui.graphics.Color
@@ -24,16 +20,5 @@ data class CubeletNew(
     var axisY: Vec3 = Vec3(0f, 1f, 0f),
     var axisZ: Vec3 = Vec3(0f, 0f, 1f),
 )
-/*
-data class CubeletNew(
-    val id: Int,
 
-    val pos: Vec3,
 
-    val up: Color?,
-    val down: Color?,
-    val left: Color?,
-    val right: Color?,
-    val front: Color?,
-    val back: Color?
-)*/

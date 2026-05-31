@@ -1,5 +1,6 @@
 package com.quicklydone.nt.cube222
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -36,10 +37,12 @@ import com.quicklydone.nt.cube.CubeFactory.createCubelets
 import com.quicklydone.nt.cube.rememberCubelets
 import com.quicklydone.nt.cube_new.ArrowDirNew
 import com.quicklydone.nt.cube_new.CubeRenderer222
+import com.quicklydone.nt.cube_new.CubeletNew
 import com.quicklydone.nt.cube_new.FaceMarkerNew
 import com.quicklydone.nt.cube_new.SideNew
 import com.quicklydone.nt.cube_new.VisibleFaceNew
 import com.quicklydone.nt.solver.Arrows222
+import com.quicklydone.nt.solver.CubeState222
 import com.quicklydone.nt.solver.Moves222
 import com.quicklydone.nt.solver.Solver222
 import kotlinx.coroutines.launch
@@ -105,6 +108,99 @@ fun Cube222Screen(
 
     }
 
+
+    fun buildCornersPos(
+        cubelets: List<CubeletNew>
+    ): IntArray {
+
+        val positions = listOf(
+
+            Vec3(-0.5f,-0.5f,-0.5f), // 0
+            Vec3( 0.5f,-0.5f,-0.5f), // 1
+
+            Vec3(-0.5f, 0.5f,-0.5f), // 2
+            Vec3( 0.5f, 0.5f,-0.5f), // 3
+
+            Vec3(-0.5f,-0.5f, 0.5f), // 4
+            Vec3( 0.5f,-0.5f, 0.5f), // 5
+
+            Vec3(-0.5f, 0.5f, 0.5f), // 6
+            Vec3( 0.5f, 0.5f, 0.5f)  // 7
+        )
+
+        val cornersPos = IntArray(8)
+
+        cubelets.forEach { cube ->
+
+            val posIndex =
+                positions.indexOf(cube.pos)
+
+            cornersPos[posIndex] =
+                cube.id
+        }
+
+        return cornersPos
+    }
+
+    val positions = listOf(
+        Vec3(-0.5f,-0.5f,-0.5f), // 0
+        Vec3( 0.5f,-0.5f,-0.5f), // 1
+        Vec3(-0.5f, 0.5f,-0.5f), // 2
+        Vec3( 0.5f, 0.5f,-0.5f), // 3
+        Vec3(-0.5f,-0.5f, 0.5f), // 4
+        Vec3( 0.5f,-0.5f, 0.5f), // 5
+        Vec3(-0.5f, 0.5f, 0.5f), // 6
+        Vec3( 0.5f, 0.5f, 0.5f)  // 7
+    )
+
+    val cornersPos = IntArray(8)
+
+    cubelets.forEach { cube ->
+
+        val posIndex =
+            positions.indexOf(cube.pos)
+
+        cornersPos[posIndex] =
+            cube.id
+    }
+
+
+    fun dirCode(v: Vec3): Int =
+        when {
+            v.x > 0.9f -> 0   // +X
+            v.x < -0.9f -> 1  // -X
+
+            v.y > 0.9f -> 2   // +Y
+            v.y < -0.9f -> 3  // -Y
+
+            v.z > 0.9f -> 4   // +Z
+            else -> 5         // -Z
+        }
+
+    fun buildCornerAxes(
+        cubelets: List<CubeletNew>
+    ): IntArray {
+
+        val result = IntArray(8 * 3)
+
+        cubelets.forEach { cube ->
+
+            val posIndex =
+                positions.indexOf(cube.pos)
+
+            result[posIndex * 3 + 0] =
+                dirCode(cube.axisX)
+
+            result[posIndex * 3 + 1] =
+                dirCode(cube.axisY)
+
+            result[posIndex * 3 + 2] =
+                dirCode(cube.axisZ)
+        }
+
+        return result
+    }
+
     fun startRotation(
         axis: Vec3, layer: Float, dir: Float
     ) {
@@ -120,6 +216,31 @@ fun Cube222Screen(
 
                     animAxis = axis
                     animLayer = layer
+
+                    /*
+                                       val cornersPos =  buildCornersPos(cubelets)
+                                       Log.d("STATE",cornersPos.joinToString())
+
+                                       val cornersAxes =  buildCornerAxes(cubelets)
+                                       Log.d("STATE",cornersAxes.joinToString())
+
+                                      val axes = buildCornerAxes(cubelets)
+
+                                       for (i in 0 until 8) {
+
+                                           Log.d(
+                                               "STATE",
+                                               "$i  ${axes[i*3]}  ${axes[i*3+1]}  ${axes[i*3+2]}"
+                                           )
+
+                                         *//*  Log.d(
+                            "AXES",
+                            "pos=$i  X=${axes[i*3]}  Y=${axes[i*3+1]}  Z=${axes[i*3+2]}"
+                        )*//*
+                    }*/
+
+
+
                 },
 
                 onStep = {
@@ -128,18 +249,28 @@ fun Cube222Screen(
 
                 onEnd = {
 
-                    animAxis = null
+                    val state = CubeState222(
+                        //cubelets = cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Solver222.onCubeChanged(state)
+
+
+              animAxis = null
                     animLayer = 0f
                     animAngle = 0f
 
+
+
                     markers.clear()
 
-                    // 👇 показать следующий хинт автоматически
                     Solver222.currentStep++
 
-                    Solver222.showNextHint(
-                        markers
-                    )
+                    Solver222.showNextHint(markers)
+
+
                 })
         }
     }
@@ -173,9 +304,17 @@ fun Cube222Screen(
         axis: Vec3, layer: Float, dir: Float
     ) {
 
-        if (animAxis != null) return
+        //if (animAxis != null) return
+
+        Log.d("ROT", "request $axis $layer $dir")
+
+        if (animAxis != null) {
+            Log.d("ROT", "rejected")
+            return
+        }
 
         scope.launch {
+            Log.d("ROT", "started coroutine")
 
             anima(
                 cubelets = cubelets, axis = axis, layer = layer, dir = dir,
@@ -213,10 +352,14 @@ fun Cube222Screen(
         Row {
             Button(
                 onClick = {
-                    Moves222.test(
+                    /*Moves222.test(
                         gestureState,// cubelets = cubelets,
                         rotate = ::jumpRotation
                     )
+                    Solver222.getSolution()*/
+
+                    Moves222.scramble(cubelets, 5)
+                    cubelets.add(cubelets.removeAt(0))
                     Solver222.getSolution()
 
                 }) {
@@ -225,6 +368,14 @@ fun Cube222Screen(
 
             Button(
                 onClick = {
+                    val state = CubeState222(
+                        //cubelets,
+
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Solver222.onCubeChanged(state)
 
                     Solver222.showNextHint(
                         markers
@@ -436,5 +587,6 @@ fun Cube222Screen(
             }
         }
     }
+
 }
 

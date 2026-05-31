@@ -1,21 +1,13 @@
 package com.quicklydone.nt.solver
 
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.quicklydone.nt.common.GestureState222
 import com.quicklydone.nt.common.Vec3
+import com.quicklydone.nt.cube_new.CubeletNew
+import com.quicklydone.nt.solver.Solver222.applyRotation
 
 
 object Moves222 {
-    /*fun test(gestureState: GestureState222, rotate: (Vec3, Float, Float) -> Unit) {
-
-        Solver222.scrambleMoves.clear()
-        rotateMove("R",rotate)
-        Solver222.scrambleMoves += "R"
-        rotateMove("U",rotate)
-        Solver222.scrambleMoves += "U"
-        rotateMove("F",rotate)
-        Solver222.scrambleMoves += "F"
-
-    }*/
 
     fun upa(rotate: (Vec3, Float, Float) -> Unit) {
         rotate(
@@ -40,7 +32,7 @@ object Moves222 {
             "B", "B'"
         )
 
-        repeat(10) {
+        repeat(5) {
 
             val move =
                 allMoves.random()
@@ -194,7 +186,51 @@ object Moves222 {
                 )
         }
     }
-}
 
+    fun scramble(
+        cubelets: SnapshotStateList<CubeletNew>,
+        movesCount: Int = 20
+    ) {
+
+        Solver222.scrambleMoves.clear()
+
+        val allMoves = listOf(
+            "R", "R'",
+            "L", "L'",
+            "U", "U'",
+            "D", "D'",
+            "F", "F'",
+            "B", "B'"
+        )
+
+        repeat(movesCount) {
+
+            val move = allMoves.random()
+
+            when (move) {
+
+                "R" -> applyRotation(cubelets, Vec3(1f, 0f, 0f), 0.5f, -1f)
+                "R'" -> applyRotation(cubelets, Vec3(1f, 0f, 0f), 0.5f, 1f)
+
+                "L" -> applyRotation(cubelets, Vec3(1f, 0f, 0f), -0.5f, 1f)
+                "L'" -> applyRotation(cubelets, Vec3(1f, 0f, 0f), -0.5f, -1f)
+
+                "U" -> applyRotation(cubelets, Vec3(0f, 1f, 0f), 0.5f, -1f)
+                "U'" -> applyRotation(cubelets, Vec3(0f, 1f, 0f), 0.5f, 1f)
+
+                "D" -> applyRotation(cubelets, Vec3(0f, 1f, 0f), -0.5f, 1f)
+                "D'" -> applyRotation(cubelets, Vec3(0f, 1f, 0f), -0.5f, -1f)
+
+                "F" -> applyRotation(cubelets, Vec3(0f, 0f, 1f), 0.5f, -1f)
+                "F'" -> applyRotation(cubelets, Vec3(0f, 0f, 1f), 0.5f, 1f)
+
+                "B" -> applyRotation(cubelets, Vec3(0f, 0f, 1f), -0.5f, 1f)
+                "B'" -> applyRotation(cubelets, Vec3(0f, 0f, 1f), -0.5f, -1f)
+            }
+
+            Solver222.scrambleMoves += move
+        }
+    }
+}
 
 
