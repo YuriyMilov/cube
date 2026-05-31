@@ -35,13 +35,11 @@ import com.quicklydone.nt.common.Vec3
 import com.quicklydone.nt.cube.CubeConfig
 import com.quicklydone.nt.cube.CubeFactory.createCubelets
 import com.quicklydone.nt.cube.rememberCubelets
-import com.quicklydone.nt.cube_new.ArrowDirNew
 import com.quicklydone.nt.cube_new.CubeRenderer222
 import com.quicklydone.nt.cube_new.CubeletNew
 import com.quicklydone.nt.cube_new.FaceMarkerNew
 import com.quicklydone.nt.cube_new.SideNew
 import com.quicklydone.nt.cube_new.VisibleFaceNew
-import com.quicklydone.nt.solver.Arrows222
 import com.quicklydone.nt.solver.CubeState222
 import com.quicklydone.nt.solver.Moves222
 import com.quicklydone.nt.solver.Solver222
@@ -250,7 +248,7 @@ fun Cube222Screen(
                 onEnd = {
 
                     val state = CubeState222(
-                        //cubelets = cubelets,
+                        cubelets = cubelets,
                         cornersPos = buildCornersPos(cubelets),
                         cornersAxes = buildCornerAxes(cubelets)
                     )
@@ -268,7 +266,7 @@ fun Cube222Screen(
 
                     Solver222.currentStep++
 
-                    Solver222.showNextHint(markers)
+                    Solver222.showNextHint(cubelets, markers)
 
 
                 })
@@ -350,42 +348,9 @@ fun Cube222Screen(
         )
 
         Row {
-            Button(
-                onClick = {
-                    /*Moves222.test(
-                        gestureState,// cubelets = cubelets,
-                        rotate = ::jumpRotation
-                    )
-                    Solver222.getSolution()*/
 
-                    Moves222.scramble(cubelets, 5)
-                    cubelets.add(cubelets.removeAt(0))
-                    Solver222.getSolution()
 
-                }) {
-                Text("Scramble")
-            }
 
-            Button(
-                onClick = {
-                    val state = CubeState222(
-                        //cubelets,
-
-                        cornersPos = buildCornersPos(cubelets),
-                        cornersAxes = buildCornerAxes(cubelets)
-                    )
-
-                    Solver222.onCubeChanged(state)
-
-                    Solver222.showNextHint(
-                        markers
-                    )
-                    // Solver222.currentStep++
-
-                }
-            ) {
-                Text("SOLVE")
-            }
         }
 
         Box(
@@ -430,7 +395,7 @@ fun Cube222Screen(
 
         }
 
-        Row {
+  /*      Row {
             Button(
                 onClick = {
                     Arrows222.addRingHintR(markers)
@@ -586,6 +551,74 @@ fun Cube222Screen(
                 Text("Arrow")
             }
         }
+
+   */
+
+        Button(
+            onClick = {
+                /*Moves222.test(
+                    gestureState,// cubelets = cubelets,
+                    rotate = ::jumpRotation
+                )
+                Solver222.getSolution()*/
+
+                Moves222.scramble(cubelets, 5)
+                cubelets.add(cubelets.removeAt(0))
+               // Solver222.getSolution()
+
+            }) {
+            Text("Scramble")
+        }
+        Button(
+            onClick = {
+                val state = CubeState222(
+                    cubelets,
+
+                    cornersPos = buildCornersPos(cubelets),
+                    cornersAxes = buildCornerAxes(cubelets)
+                )
+
+               // Solver222.onCubeChanged(state)
+
+                Solver222.getSolutionRGW(state)
+
+                Solver222.showNextHintRGW(
+                    cubelets,
+                    markers
+                )
+                // Solver222.currentStep++
+
+            }
+        ) {
+            Text("RGW")
+        }
+
+
+
+
+        Button(
+            onClick = {
+                val state = CubeState222(
+                    cubelets,
+                    cornersPos = buildCornersPos(cubelets),
+                    cornersAxes = buildCornerAxes(cubelets)
+                )
+
+                Solver222.onCubeChanged(state)
+
+                Solver222.getSolution()
+
+                Solver222.showNextHint(
+                    cubelets,
+                    markers
+                )
+                // Solver222.currentStep++
+
+            }
+        ) {
+            Text("SOLVE")
+        }
+
     }
 
 }
