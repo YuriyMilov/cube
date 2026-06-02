@@ -43,6 +43,8 @@ import com.quicklydone.nt.cube_new.VisibleFaceNew
 import com.quicklydone.nt.solver.CubeState222
 import com.quicklydone.nt.solver.Moves222
 import com.quicklydone.nt.solver.Solver222
+import com.quicklydone.nt.solver.Solver222.pre
+import com.quicklydone.nt.solver.Solver222.solve
 import kotlinx.coroutines.launch
 
 @Composable
@@ -554,21 +556,89 @@ fun Cube222Screen(
 
    */
 
-        Button(
-            onClick = {
-                /*Moves222.test(
-                    gestureState,// cubelets = cubelets,
-                    rotate = ::jumpRotation
-                )
-                Solver222.getSolution()*/
 
-                Moves222.scramble(cubelets, 5)
-                cubelets.add(cubelets.removeAt(0))
-               // Solver222.getSolution()
+        Row {
 
-            }) {
-            Text("Scramble")
-        }
+
+            Button(
+                onClick = {
+
+                    val stateBefore = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+                    Log.d(
+                        "SOLVER",
+                        "XXXXXXX    INIT    XXXXXXX"
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateBefore.cornersPos.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateBefore.cornersAxes.joinToString()
+                    )
+
+
+                    Moves222.scramble(cubelets, 1)
+
+
+                    val stateAfter = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+
+                    Log.d(
+                        "SOLVER",
+                        "XXXXXXXXXXXXXXXXXXXX"
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersPos.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersAxes.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                    )
+
+                }) {
+                Text("crmbl")
+            }
+
+
+
+            Button(
+                onClick = {
+                    val state = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Solver222.onCubeChanged(state)
+
+                    Solver222.getSolution()
+
+                    Solver222.showNextHint(
+                        cubelets,
+                        markers
+                    )
+                    // Solver222.currentStep++
+
+                }
+            ) {
+                Text("slv")
+            }
+
+
         Button(
             onClick = {
                 val state = CubeState222(
@@ -590,36 +660,662 @@ fun Cube222Screen(
 
             }
         ) {
-            Text("RGW")
+            Text("rgw")
         }
 
+            val scope = rememberCoroutineScope()
+
+            Button(
+                onClick = {
+                    scope.launch {
+
+                        val state = Solver222.State(
+                            buildCornersPos(cubelets),
+                             buildCornerAxes(cubelets)
+                        )
+
+                        val TARGET_ORI = listOf(0, 2, 4)
+
+                        val result = solve(state)
 
 
+                        /*val result1 = solve(
+                            state,
+                            { state: Solver222.State ->
+                                val pos7 = state.pos.indexOf(7)
+                                pos7 == 7 //&& state.ori[21] == 0 && state.ori[22] == 2 && state.ori[23] == 4
+                            }
+                        )
+                        */
 
-        Button(
-            onClick = {
-                val state = CubeState222(
-                    cubelets,
-                    cornersPos = buildCornersPos(cubelets),
-                    cornersAxes = buildCornerAxes(cubelets)
-                )
-
-                Solver222.onCubeChanged(state)
-
-                Solver222.getSolution()
-
-                Solver222.showNextHint(
-                    cubelets,
-                    markers
-                )
-                // Solver222.currentStep++
-
+                        Log.d("SOLVER","Solution: ${result}")
+                    }
+                }
+            ) {
+                Text("Solve")
             }
-        ) {
-            Text("SOLVE")
+
         }
 
+
+
+
+
+        Row {
+
+
+
+            Button(
+                onClick = {
+                    /*Moves222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::jumpRotation
+                    )
+                    Solver222.getSolution()*/
+
+
+
+                    val state = CubeState222(
+                        cubelets,
+
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    // val qq = "R U R' U'"
+                    val qq = "R"
+                    Log.d(
+                        "SOLVER",
+                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                    )
+                    pre(state,qq, cubelets)
+                    //cubelets.add(cubelets.removeAt(0))
+
+                    val stateAfter = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersPos.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersAxes.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        "************************************"
+                    )
+
+                }) {
+                Text("R")
+            }
+
+            Button(
+                onClick = {
+                    /*Moves222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::jumpRotation
+                    )
+                    Solver222.getSolution()*/
+
+
+
+                    val state = CubeState222(
+                        cubelets,
+
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    // val qq = "R U R' U'"
+                    val qq = "R'"
+                    Log.d(
+                        "SOLVER",
+                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                    )
+                    pre(state,qq, cubelets)
+                    //cubelets.add(cubelets.removeAt(0))
+
+                    val stateAfter = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersPos.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersAxes.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        "************************************"
+                    )
+
+                }) {
+                Text("R'")
+            }
+
+            Button(
+                onClick = {
+                    /*Moves222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::jumpRotation
+                    )
+                    Solver222.getSolution()*/
+
+
+
+                    val state = CubeState222(
+                        cubelets,
+
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    // val qq = "R U R' U'"
+                    val qq = "L"
+                    Log.d(
+                        "SOLVER",
+                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                    )
+                    pre(state,qq, cubelets)
+                    //cubelets.add(cubelets.removeAt(0))
+
+                    val stateAfter = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersPos.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersAxes.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        "************************************"
+                    )
+
+                }) {
+                Text("L")
+            }
+
+            Button(
+                onClick = {
+                    /*Moves222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::jumpRotation
+                    )
+                    Solver222.getSolution()*/
+
+
+
+                    val state = CubeState222(
+                        cubelets,
+
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    // val qq = "R U R' U'"
+                    val qq = "L'"
+                    Log.d(
+                        "SOLVER",
+                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                    )
+                    pre(state,qq, cubelets)
+                    //cubelets.add(cubelets.removeAt(0))
+
+                    val stateAfter = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersPos.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersAxes.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        "************************************"
+                    )
+
+                }) {
+                Text("L'")
+            }
+
+            Button(
+                onClick = {
+                    /*Moves222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::jumpRotation
+                    )
+                    Solver222.getSolution()*/
+
+
+
+                    val state = CubeState222(
+                        cubelets,
+
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    // val qq = "R U R' U'"
+                    val qq = "U"
+                    Log.d(
+                        "SOLVER",
+                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                    )
+                    pre(state,qq, cubelets)
+                    //cubelets.add(cubelets.removeAt(0))
+
+                    val stateAfter = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersPos.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersAxes.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        "************************************"
+                    )
+
+                }) {
+                Text("U")
+            }
+
+            Button(
+                onClick = {
+                    /*Moves222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::jumpRotation
+                    )
+                    Solver222.getSolution()*/
+
+
+
+                    val state = CubeState222(
+                        cubelets,
+
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    // val qq = "R U R' U'"
+                    val qq = "U'"
+                    Log.d(
+                        "SOLVER",
+                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                    )
+                    pre(state,qq, cubelets)
+                    //cubelets.add(cubelets.removeAt(0))
+
+                    val stateAfter = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersPos.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersAxes.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        "************************************"
+                    )
+
+                }) {
+                Text("U'")
+            }
+
+
+        }
+
+
+
+        Row {
+
+
+
+            Button(
+                onClick = {
+                    /*Moves222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::jumpRotation
+                    )
+                    Solver222.getSolution()*/
+
+
+
+                    val state = CubeState222(
+                        cubelets,
+
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    // val qq = "R U R' U'"
+                    val qq = "D"
+                    Log.d(
+                        "SOLVER",
+                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                    )
+                    pre(state,qq, cubelets)
+                    //cubelets.add(cubelets.removeAt(0))
+
+                    val stateAfter = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersPos.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersAxes.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        "************************************"
+                    )
+
+                }) {
+                Text("D")
+            }
+
+            Button(
+                onClick = {
+                    /*Moves222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::jumpRotation
+                    )
+                    Solver222.getSolution()*/
+
+
+
+                    val state = CubeState222(
+                        cubelets,
+
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    // val qq = "R U R' U'"
+                    val qq = "D'"
+                    Log.d(
+                        "SOLVER",
+                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                    )
+                    pre(state,qq, cubelets)
+                    //cubelets.add(cubelets.removeAt(0))
+
+                    val stateAfter = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersPos.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersAxes.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        "************************************"
+                    )
+
+                }) {
+                Text("D'")
+            }
+
+            Button(
+                onClick = {
+                    /*Moves222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::jumpRotation
+                    )
+                    Solver222.getSolution()*/
+
+
+
+                    val state = CubeState222(
+                        cubelets,
+
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    // val qq = "R U R' U'"
+                    val qq = "F"
+                    Log.d(
+                        "SOLVER",
+                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                    )
+                    pre(state,qq, cubelets)
+                    //cubelets.add(cubelets.removeAt(0))
+
+                    val stateAfter = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersPos.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersAxes.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        "************************************"
+                    )
+
+                }) {
+                Text("F")
+            }
+
+            Button(
+                onClick = {
+                    /*Moves222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::jumpRotation
+                    )
+                    Solver222.getSolution()*/
+
+
+
+                    val state = CubeState222(
+                        cubelets,
+
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    // val qq = "R U R' U'"
+                    val qq = "F'"
+                    Log.d(
+                        "SOLVER",
+                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                    )
+                    pre(state,qq, cubelets)
+                    //cubelets.add(cubelets.removeAt(0))
+
+                    val stateAfter = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersPos.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersAxes.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        "************************************"
+                    )
+
+                }) {
+                Text("F'")
+            }
+
+            Button(
+                onClick = {
+                    /*Moves222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::jumpRotation
+                    )
+                    Solver222.getSolution()*/
+
+
+
+                    val state = CubeState222(
+                        cubelets,
+
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    // val qq = "R U R' U'"
+                    val qq = "B"
+                    Log.d(
+                        "SOLVER",
+                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                    )
+                    pre(state,qq, cubelets)
+                    //cubelets.add(cubelets.removeAt(0))
+
+                    val stateAfter = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersPos.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersAxes.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        "************************************"
+                    )
+
+                }) {
+                Text("B")
+            }
+
+            Button(
+                onClick = {
+                    /*Moves222.test(
+                        gestureState,// cubelets = cubelets,
+                        rotate = ::jumpRotation
+                    )
+                    Solver222.getSolution()*/
+
+
+
+                    val state = CubeState222(
+                        cubelets,
+
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    // val qq = "R U R' U'"
+                    val qq = "B'"
+                    Log.d(
+                        "SOLVER",
+                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                    )
+                    pre(state,qq, cubelets)
+                    //cubelets.add(cubelets.removeAt(0))
+
+                    val stateAfter = CubeState222(
+                        cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersPos.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        stateAfter.cornersAxes.joinToString()
+                    )
+                    Log.d(
+                        "SOLVER",
+                        "************************************"
+                    )
+
+                }) {
+                Text("B'")
+            }
+
+
+        }
     }
 
 }
+/*
 
+
+"R", "R'",
+"L", "L'",
+"U", "U'",
+"D", "D'",
+"F", "F'",
+"B", "B'"
+
+
+*/
