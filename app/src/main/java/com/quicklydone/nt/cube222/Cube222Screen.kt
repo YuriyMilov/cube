@@ -602,7 +602,7 @@ fun Cube222Screen(
                     )
                     Log.d(
                         "SOLVER",
-                        stateAfter.cornersAxes.joinToString()
+                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
                         "SOLVER",
@@ -743,7 +743,7 @@ fun Cube222Screen(
                     )
                     Log.d(
                         "SOLVER",
-                        stateAfter.cornersAxes.joinToString()
+                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
                         "SOLVER",
@@ -792,7 +792,7 @@ fun Cube222Screen(
                     )
                     Log.d(
                         "SOLVER",
-                        stateAfter.cornersAxes.joinToString()
+                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
                         "SOLVER",
@@ -841,7 +841,7 @@ fun Cube222Screen(
                     )
                     Log.d(
                         "SOLVER",
-                        stateAfter.cornersAxes.joinToString()
+                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
                         "SOLVER",
@@ -890,7 +890,7 @@ fun Cube222Screen(
                     )
                     Log.d(
                         "SOLVER",
-                        stateAfter.cornersAxes.joinToString()
+                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
                         "SOLVER",
@@ -939,7 +939,7 @@ fun Cube222Screen(
                     )
                     Log.d(
                         "SOLVER",
-                        stateAfter.cornersAxes.joinToString()
+                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
                         "SOLVER",
@@ -988,7 +988,7 @@ fun Cube222Screen(
                     )
                     Log.d(
                         "SOLVER",
-                        stateAfter.cornersAxes.joinToString()
+                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
                         "SOLVER",
@@ -1046,7 +1046,7 @@ fun Cube222Screen(
                     )
                     Log.d(
                         "SOLVER",
-                        stateAfter.cornersAxes.joinToString()
+                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
                         "SOLVER",
@@ -1095,7 +1095,7 @@ fun Cube222Screen(
                     )
                     Log.d(
                         "SOLVER",
-                        stateAfter.cornersAxes.joinToString()
+                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
                         "SOLVER",
@@ -1144,7 +1144,7 @@ fun Cube222Screen(
                     )
                     Log.d(
                         "SOLVER",
-                        stateAfter.cornersAxes.joinToString()
+                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
                         "SOLVER",
@@ -1193,7 +1193,7 @@ fun Cube222Screen(
                     )
                     Log.d(
                         "SOLVER",
-                        stateAfter.cornersAxes.joinToString()
+                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
                         "SOLVER",
@@ -1242,7 +1242,7 @@ fun Cube222Screen(
                     )
                     Log.d(
                         "SOLVER",
-                        stateAfter.cornersAxes.joinToString()
+                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
                         "SOLVER",
@@ -1291,7 +1291,7 @@ fun Cube222Screen(
                     )
                     Log.d(
                         "SOLVER",
-                        stateAfter.cornersAxes.joinToString()
+                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
                         "SOLVER",

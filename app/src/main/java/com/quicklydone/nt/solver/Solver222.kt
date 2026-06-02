@@ -317,19 +317,6 @@ object Solver222 {
     )
 
 
-
-    //private fun moveRPrime(state: State): State {}
-
-   /* fun inversePerm(p: IntArray): IntArray {
-        val inv = IntArray(p.size)
-        for (i in p.indices) {
-            inv[p[i]] = i
-        }
-        return inv
-    }*/
-
-
-
     fun inversePerm(p: IntArray): IntArray {
         val inv = IntArray(p.size)
         for (i in p.indices) {
@@ -349,29 +336,35 @@ object Solver222 {
         5
     )
 
-    fun moveR(state: State): State {
+    fun moveR(state: State): State =
+        applyPermWithOri(
+            state,
+            moveR,
+            intArrayOf(1, 3, 5, 7),
+            ::rotateDirR
+        )
 
-        val newPos = IntArray(8)
+    fun rotateDirRPrime(dir: Int): Int =
+        when (dir) {
+            0 -> 0
+            1 -> 1
 
-        for (i in 0 until 8) {
-            newPos[i] = state.pos[moveR[i]]
+            5 -> 2
+            3 -> 5
+            4 -> 3
+            2 -> 4
+
+            else -> error("bad dir")
         }
-
-        return state.copy(pos = newPos)
-    }
-
 
     val moveRPrime = inversePerm(moveR)
-    fun moveRPrime(state: State): State {
-
-        val newPos = IntArray(8)
-
-        for (i in 0 until 8) {
-            newPos[i] = state.pos[moveRPrime[i]]
-        }
-
-        return state.copy(pos = newPos)
-    }
+    fun moveRPrime(state: State): State =
+        applyPermWithOri(
+            state,
+            moveRPrime,
+            intArrayOf(1, 3, 5, 7),
+            ::rotateDirRPrime
+        )
 
 
     val moveL = intArrayOf(
@@ -385,40 +378,47 @@ object Solver222 {
         7  // 7
     )
 
-    fun moveL(state: State): State {
+    fun rotateDirL(dir: Int): Int =
+        when (dir) {
+            0 -> 0
+            1 -> 1
 
-        val newPos = IntArray(8)
+            2 -> 4
+            4 -> 3
+            3 -> 5
+            5 -> 2
 
-        for (i in 0 until 8) {
-            newPos[i] = state.pos[moveL[i]]
+            else -> error("bad dir")
         }
-
-        return state.copy(pos = newPos)
-    }
+    fun moveL(state: State): State =
+        applyPermWithOri(
+            state,
+            moveL,
+            intArrayOf(0,2,4,6),
+            ::rotateDirL
+        )
 
     val moveLPrime = inversePerm(moveL)
+    fun rotateDirLPrime(dir: Int): Int =
+        when (dir) {
+            0 -> 0
+            1 -> 1
 
-    fun moveLPrime(state: State): State {
+            4 -> 2
+            3 -> 4
+            5 -> 3
+            2 -> 5
 
-        val newPos = IntArray(8)
-
-        for (i in 0 until 8) {
-            newPos[i] = state.pos[moveLPrime[i]]
+            else -> error("bad dir")
         }
+    fun moveLPrime(state: State): State  =
+            applyPermWithOri(
+                state,
+                moveLPrime,
+                intArrayOf(0, 2, 4, 6),
+                ::rotateDirLPrime
+            )
 
-        return state.copy(pos = newPos)
-    }
-
-
-
-
-
-    /*
-
-
-   val moveDPrime = inversePerm(permD)
-
-   val moveBPrime = inversePerm(permB)*/
 
 
 
@@ -433,30 +433,48 @@ object Solver222 {
         3  // 7
     )
 
-    fun moveU(state: State): State {
+    fun rotateDirU(dir: Int): Int =
+        when (dir) {
+            0 -> 4
+            4 -> 1
+            1 -> 5
+            5 -> 0
 
-        val newPos = IntArray(8)
+            2 -> 2
+            3 -> 3
 
-        for (i in 0 until 8) {
-            newPos[i] = state.pos[moveU[i]]
+            else -> error("bad dir")
         }
 
-        return state.copy(pos = newPos)
-    }
+    fun moveU(state: State): State  =
+            applyPermWithOri(
+                state,
+                moveU,
+                intArrayOf(2,3,6,7),
+                ::rotateDirU
+            )
 
 
     val moveUPrime = inversePerm(moveU)
+    fun rotateDirUPrime(dir: Int): Int =
+        when (dir) {
+            0 -> 5
+            5 -> 1
+            1 -> 4
+            4 -> 0
 
-    fun moveUPrime(state: State): State {
+            2 -> 2
+            3 -> 3
 
-        val newPos = IntArray(8)
-
-        for (i in 0 until 8) {
-            newPos[i] = state.pos[moveUPrime[i]]
+            else -> error("bad dir")
         }
-
-        return state.copy(pos = newPos)
-    }
+    fun moveUPrime(state: State): State   =
+            applyPermWithOri(
+                state,
+                moveUPrime,
+                intArrayOf(0, 2, 4, 6),
+                ::rotateDirUPrime
+            )
 
    val moveD = intArrayOf(
         1, // 0
@@ -468,30 +486,46 @@ object Solver222 {
         6, // 6
         7  // 7
     )
+    fun rotateDirD(dir: Int): Int =
+        when (dir) {
+            0 -> 5
+            5 -> 1
+            1 -> 4
+            4 -> 0
 
-    fun moveD(state: State): State {
+            2 -> 2
+            3 -> 3
 
-        val newPos = IntArray(8)
-
-        for (i in 0 until 8) {
-            newPos[i] = state.pos[moveD[i]]
+            else -> error("bad dir")
         }
-
-        return state.copy(pos = newPos)
-    }
+    fun moveD(state: State): State   =
+            applyPermWithOri(
+                state,
+                moveD,
+                intArrayOf(0,1,4,5),
+                ::rotateDirD
+            )
 
     val moveDPrime = inversePerm(moveD)
+    fun rotateDirDPrime(dir: Int): Int =
+        when (dir) {
+            0 -> 4
+            4 -> 1
+            1 -> 5
+            5 -> 0
 
-    fun moveDPrime(state: State): State {
+            2 -> 2
+            3 -> 3
 
-        val newPos = IntArray(8)
-
-        for (i in 0 until 8) {
-            newPos[i] = state.pos[moveDPrime[i]]
+            else -> error("bad dir")
         }
-
-        return state.copy(pos = newPos)
-    }
+    fun moveDPrime(state: State): State  =
+            applyPermWithOri(
+                state,
+                moveDPrime,
+                intArrayOf(0, 2, 4, 6),
+                ::rotateDirDPrime
+            )
 
 
     val moveF = intArrayOf(
@@ -504,31 +538,48 @@ object Solver222 {
         4, // 6
         6  // 7
     )
+    fun rotateDirF(dir: Int): Int =
+        when (dir) {
+            2 -> 4
+            4 -> 3
+            3 -> 5
+            5 -> 2
 
-    fun moveF(state: State): State {
+            0 -> 0
+            1 -> 1
 
-        val newPos = IntArray(8)
-
-        for (i in 0 until 8) {
-            newPos[i] = state.pos[moveF[i]]
+            else -> error("bad dir")
         }
+    fun moveF(state: State): State  =
+            applyPermWithOri(
+                state,
+                moveF,
+                intArrayOf(4,5,6,7),
+                ::rotateDirF
+            )
 
-        return state.copy(pos = newPos)
-    }
 
+    val  moveFPrime = inversePerm(moveF)
 
-    val permFPrime = inversePerm(moveF)
+    fun rotateDirFPrime(dir: Int): Int =
+        when (dir) {
+            2 -> 5
+            5 -> 3
+            3 -> 4
+            4 -> 2
 
-    fun moveFPrime(state: State): State {
+            0 -> 0
+            1 -> 1
 
-        val newPos = IntArray(8)
-
-        for (i in 0 until 8) {
-            newPos[i] = state.pos[permFPrime[i]]
+            else -> error("bad dir")
         }
-
-        return state.copy(pos = newPos)
-    }
+    fun moveFPrime(state: State): State  =
+            applyPermWithOri(
+                state,
+                moveFPrime,
+                intArrayOf(0, 2, 4, 6),
+                ::rotateDirFPrime
+            )
 
 
     val moveB = intArrayOf(
@@ -541,47 +592,53 @@ object Solver222 {
         6, // 6
         7  // 7
     )
+    fun rotateDirB(dir: Int): Int =
+        when (dir) {
+            2 -> 5
+            5 -> 3
+            3 -> 4
+            4 -> 2
 
-    fun moveB(state: State): State {
+            0 -> 0
+            1 -> 1
 
-        val newPos = IntArray(8)
-
-        for (i in 0 until 8) {
-            newPos[i] = state.pos[moveB[i]]
+            else -> error("bad dir")
         }
-
-        return state.copy(pos = newPos)
-    }
+    fun moveB(state: State): State   =
+            applyPermWithOri(
+                state,
+                moveB,
+                intArrayOf(0,1,2,3),
+                ::rotateDirB
+            )
 
 
     val moveBPrime = inversePerm(moveB)
+    fun rotateDirBPrime(dir: Int): Int =
+        when (dir) {
+            2 -> 4
+            4 -> 3
+            3 -> 5
+            5 -> 2
 
-    fun moveBPrime(state: State): State {
+            0 -> 0
+            1 -> 1
 
-        val newPos = IntArray(8)
-
-        for (i in 0 until 8) {
-            newPos[i] = state.pos[moveBPrime[i]]
+            else -> error("bad dir")
         }
-
-        return state.copy(pos = newPos)
-    }
+    fun moveBPrime(state: State): State =
+            applyPermWithOri(
+                state,
+                moveBPrime,
+                intArrayOf(0, 2, 4, 6),
+                ::rotateDirBPrime
+            )
 
 
     fun solve(start: State): List<String> {
 
 
-/*
 
-        Log.d("TEST", compose(permR, moveRPrime).joinToString())
-        Log.d("TEST", compose(moveRPrime, permR).joinToString())
-
-        Log.d("TEST", compose(moveL, moveLPrime).joinToString())
-        Log.d("TEST", compose(moveLPrime, moveL).joinToString())
-
-        Log.d("TEST", compose(moveF, moveFPrime).joinToString())
-        Log.d("TEST", compose(moveFPrime, moveF).joinToString())
-*/
 
 
 
@@ -605,23 +662,33 @@ object Solver222 {
 
             val (state, path) = queue.removeFirst()
 
-            val key = state.pos.joinToString(",")
+            val key =
+                state.pos.joinToString(",") +
+                        "|" +
+                        state.ori.joinToString(",")
 
             if (!visited.add(key)) {
                 continue
             }
 
-            // цель: кублет 7 стоит в позиции 7
-            if (state.pos[7] == 7) {
-                Log.d(
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+            if (state.pos[7] == 7 && state.ori.sliceArray(21..23).contentEquals(intArrayOf(0,2,4))) {
+
+             //if (state.pos[7] == 7 && state.pos[6] == 3 && state.pos[5] == 5 && state.pos[4] == 1) {
+             // if ( state.pos[7] == 7 ) {
+
+                    Log.d(
                     "SOLVER",
                     "FOUND: ${path.joinToString(" ")} -> ${state.pos.joinToString()}"
+
                 )
                 return path
             }
 
             // защита от слишком глубокого поиска
-            if (path.size >= 14) {
+            if (path.size >= 4) {
                 continue
             }
 
@@ -662,12 +729,9 @@ object Solver222 {
 
         Log.d(
             "SOLVER",
-            "-->>   $move : ${state.pos.joinToString()} -> ${result.pos.joinToString()}"
+            "-->>   $move : ${state.pos.joinToString()} -> ${result.pos.joinToString()}  ${result.ori.joinToString()}"
         )
-        /* Log.d(
-             "MOVE_DEBUG",
-             "$move : ${state.pos.joinToString()} -> ${result.pos.joinToString()}"
-         )*/
+
         return result
     }
     fun compose(a: IntArray, b: IntArray): IntArray {
@@ -679,6 +743,69 @@ object Solver222 {
 
         return r
     }
+
+
+
+
+    fun rotateDirR(dir: Int): Int =
+        when (dir) {
+            0 -> 0
+            1 -> 1
+
+            2 -> 5
+            5 -> 3
+            3 -> 4
+            4 -> 2
+
+            else -> error("bad dir")
+        }
+
+    fun applyPermWithOri(
+        state: State,
+        perm: IntArray,
+        affected: IntArray,
+        rotate: (Int) -> Int
+    ): State {
+
+        val newPos = IntArray(8)
+        val newOri = IntArray(24)
+
+        // перестановка
+        for (i in 0 until 8) {
+
+            val src = perm[i]
+
+            newPos[i] = state.pos[src]
+
+            for (k in 0 until 3) {
+                newOri[i * 3 + k] =
+                    state.ori[src * 3 + k]
+            }
+        }
+
+        // поворот локальных осей
+        for (p in affected) {
+
+            val base = p * 3
+
+            newOri[base + 0] = rotate(newOri[base + 0])
+            newOri[base + 1] = rotate(newOri[base + 1])
+            newOri[base + 2] = rotate(newOri[base + 2])
+        }
+
+        return State(newPos, newOri)
+    }
+
+  //  fun rotateIdentity(dir: Int) = dir
+
+    val RIGHT = intArrayOf(1,3,5,7)
+    val LEFT  = intArrayOf(0,2,4,6)
+
+    val UP    = intArrayOf(2,3,6,7)
+    val DOWN  = intArrayOf(0,1,4,5)
+
+    val FRONT = intArrayOf(4,5,6,7)
+    val BACK  = intArrayOf(0,1,2,3)
 }
 
 
