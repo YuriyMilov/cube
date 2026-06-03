@@ -108,6 +108,10 @@ fun Cube222Screen(
 
     }
 
+    fun veiw() {
+        rotX = 0.8f
+        rotY = -0.8f
+    }
 
     fun buildCornersPos(
         cubelets: List<CubeletNew>
@@ -115,67 +119,62 @@ fun Cube222Screen(
 
         val positions = listOf(
 
-            Vec3(-0.5f,-0.5f,-0.5f), // 0
-            Vec3( 0.5f,-0.5f,-0.5f), // 1
+            Vec3(-0.5f, -0.5f, -0.5f), // 0
+            Vec3(0.5f, -0.5f, -0.5f), // 1
 
-            Vec3(-0.5f, 0.5f,-0.5f), // 2
-            Vec3( 0.5f, 0.5f,-0.5f), // 3
+            Vec3(-0.5f, 0.5f, -0.5f), // 2
+            Vec3(0.5f, 0.5f, -0.5f), // 3
 
-            Vec3(-0.5f,-0.5f, 0.5f), // 4
-            Vec3( 0.5f,-0.5f, 0.5f), // 5
+            Vec3(-0.5f, -0.5f, 0.5f), // 4
+            Vec3(0.5f, -0.5f, 0.5f), // 5
 
             Vec3(-0.5f, 0.5f, 0.5f), // 6
-            Vec3( 0.5f, 0.5f, 0.5f)  // 7
+            Vec3(0.5f, 0.5f, 0.5f)  // 7
         )
 
         val cornersPos = IntArray(8)
 
         cubelets.forEach { cube ->
 
-            val posIndex =
-                positions.indexOf(cube.pos)
+            val posIndex = positions.indexOf(cube.pos)
 
-            cornersPos[posIndex] =
-                cube.id
+            cornersPos[posIndex] = cube.id
         }
 
         return cornersPos
     }
 
     val positions = listOf(
-        Vec3(-0.5f,-0.5f,-0.5f), // 0
-        Vec3( 0.5f,-0.5f,-0.5f), // 1
-        Vec3(-0.5f, 0.5f,-0.5f), // 2
-        Vec3( 0.5f, 0.5f,-0.5f), // 3
-        Vec3(-0.5f,-0.5f, 0.5f), // 4
-        Vec3( 0.5f,-0.5f, 0.5f), // 5
+        Vec3(-0.5f, -0.5f, -0.5f), // 0
+        Vec3(0.5f, -0.5f, -0.5f), // 1
+        Vec3(-0.5f, 0.5f, -0.5f), // 2
+        Vec3(0.5f, 0.5f, -0.5f), // 3
+        Vec3(-0.5f, -0.5f, 0.5f), // 4
+        Vec3(0.5f, -0.5f, 0.5f), // 5
         Vec3(-0.5f, 0.5f, 0.5f), // 6
-        Vec3( 0.5f, 0.5f, 0.5f)  // 7
+        Vec3(0.5f, 0.5f, 0.5f)  // 7
     )
 
     val cornersPos = IntArray(8)
 
     cubelets.forEach { cube ->
 
-        val posIndex =
-            positions.indexOf(cube.pos)
+        val posIndex = positions.indexOf(cube.pos)
 
-        cornersPos[posIndex] =
-            cube.id
+        cornersPos[posIndex] = cube.id
     }
 
 
-    fun dirCode(v: Vec3): Int =
-        when {
-            v.x > 0.9f -> 0   // +X
-            v.x < -0.9f -> 1  // -X
+    fun dirCode(v: Vec3): Int = when {
+        v.x > 0.9f -> 0   // +X
+        v.x < -0.9f -> 1  // -X
 
-            v.y > 0.9f -> 2   // +Y
-            v.y < -0.9f -> 3  // -Y
+        v.y > 0.9f -> 2   // +Y
+        v.y < -0.9f -> 3  // -Y
 
-            v.z > 0.9f -> 4   // +Z
-            else -> 5         // -Z
-        }
+        v.z > 0.9f -> 4   // +Z
+        else -> 5         // -Z
+    }
 
     fun buildCornerAxes(
         cubelets: List<CubeletNew>
@@ -185,17 +184,13 @@ fun Cube222Screen(
 
         cubelets.forEach { cube ->
 
-            val posIndex =
-                positions.indexOf(cube.pos)
+            val posIndex = positions.indexOf(cube.pos)
 
-            result[posIndex * 3 + 0] =
-                dirCode(cube.axisX)
+            result[posIndex * 3 + 0] = dirCode(cube.axisX)
 
-            result[posIndex * 3 + 1] =
-                dirCode(cube.axisY)
+            result[posIndex * 3 + 1] = dirCode(cube.axisY)
 
-            result[posIndex * 3 + 2] =
-                dirCode(cube.axisZ)
+            result[posIndex * 3 + 2] = dirCode(cube.axisZ)
         }
 
         return result
@@ -240,7 +235,6 @@ fun Cube222Screen(
                     }*/
 
 
-
                 },
 
                 onStep = {
@@ -258,7 +252,7 @@ fun Cube222Screen(
                     Solver222.onCubeChanged(state)
 
 
-              animAxis = null
+                    animAxis = null
                     animLayer = 0f
                     animAngle = 0f
 
@@ -344,17 +338,17 @@ fun Cube222Screen(
             .background(Color(0xFF101010))
             .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
-
-        TopBar(
-            goMenu = goMenu, onReset = ::resetCube//, goMove = ::onMove
-        )
-
-        Row {
-
-
-
+        TopBar(goMenu = goMenu, onReset = ::resetCube)
+Row{
+    Button(
+        onClick = {
+            rotX = 0.8f
+            rotY = -0.8f
         }
-
+    ) {
+        Text("VIEW")
+    }
+}
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -397,164 +391,164 @@ fun Cube222Screen(
 
         }
 
-  /*      Row {
-            Button(
-                onClick = {
-                    Arrows222.addRingHintR(markers)
-                }
-            ) {
-                Text("R")
-            }
+        /*      Row {
+                  Button(
+                      onClick = {
+                          Arrows222.addRingHintR(markers)
+                      }
+                  ) {
+                      Text("R")
+                  }
 
-            Button(
-                onClick = {
-                    Arrows222.addRingHintRPrime(markers)
-                }
-            ) {
-                Text("R'")
-            }
-            Button(
-                onClick = {
-                    Arrows222.addRingHintL(markers)
-                }
-            ) {
-                Text("L")
-            }
+                  Button(
+                      onClick = {
+                          Arrows222.addRingHintRPrime(markers)
+                      }
+                  ) {
+                      Text("R'")
+                  }
+                  Button(
+                      onClick = {
+                          Arrows222.addRingHintL(markers)
+                      }
+                  ) {
+                      Text("L")
+                  }
 
-            Button(
-                onClick = {
-                    Arrows222.addRingHintLPrime(markers)
-                }
-            ) {
-                Text("L'")
-            }
-            Button(
-                onClick = {
-                    Moves222.upa(rotate = ::startRotation)
+                  Button(
+                      onClick = {
+                          Arrows222.addRingHintLPrime(markers)
+                      }
+                  ) {
+                      Text("L'")
+                  }
+                  Button(
+                      onClick = {
+                          Moves222.upa(rotate = ::startRotation)
 
-                }) {
-                Text("Move")
-            }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        }
-        ///////////////////////////////
-
-
-        Row {
-            Button(
-                onClick = {
-                    Arrows222.addRingHintU(markers)
-                    // Solver222.upa(
-                    //    rotate = ::startRotation
-                    //)
-                }) {
-                Text("U")
-            }
-            Button(
-                onClick = {
-                    Arrows222.addRingHintUPrime(markers)
-                    //Solver222.upb(
-                    //   rotate = ::startRotation
-                    //)
-                }) {
-                Text("U'")
-            }
-            Button(
-                onClick = {
-                    Arrows222.addRingHintD(markers)
-                }
-            ) {
-                Text("D")
-            }
-
-            Button(
-                onClick = {
-                    Arrows222.addRingHintDPrime(markers)
-                }
-            ) {
-                Text("D'")
-            }
+                      }) {
+                      Text("Move")
+                  }
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+              }
+              ///////////////////////////////
 
 
-            Text(" ")
-            Button(
-                onClick = {
-                    markers.clear()
+              Row {
+                  Button(
+                      onClick = {
+                          Arrows222.addRingHintU(markers)
+                          // Solver222.upa(
+                          //    rotate = ::startRotation
+                          //)
+                      }) {
+                      Text("U")
+                  }
+                  Button(
+                      onClick = {
+                          Arrows222.addRingHintUPrime(markers)
+                          //Solver222.upb(
+                          //   rotate = ::startRotation
+                          //)
+                      }) {
+                      Text("U'")
+                  }
+                  Button(
+                      onClick = {
+                          Arrows222.addRingHintD(markers)
+                      }
+                  ) {
+                      Text("D")
+                  }
 
-                    markers += FaceMarkerNew(
-                        side = SideNew.RIGHT, color = Color.White, radius = 24f
-                    )
-                }) {
-                Text("Clear")
-            }
-        }
-        ///////////////////////////////
-
-        Row {
-
-            Button(
-                onClick = {
-                    Arrows222.addRingHintF(markers)
-                }
-            ) {
-                Text("F")
-            }
-
-            Button(
-                onClick = {
-                    Arrows222.addRingHintFPrime(markers)
-                }
-            ) {
-                Text("F'")
-            }
-
-            Button(
-                onClick = {
-                    Arrows222.addRingHintB(markers)
-                }
-            ) {
-                Text("B")
-            }
-
-            Button(
-                onClick = {
-                    Arrows222.addRingHintBPrime(markers)
-                }
-            ) {
-                Text("B'")
-            }
-
-            Text("  ")
+                  Button(
+                      onClick = {
+                          Arrows222.addRingHintDPrime(markers)
+                      }
+                  ) {
+                      Text("D'")
+                  }
 
 
-            Button(
+                  Text(" ")
+                  Button(
+                      onClick = {
+                          markers.clear()
 
-                onClick = {
+                          markers += FaceMarkerNew(
+                              side = SideNew.RIGHT, color = Color.White, radius = 24f
+                          )
+                      }) {
+                      Text("Clear")
+                  }
+              }
+              ///////////////////////////////
 
-                    markers.clear()
+              Row {
 
-                    markers += FaceMarkerNew(
+                  Button(
+                      onClick = {
+                          Arrows222.addRingHintF(markers)
+                      }
+                  ) {
+                      Text("F")
+                  }
 
-                        face = InputCube222.Face.RIGHT,
-                        // face = InputCube222.Face.FRONT,
+                  Button(
+                      onClick = {
+                          Arrows222.addRingHintFPrime(markers)
+                      }
+                  ) {
+                      Text("F'")
+                  }
 
-                        row = 1, col = 0,
+                  Button(
+                      onClick = {
+                          Arrows222.addRingHintB(markers)
+                      }
+                  ) {
+                      Text("B")
+                  }
 
-                        //arrow = ArrowDirNew.POS_U,
-                        arrow = ArrowDirNew.NEG_V,
+                  Button(
+                      onClick = {
+                          Arrows222.addRingHintBPrime(markers)
+                      }
+                  ) {
+                      Text("B'")
+                  }
 
-                        color = Color.Black,
+                  Text("  ")
 
-                        count = 1
-                    )
-                }) {
 
-                Text("Arrow")
-            }
-        }
+                  Button(
 
-   */
+                      onClick = {
+
+                          markers.clear()
+
+                          markers += FaceMarkerNew(
+
+                              face = InputCube222.Face.RIGHT,
+                              // face = InputCube222.Face.FRONT,
+
+                              row = 1, col = 0,
+
+                              //arrow = ArrowDirNew.POS_U,
+                              arrow = ArrowDirNew.NEG_V,
+
+                              color = Color.Black,
+
+                              count = 1
+                          )
+                      }) {
+
+                      Text("Arrow")
+                  }
+              }
+
+         */
 
 
         Row {
@@ -569,20 +563,17 @@ fun Cube222Screen(
                         cornersAxes = buildCornerAxes(cubelets)
                     )
                     Log.d(
-                        "SOLVER",
-                        "XXXXXXX    INIT    XXXXXXX"
+                        "SOLVER", "---   INIT   ---"
                     )
                     Log.d(
-                        "SOLVER",
-                        stateBefore.cornersPos.joinToString()
+                        "SOLVER", stateBefore.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        stateBefore.cornersAxes.joinToString()
+                        "SOLVER", stateBefore.cornersAxes.joinToString()
                     )
 
 
-                    Moves222.scramble(cubelets, 1)
+                    Moves222.scramble(cubelets, 7)
 
 
                     val stateAfter = CubeState222(
@@ -593,24 +584,20 @@ fun Cube222Screen(
 
 
                     Log.d(
-                        "SOLVER",
-                        "XXXXXXXXXXXXXXXXXXXX"
+                        "SOLVER", "--------------------------"
                     )
                     Log.d(
-                        "SOLVER",
-                        stateAfter.cornersPos.joinToString()
+                        "SOLVER", stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                        "SOLVER", "==================================================="
                     )
 
                 }) {
-                Text("crmbl")
+                Text("Scramle")
             }
 
 
@@ -628,72 +615,70 @@ fun Cube222Screen(
                     Solver222.getSolution()
 
                     Solver222.showNextHint(
-                        cubelets,
-                        markers
+                        cubelets, markers
                     )
                     // Solver222.currentStep++
 
-                }
-            ) {
-                Text("slv")
+                }) {
+                Text("Inv")
             }
 
 
-        Button(
-            onClick = {
-                val state = CubeState222(
-                    cubelets,
+            Button(
+                onClick = {
+                    val state = CubeState222(
+                        cubelets,
 
-                    cornersPos = buildCornersPos(cubelets),
-                    cornersAxes = buildCornerAxes(cubelets)
-                )
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
 
-               // Solver222.onCubeChanged(state)
+                    // Solver222.onCubeChanged(state)
 
-                Solver222.getSolutionRGW(state)
+                    Solver222.getSolutionRGW(state)
 
-                Solver222.showNextHintRGW(
-                    cubelets,
-                    markers
-                )
-                // Solver222.currentStep++
+                    Solver222.showNextHintRGW(
+                        cubelets, markers
+                    )
+                    // Solver222.currentStep++
 
+                }) {
+                Text("Solve")
             }
-        ) {
-            Text("rgw")
-        }
 
             val scope = rememberCoroutineScope()
+/*
 
             Button(
                 onClick = {
                     scope.launch {
 
                         val state = Solver222.State(
-                            buildCornersPos(cubelets),
-                             buildCornerAxes(cubelets)
+                            buildCornersPos(cubelets), buildCornerAxes(cubelets)
                         )
 
-                        val TARGET_ORI = listOf(0, 2, 4)
+                        listOf(0, 2, 4)
 
                         val result = solve(state)
 
 
-                        /*val result1 = solve(
+                        */
+/*val result1 = solve(
                             state,
                             { state: Solver222.State ->
                                 val pos7 = state.pos.indexOf(7)
                                 pos7 == 7 //&& state.ori[21] == 0 && state.ori[22] == 2 && state.ori[23] == 4
                             }
                         )
-                        */
+                        *//*
 
-                        Log.d("SOLVER","Solution: ${result}")
+
+                        Log.d("SOLVER", "Solution: $result")
                     }
-                }
-            ) {
+                }) {
                 Text("Solve")
             }
+*/
 
         }
 
@@ -704,7 +689,6 @@ fun Cube222Screen(
         Row {
 
 
-
             Button(
                 onClick = {
                     /*Moves222.test(
@@ -712,7 +696,6 @@ fun Cube222Screen(
                         rotate = ::jumpRotation
                     )
                     Solver222.getSolution()*/
-
 
 
                     val state = CubeState222(
@@ -725,10 +708,9 @@ fun Cube222Screen(
                     // val qq = "R U R' U'"
                     val qq = "R"
                     Log.d(
-                        "SOLVER",
-                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                        "SOLVER", ">>>>>>>>>>   $qq   <<<<<<<<<<<"
                     )
-                    pre(state,qq, cubelets)
+                    pre(state, qq, cubelets)
                     //cubelets.add(cubelets.removeAt(0))
 
                     val stateAfter = CubeState222(
@@ -738,16 +720,13 @@ fun Cube222Screen(
                     )
 
                     Log.d(
-                        "SOLVER",
-                        stateAfter.cornersPos.joinToString()
+                        "SOLVER", stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "************************************"
+                        "SOLVER", "************************************"
                     )
 
                 }) {
@@ -763,7 +742,6 @@ fun Cube222Screen(
                     Solver222.getSolution()*/
 
 
-
                     val state = CubeState222(
                         cubelets,
 
@@ -774,10 +752,9 @@ fun Cube222Screen(
                     // val qq = "R U R' U'"
                     val qq = "R'"
                     Log.d(
-                        "SOLVER",
-                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                        "SOLVER", ">>>>>>>>>>   $qq   <<<<<<<<<<<"
                     )
-                    pre(state,qq, cubelets)
+                    pre(state, qq, cubelets)
                     //cubelets.add(cubelets.removeAt(0))
 
                     val stateAfter = CubeState222(
@@ -787,16 +764,13 @@ fun Cube222Screen(
                     )
 
                     Log.d(
-                        "SOLVER",
-                        stateAfter.cornersPos.joinToString()
+                        "SOLVER", stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "************************************"
+                        "SOLVER", "************************************"
                     )
 
                 }) {
@@ -812,7 +786,6 @@ fun Cube222Screen(
                     Solver222.getSolution()*/
 
 
-
                     val state = CubeState222(
                         cubelets,
 
@@ -823,10 +796,9 @@ fun Cube222Screen(
                     // val qq = "R U R' U'"
                     val qq = "L"
                     Log.d(
-                        "SOLVER",
-                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                        "SOLVER", ">>>>>>>>>>   $qq   <<<<<<<<<<<"
                     )
-                    pre(state,qq, cubelets)
+                    pre(state, qq, cubelets)
                     //cubelets.add(cubelets.removeAt(0))
 
                     val stateAfter = CubeState222(
@@ -836,16 +808,13 @@ fun Cube222Screen(
                     )
 
                     Log.d(
-                        "SOLVER",
-                        stateAfter.cornersPos.joinToString()
+                        "SOLVER", stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "************************************"
+                        "SOLVER", "************************************"
                     )
 
                 }) {
@@ -861,7 +830,6 @@ fun Cube222Screen(
                     Solver222.getSolution()*/
 
 
-
                     val state = CubeState222(
                         cubelets,
 
@@ -872,10 +840,9 @@ fun Cube222Screen(
                     // val qq = "R U R' U'"
                     val qq = "L'"
                     Log.d(
-                        "SOLVER",
-                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                        "SOLVER", ">>>>>>>>>>   $qq   <<<<<<<<<<<"
                     )
-                    pre(state,qq, cubelets)
+                    pre(state, qq, cubelets)
                     //cubelets.add(cubelets.removeAt(0))
 
                     val stateAfter = CubeState222(
@@ -885,16 +852,13 @@ fun Cube222Screen(
                     )
 
                     Log.d(
-                        "SOLVER",
-                        stateAfter.cornersPos.joinToString()
+                        "SOLVER", stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "************************************"
+                        "SOLVER", "************************************"
                     )
 
                 }) {
@@ -910,7 +874,6 @@ fun Cube222Screen(
                     Solver222.getSolution()*/
 
 
-
                     val state = CubeState222(
                         cubelets,
 
@@ -921,10 +884,9 @@ fun Cube222Screen(
                     // val qq = "R U R' U'"
                     val qq = "U"
                     Log.d(
-                        "SOLVER",
-                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                        "SOLVER", ">>>>>>>>>>   $qq   <<<<<<<<<<<"
                     )
-                    pre(state,qq, cubelets)
+                    pre(state, qq, cubelets)
                     //cubelets.add(cubelets.removeAt(0))
 
                     val stateAfter = CubeState222(
@@ -934,16 +896,13 @@ fun Cube222Screen(
                     )
 
                     Log.d(
-                        "SOLVER",
-                        stateAfter.cornersPos.joinToString()
+                        "SOLVER", stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "************************************"
+                        "SOLVER", "************************************"
                     )
 
                 }) {
@@ -959,7 +918,6 @@ fun Cube222Screen(
                     Solver222.getSolution()*/
 
 
-
                     val state = CubeState222(
                         cubelets,
 
@@ -970,10 +928,9 @@ fun Cube222Screen(
                     // val qq = "R U R' U'"
                     val qq = "U'"
                     Log.d(
-                        "SOLVER",
-                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                        "SOLVER", ">>>>>>>>>>   $qq   <<<<<<<<<<<"
                     )
-                    pre(state,qq, cubelets)
+                    pre(state, qq, cubelets)
                     //cubelets.add(cubelets.removeAt(0))
 
                     val stateAfter = CubeState222(
@@ -983,16 +940,13 @@ fun Cube222Screen(
                     )
 
                     Log.d(
-                        "SOLVER",
-                        stateAfter.cornersPos.joinToString()
+                        "SOLVER", stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "************************************"
+                        "SOLVER", "************************************"
                     )
 
                 }) {
@@ -1007,7 +961,6 @@ fun Cube222Screen(
         Row {
 
 
-
             Button(
                 onClick = {
                     /*Moves222.test(
@@ -1015,7 +968,6 @@ fun Cube222Screen(
                         rotate = ::jumpRotation
                     )
                     Solver222.getSolution()*/
-
 
 
                     val state = CubeState222(
@@ -1028,10 +980,9 @@ fun Cube222Screen(
                     // val qq = "R U R' U'"
                     val qq = "D"
                     Log.d(
-                        "SOLVER",
-                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                        "SOLVER", ">>>>>>>>>>   $qq   <<<<<<<<<<<"
                     )
-                    pre(state,qq, cubelets)
+                    pre(state, qq, cubelets)
                     //cubelets.add(cubelets.removeAt(0))
 
                     val stateAfter = CubeState222(
@@ -1041,16 +992,13 @@ fun Cube222Screen(
                     )
 
                     Log.d(
-                        "SOLVER",
-                        stateAfter.cornersPos.joinToString()
+                        "SOLVER", stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "************************************"
+                        "SOLVER", "************************************"
                     )
 
                 }) {
@@ -1066,7 +1014,6 @@ fun Cube222Screen(
                     Solver222.getSolution()*/
 
 
-
                     val state = CubeState222(
                         cubelets,
 
@@ -1077,10 +1024,9 @@ fun Cube222Screen(
                     // val qq = "R U R' U'"
                     val qq = "D'"
                     Log.d(
-                        "SOLVER",
-                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                        "SOLVER", ">>>>>>>>>>   $qq   <<<<<<<<<<<"
                     )
-                    pre(state,qq, cubelets)
+                    pre(state, qq, cubelets)
                     //cubelets.add(cubelets.removeAt(0))
 
                     val stateAfter = CubeState222(
@@ -1090,16 +1036,13 @@ fun Cube222Screen(
                     )
 
                     Log.d(
-                        "SOLVER",
-                        stateAfter.cornersPos.joinToString()
+                        "SOLVER", stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "************************************"
+                        "SOLVER", "************************************"
                     )
 
                 }) {
@@ -1115,7 +1058,6 @@ fun Cube222Screen(
                     Solver222.getSolution()*/
 
 
-
                     val state = CubeState222(
                         cubelets,
 
@@ -1126,10 +1068,9 @@ fun Cube222Screen(
                     // val qq = "R U R' U'"
                     val qq = "F"
                     Log.d(
-                        "SOLVER",
-                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                        "SOLVER", ">>>>>>>>>>   $qq   <<<<<<<<<<<"
                     )
-                    pre(state,qq, cubelets)
+                    pre(state, qq, cubelets)
                     //cubelets.add(cubelets.removeAt(0))
 
                     val stateAfter = CubeState222(
@@ -1139,16 +1080,13 @@ fun Cube222Screen(
                     )
 
                     Log.d(
-                        "SOLVER",
-                        stateAfter.cornersPos.joinToString()
+                        "SOLVER", stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "************************************"
+                        "SOLVER", "************************************"
                     )
 
                 }) {
@@ -1164,7 +1102,6 @@ fun Cube222Screen(
                     Solver222.getSolution()*/
 
 
-
                     val state = CubeState222(
                         cubelets,
 
@@ -1175,10 +1112,9 @@ fun Cube222Screen(
                     // val qq = "R U R' U'"
                     val qq = "F'"
                     Log.d(
-                        "SOLVER",
-                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                        "SOLVER", ">>>>>>>>>>   $qq   <<<<<<<<<<<"
                     )
-                    pre(state,qq, cubelets)
+                    pre(state, qq, cubelets)
                     //cubelets.add(cubelets.removeAt(0))
 
                     val stateAfter = CubeState222(
@@ -1188,16 +1124,13 @@ fun Cube222Screen(
                     )
 
                     Log.d(
-                        "SOLVER",
-                        stateAfter.cornersPos.joinToString()
+                        "SOLVER", stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "************************************"
+                        "SOLVER", "************************************"
                     )
 
                 }) {
@@ -1213,7 +1146,6 @@ fun Cube222Screen(
                     Solver222.getSolution()*/
 
 
-
                     val state = CubeState222(
                         cubelets,
 
@@ -1224,10 +1156,9 @@ fun Cube222Screen(
                     // val qq = "R U R' U'"
                     val qq = "B"
                     Log.d(
-                        "SOLVER",
-                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                        "SOLVER", ">>>>>>>>>>   $qq   <<<<<<<<<<<"
                     )
-                    pre(state,qq, cubelets)
+                    pre(state, qq, cubelets)
                     //cubelets.add(cubelets.removeAt(0))
 
                     val stateAfter = CubeState222(
@@ -1237,16 +1168,13 @@ fun Cube222Screen(
                     )
 
                     Log.d(
-                        "SOLVER",
-                        stateAfter.cornersPos.joinToString()
+                        "SOLVER", stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "************************************"
+                        "SOLVER", "************************************"
                     )
 
                 }) {
@@ -1262,7 +1190,6 @@ fun Cube222Screen(
                     Solver222.getSolution()*/
 
 
-
                     val state = CubeState222(
                         cubelets,
 
@@ -1273,10 +1200,9 @@ fun Cube222Screen(
                     // val qq = "R U R' U'"
                     val qq = "B'"
                     Log.d(
-                        "SOLVER",
-                        ">>>>>>>>>>   $qq   <<<<<<<<<<<"
+                        "SOLVER", ">>>>>>>>>>   $qq   <<<<<<<<<<<"
                     )
-                    pre(state,qq, cubelets)
+                    pre(state, qq, cubelets)
                     //cubelets.add(cubelets.removeAt(0))
 
                     val stateAfter = CubeState222(
@@ -1286,16 +1212,13 @@ fun Cube222Screen(
                     )
 
                     Log.d(
-                        "SOLVER",
-                        stateAfter.cornersPos.joinToString()
+                        "SOLVER", stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "stateAfter -> " + stateAfter.cornersAxes.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
-                        "SOLVER",
-                        "************************************"
+                        "SOLVER", "************************************"
                     )
 
                 }) {
@@ -1306,8 +1229,7 @@ fun Cube222Screen(
         }
     }
 
-}
-/*
+}/*
 
 
 "R", "R'",
