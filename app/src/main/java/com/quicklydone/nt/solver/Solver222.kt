@@ -243,9 +243,26 @@ object Solver222 {
     }
 
 
-
-
     fun getSolutionRGW(state: CubeState222) {
+
+        solutionMoves.clear()
+
+        Log.d("SOLVER", state.cornersPos.joinToString())
+        Log.d("SOLVER", state.cornersAxes.joinToString())
+
+        val start = State(
+            pos = state.cornersPos.copyOf(),
+            ori = state.cornersAxes.copyOf()
+        )
+
+        val result = solve(start)
+
+        solutionMoves.addAll(result)
+
+        currentStep = 0
+    }
+
+    fun getSolutionRGW1(state: CubeState222) {
         solutionMoves.clear()
 
 
@@ -335,7 +352,18 @@ object Solver222 {
         6,
         5
     )
+    fun rotateDirR(dir: Int): Int =
+        when (dir) {
+            0 -> 0
+            1 -> 1
 
+            2 -> 5
+            5 -> 3
+            3 -> 4
+            4 -> 2
+
+            else -> error("bad dir")
+        }
     fun moveR(state: State): State =
         applyPermWithOri(
             state,
@@ -472,7 +500,7 @@ object Solver222 {
             applyPermWithOri(
                 state,
                 moveUPrime,
-                intArrayOf(0, 2, 4, 6),
+                intArrayOf(2,3,6,7),
                 ::rotateDirUPrime
             )
 
@@ -523,7 +551,7 @@ object Solver222 {
             applyPermWithOri(
                 state,
                 moveDPrime,
-                intArrayOf(0, 2, 4, 6),
+                intArrayOf(0,1,4,5),
                 ::rotateDirDPrime
             )
 
@@ -577,7 +605,7 @@ object Solver222 {
             applyPermWithOri(
                 state,
                 moveFPrime,
-                intArrayOf(0, 2, 4, 6),
+                intArrayOf(4,5,6,7),
                 ::rotateDirFPrime
             )
 
@@ -630,7 +658,7 @@ object Solver222 {
             applyPermWithOri(
                 state,
                 moveBPrime,
-                intArrayOf(0, 2, 4, 6),
+                intArrayOf(0,1,2,3),
                 ::rotateDirBPrime
             )
 
@@ -674,16 +702,14 @@ object Solver222 {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-            if (state.pos[7] == 7 && state.ori.sliceArray(21..23).contentEquals(intArrayOf(0,2,4))) {
+           // if (state.pos[7] == 7 && state.ori.sliceArray(21..23).contentEquals(intArrayOf(0,2,4))) {
 
-             //if (state.pos[7] == 7 && state.pos[6] == 3 && state.pos[5] == 5 && state.pos[4] == 1) {
+ if (state.pos[7] == 7 //&& state.pos[6] == 6
+     && state.ori.sliceArray(21..23).contentEquals(intArrayOf(0,2,4))) {
              // if ( state.pos[7] == 7 ) {
 
-                    Log.d(
-                    "SOLVER",
-                    "FOUND: ${path.joinToString(" ")} -> ${state.pos.joinToString()}"
+              Log.d("SOLVER", "FOUND: ${path.joinToString(" ")} -> ${state.pos.joinToString()}")
 
-                )
                 return path
             }
 
@@ -747,18 +773,7 @@ object Solver222 {
 
 
 
-    fun rotateDirR(dir: Int): Int =
-        when (dir) {
-            0 -> 0
-            1 -> 1
 
-            2 -> 5
-            5 -> 3
-            3 -> 4
-            4 -> 2
-
-            else -> error("bad dir")
-        }
 
     fun applyPermWithOri(
         state: State,

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -26,13 +25,10 @@ import com.quicklydone.nt.animation.rotateLayer444
 import com.quicklydone.nt.common.GestureState444
 import com.quicklydone.nt.common.TopBar
 import com.quicklydone.nt.common.Vec3
-import com.quicklydone.nt.common.rememberCubelets
 import com.quicklydone.nt.cube.CubeConfig
 import com.quicklydone.nt.cube.CubeFactory
 import com.quicklydone.nt.cube.rememberCubelets
 import com.quicklydone.nt.cube_new.CubeRenderer444
-import com.quicklydone.nt.cube_new.CubeRendererNew
-import com.quicklydone.nt.cube_new.VisibleFaceNew
 import kotlinx.coroutines.launch
 
 @Composable
@@ -63,10 +59,6 @@ fun Cube444Screen(
         mutableFloatStateOf(0f)
     }
 
-    val visibleFaces = remember {
-        mutableStateListOf<VisibleFaceNew>()
-    }
-
     val scope = rememberCoroutineScope()
 
     fun resetCube() {
@@ -81,6 +73,7 @@ fun Cube444Screen(
         rotX = 0.8f
         rotY = -0.8f
     }
+
 
     fun startRotation(
         axis: Vec3,

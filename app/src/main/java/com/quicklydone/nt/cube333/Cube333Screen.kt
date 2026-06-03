@@ -79,6 +79,7 @@ fun Cube333Screen(
         rotY = -0.8f
     }
 
+
     fun startRotation(
         axis: Vec3,
         layer: Float,
@@ -146,10 +147,7 @@ fun Cube333Screen(
             .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
 
-        TopBar(
-            goMenu = goMenu,
-            onReset = ::resetCube
-        )
+        TopBar(goMenu = goMenu, onReset = ::resetCube)
 
         Box(
             modifier = Modifier
