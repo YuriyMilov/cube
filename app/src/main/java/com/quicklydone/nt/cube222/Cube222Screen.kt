@@ -45,7 +45,9 @@ import com.quicklydone.nt.solver.Moves222
 import com.quicklydone.nt.solver.Solver222
 import com.quicklydone.nt.solver.Solver222.pre
 import com.quicklydone.nt.solver.Solver222.solve
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun Cube222Screen(
@@ -105,7 +107,13 @@ fun Cube222Screen(
         markers += FaceMarkerNew(
             side = SideNew.RIGHT, color = Color.White, radius = 24f
         )
-
+        /*Solver222.State(
+            pos = intArrayOf( 0, 4, 2, 6, 7, 1, 3, 5),
+            ori = intArrayOf(
+                0,2,4, 0,2,4, 0,2,4, 0,2,4,
+                0,2,4, 0,2,4, 0,2,4, 0,2,4
+            )
+        )*/
     }
 
     fun veiw() {
@@ -580,7 +588,8 @@ Row{
                         "SOLVER", stateBefore.cornersAxes.joinToString()
                     )
 
-
+                   // cubelets.clear()
+                   // cubelets.addAll(createCubelets(config))
                     Moves222.scramble(cubelets, 7)
 
 
@@ -634,23 +643,25 @@ Row{
 
             Button(
                 onClick = {
-                    val state = CubeState222(
-                        cubelets,
+                    scope.launch(Dispatchers.Default) {
 
-                        cornersPos = buildCornersPos(cubelets),
-                        cornersAxes = buildCornerAxes(cubelets)
-                    )
+                        val state = CubeState222(
+                            cubelets,
+                            cornersPos = buildCornersPos(cubelets),
+                            cornersAxes = buildCornerAxes(cubelets)
+                        )
 
-                    // Solver222.onCubeChanged(state)
+                        Solver222.getSolutionRGW(state)
 
-                    Solver222.getSolutionRGW(state)
-
-                    Solver222.showNextHintRGW(
-                        cubelets, markers
-                    )
-                    // Solver222.currentStep++
-
-                }) {
+                        withContext(Dispatchers.Main) {
+                            Solver222.showNextHintRGW(
+                                cubelets,
+                                markers
+                            )
+                        }
+                    }
+                }
+            ) {
                 Text("Solve")
             }
 

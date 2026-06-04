@@ -334,10 +334,6 @@ object Solver222 {
 
     }
 
-    data class State(
-        val pos: IntArray,
-        val ori: IntArray
-    )
 
 
     fun inversePerm(p: IntArray): IntArray {
@@ -679,8 +675,18 @@ object Solver222 {
             )
 
 
-    fun solve(start: State): List<String> {
-     val moves = listOf(
+    data class Node(
+        val state: State,
+        val parent: Node?,
+        val move: String?,
+        val depth: Int
+    )
+
+   /* fun solve(start: State): List<String> {
+
+        val startTime = System.currentTimeMillis()
+
+        val moves = listOf(
             "R", "R'",
             "L", "L'",
             "U", "U'",
@@ -689,68 +695,97 @@ object Solver222 {
             "B", "B'"
         )
 
-        val queue = ArrayDeque<Pair<State, List<String>>>()
+        val queue = ArrayDeque<Node>()
+        val visited = HashSet<State>()
 
-        // храним всё состояние, а не только targetPos
-        val visited = mutableSetOf<String>()
+        val root = Node(
+            state = start,
+            parent = null,
+            move = null,
+            depth = 0
+        )
 
-        queue.add(start to emptyList())
+        queue.add(root)
+        visited.add(start)
 
         while (queue.isNotEmpty()) {
 
-            val (state, path) = queue.removeFirst()
+            val node = queue.removeFirst()
+            val state = node.state
 
-            val key =
-                state.pos.joinToString(",") +
-                        "|" +
-                        state.ori.joinToString(",")
+            if (
+                state.ori.contentEquals(
+                    intArrayOf(
+                        0,2,4, 0,2,4,
+                        0,2,4, 0,2,4,
+                        0,2,4, 0,2,4,
+                        0,2,4, 0,2,4
+                    )
+                )
+            ) {
 
-            if (!visited.add(key)) {
-                continue
-            }
+                val path = mutableListOf<String>()
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                var current: Node? = node
 
+                while (current != null) {
+                    current.move?.let { path.add(it) }
+                    current = current.parent
+                }
 
-           // if (state.pos[7] == 7 && state.ori.sliceArray(21..23).contentEquals(intArrayOf(0,2,4))) {
+                path.reverse()
 
+                val elapsed =
+                    System.currentTimeMillis() - startTime
 
-            if (//state.pos[7] == 7 && state.pos[5] == 5 && state.pos[4] == 1 && state.pos[6] == 3
-               // &&
-                    state.ori.sliceArray(0..11).contentEquals(intArrayOf(0,2,4,0,2,4,0,2,4,0,2,4))
-               // && state.ori.sliceArray(21..23).contentEquals(intArrayOf(0,2,4))
-                ){
-              //if ( state.pos[0] == 0 ) {
-
-              Log.d("SOLVER", "FOUND: ${path.joinToString(" ")} -> ${state.pos.joinToString()}")
+                Log.d(
+                    "SOLVER",
+                    "FOUND in ${elapsed}ms : ${path.joinToString(" ")}"
+                )
 
                 return path
             }
 
-            // защита от слишком глубокого поиска
-            if (path.size >= 9) {
-
-                Log.d("SOLVER", "NO SOLUTION $path.size")
-                return emptyList()
-                //continue
+            if (node.depth >= 9) {
+                continue
             }
 
             for (move in moves) {
 
-                val next = applyMove(state, move)
-                queue.add(next to (path + move))
-                Log.d("SOLVER", " **************  move = $move")
-                //Log.d("SOLVER", " **************  queue = $queue")
-                Log.d("SOLVER", " POS= ${state.pos.joinToString()}")
-                Log.d("SOLVER", " ORI= ${state.ori.joinToString()}")
+                val nextState = applyMove(state, move)
 
+                if (visited.add(nextState)) {
+
+                    queue.add(
+                        Node(
+                            state = nextState,
+                            parent = node,
+                            move = move,
+                            depth = node.depth + 1
+                        )
+                    )
+                }
+            }
+
+            if (visited.size % 10000 == 0) {
+
+                val rt = Runtime.getRuntime()
+
+                val usedMb =
+                    (rt.totalMemory() - rt.freeMemory()) /
+                            1024 / 1024
+
+                Log.d(
+                    "SOLVER",
+                    "visited=${visited.size} queue=${queue.size} mem=${usedMb}MB"
+                )
             }
         }
 
         Log.d("SOLVER", "NO SOLUTION")
-        return emptyList()
-    }
 
+        return emptyList()
+    }*/
     fun applyMove(state: State, move: String): State {
         val result = when(move) {
             "R"  -> moveR(state)
@@ -774,11 +809,11 @@ object Solver222 {
             else -> state
         }
 
-        Log.d(
+    /*    Log.d(
             "SOLVER",
             "- applyMove() ->>   $move : ${state.pos.joinToString()} -> ${result.pos.joinToString()}  ${result.ori.joinToString()}"
         )
-
+*/
         return result
     }
     fun compose(a: IntArray, b: IntArray): IntArray {
@@ -842,6 +877,109 @@ object Solver222 {
 
     val FRONT = intArrayOf(4,5,6,7)
     val BACK  = intArrayOf(0,1,2,3)
+
+
+
+
+
+
+
+
+
+    fun isSolved(state: State): Boolean {
+
+        return state.ori.contentEquals(
+            intArrayOf(
+                0,2,4, 0,2,4,
+                0,2,4, 0,2,4,
+                0,2,4, 0,2,4,
+                0,2,4, 0,2,4
+            )
+        )
+    }
+
+    fun solve(start: State): List<String> {
+
+        val startTime = System.currentTimeMillis()
+
+        for (maxDepth in 0..8) {
+
+            Log.d("SOLVER", "depth = $maxDepth")
+
+            val path = mutableListOf<String>()
+
+            if (
+                dfs(
+                    state = start,
+                    depth = 0,
+                    maxDepth = maxDepth,
+                    path = path
+                )
+            ) {
+
+                val elapsed =
+                    System.currentTimeMillis() - startTime
+
+                Log.d(
+                    "SOLVER",
+                    "FOUND in ${elapsed}ms : ${path.joinToString(" ")}"
+                )
+
+                return path
+            }
+        }
+
+        Log.d("SOLVER", "NO SOLUTION")
+
+        return emptyList()
+    }
+
+    private fun dfs(
+        state: State,
+        depth: Int,
+        maxDepth: Int,
+        path: MutableList<String>
+    ): Boolean {
+
+        if (isSolved(state)) {
+            return true
+        }
+
+        if (depth >= maxDepth) {
+            return false
+        }
+
+        val moves = listOf(
+            "R", "R'",
+            "L", "L'",
+            "U", "U'",
+            "D", "D'",
+            "F", "F'",
+            "B", "B'"
+        )
+
+        for (move in moves) {
+
+            val next = applyMove(state, move)
+
+                path.add(move)
+
+            if (
+                dfs(
+                    state = next,
+                    depth = depth + 1,
+                    maxDepth = maxDepth,
+                    path = path
+                )
+            ) {
+                return true
+            }
+
+            path.removeAt(path.lastIndex)
+        }
+
+        return false
+    }
 }
 
 
@@ -850,3 +988,27 @@ data class CubeState222(
     val cornersPos: IntArray,
     val cornersAxes: IntArray
 )
+
+data class Node(
+    val state: State,
+    val parent: Node?,
+    val move: String?
+)
+
+
+data class State(
+    val pos: IntArray,
+    val ori: IntArray
+) {
+    override fun equals(other: Any?): Boolean {
+        if (other !is State) return false
+
+        return pos.contentEquals(other.pos) &&
+                ori.contentEquals(other.ori)
+    }
+
+    override fun hashCode(): Int {
+        return 31 * pos.contentHashCode() +
+                ori.contentHashCode()
+    }
+}
