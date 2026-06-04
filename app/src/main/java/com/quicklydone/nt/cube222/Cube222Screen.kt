@@ -243,6 +243,14 @@ fun Cube222Screen(
 
                 onEnd = {
 
+                    val pos = buildCornersPos(cubelets)
+                    val ori = buildCornerAxes(cubelets)
+
+                    Log.d("SOLVER", "POS -> ${pos.joinToString()}")
+                    Log.d("SOLVER", "ORI -> ${ori.joinToString()}")
+
+
+
                     val state = CubeState222(
                         cubelets = cubelets,
                         cornersPos = buildCornersPos(cubelets),
@@ -1080,10 +1088,10 @@ Row{
                     )
 
                     Log.d(
-                        "SOLVER", stateAfter.cornersPos.joinToString()
+                        "SOLVER", "POS stateAfter -> " + stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
-                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
+                        "SOLVER", "ORI stateAfter -> " + stateAfter.cornersAxes.joinToString()
                     )
                     Log.d(
                         "SOLVER", "************************************"
@@ -1124,7 +1132,7 @@ Row{
                     )
 
                     Log.d(
-                        "SOLVER", stateAfter.cornersPos.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
                         "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
@@ -1132,6 +1140,10 @@ Row{
                     Log.d(
                         "SOLVER", "************************************"
                     )
+
+
+                    //Log.d("TEST", "*********** cornersPos **********"+ state.pos.joinToString())
+                    //Log.d("TEST", "*********** cornersAxes **********"+state.ori.joinToString())
 
                 }) {
                 Text("F'")
@@ -1168,7 +1180,7 @@ Row{
                     )
 
                     Log.d(
-                        "SOLVER", stateAfter.cornersPos.joinToString()
+                        "SOLVER", "stateAfter -> " + stateAfter.cornersPos.joinToString()
                     )
                     Log.d(
                         "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()

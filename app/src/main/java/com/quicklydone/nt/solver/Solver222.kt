@@ -132,7 +132,8 @@ object Solver222 {
     fun onCubeChanged(
         state: CubeState222
     ) {
-        Log.d(
+
+   /*     Log.d(
             "SOLVER",
             state.cornersPos.joinToString()
         )
@@ -141,6 +142,11 @@ object Solver222 {
             "SOLVER",
             state.cornersAxes.joinToString()
         )
+
+
+    */
+
+
     }
 
     fun applyRotation(
@@ -311,11 +317,11 @@ object Solver222 {
             state.cornersPos.joinToString()
         )
 
-        Log.d(
+     /*   Log.d(
             "SOLVER",
             state.cornersAxes.joinToString()
         )
-
+*/
 
         executeAlgorithm(
             algorithm,
@@ -566,15 +572,25 @@ object Solver222 {
         4, // 6
         6  // 7
     )
+    val moveF2 = intArrayOf(
+        0,
+        1,
+        2,
+        3,
+        7,
+        6,
+        5,
+        4
+    )
     fun rotateDirF(dir: Int): Int =
         when (dir) {
-            2 -> 4
-            4 -> 3
-            3 -> 5
-            5 -> 2
+            0 -> 3
+            3 -> 1
+            1 -> 2
+            2 -> 0
 
-            0 -> 0
-            1 -> 1
+            4 -> 4
+            5 -> 5
 
             else -> error("bad dir")
         }
@@ -591,13 +607,13 @@ object Solver222 {
 
     fun rotateDirFPrime(dir: Int): Int =
         when (dir) {
-            2 -> 5
-            5 -> 3
-            3 -> 4
-            4 -> 2
+            0 -> 2
+            2 -> 1
+            1 -> 3
+            3 -> 0
 
-            0 -> 0
-            1 -> 1
+            4 -> 4
+            5 -> 5
 
             else -> error("bad dir")
         }
@@ -622,13 +638,13 @@ object Solver222 {
     )
     fun rotateDirB(dir: Int): Int =
         when (dir) {
-            2 -> 5
-            5 -> 3
-            3 -> 4
-            4 -> 2
+            2 -> 1
+            1 -> 3
+            3 -> 0
+            0 -> 2
 
-            0 -> 0
-            1 -> 1
+            4 -> 4
+            5 -> 5
 
             else -> error("bad dir")
         }
@@ -644,13 +660,13 @@ object Solver222 {
     val moveBPrime = inversePerm(moveB)
     fun rotateDirBPrime(dir: Int): Int =
         when (dir) {
-            2 -> 4
-            4 -> 3
-            3 -> 5
-            5 -> 2
+            2 -> 0
+            0 -> 3
+            3 -> 1
+            1 -> 2
 
-            0 -> 0
-            1 -> 1
+            4 -> 4
+            5 -> 5
 
             else -> error("bad dir")
         }
@@ -664,13 +680,7 @@ object Solver222 {
 
 
     fun solve(start: State): List<String> {
-
-
-
-
-
-
-        val moves = listOf(
+     val moves = listOf(
             "R", "R'",
             "L", "L'",
             "U", "U'",
@@ -704,9 +714,13 @@ object Solver222 {
 
            // if (state.pos[7] == 7 && state.ori.sliceArray(21..23).contentEquals(intArrayOf(0,2,4))) {
 
- if (state.pos[7] == 7 //&& state.pos[6] == 6
-     && state.ori.sliceArray(21..23).contentEquals(intArrayOf(0,2,4))) {
-             // if ( state.pos[7] == 7 ) {
+
+            if (//state.pos[7] == 7 && state.pos[5] == 5 && state.pos[4] == 1 && state.pos[6] == 3
+               // &&
+                    state.ori.sliceArray(0..11).contentEquals(intArrayOf(0,2,4,0,2,4,0,2,4,0,2,4))
+               // && state.ori.sliceArray(21..23).contentEquals(intArrayOf(0,2,4))
+                ){
+              //if ( state.pos[0] == 0 ) {
 
               Log.d("SOLVER", "FOUND: ${path.joinToString(" ")} -> ${state.pos.joinToString()}")
 
@@ -714,15 +728,22 @@ object Solver222 {
             }
 
             // защита от слишком глубокого поиска
-            if (path.size >= 4) {
-                continue
+            if (path.size >= 9) {
+
+                Log.d("SOLVER", "NO SOLUTION $path.size")
+                return emptyList()
+                //continue
             }
 
             for (move in moves) {
 
-              //Log.d("SOLVER", "===========       for (move in moves)         ======")
                 val next = applyMove(state, move)
                 queue.add(next to (path + move))
+                Log.d("SOLVER", " **************  move = $move")
+                //Log.d("SOLVER", " **************  queue = $queue")
+                Log.d("SOLVER", " POS= ${state.pos.joinToString()}")
+                Log.d("SOLVER", " ORI= ${state.ori.joinToString()}")
+
             }
         }
 
@@ -755,7 +776,7 @@ object Solver222 {
 
         Log.d(
             "SOLVER",
-            "-->>   $move : ${state.pos.joinToString()} -> ${result.pos.joinToString()}  ${result.ori.joinToString()}"
+            "- applyMove() ->>   $move : ${state.pos.joinToString()} -> ${result.pos.joinToString()}  ${result.ori.joinToString()}"
         )
 
         return result
