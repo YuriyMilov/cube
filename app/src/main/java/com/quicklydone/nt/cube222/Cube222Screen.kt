@@ -278,7 +278,8 @@ fun Cube222Screen(
 
                     Solver222.currentStep++
 
-                    Solver222.showNextHint(cubelets, markers)
+                    //Solver222.showNextHint(cubelets, markers)
+                    Solver222.showNextHint(markers)
 
 
                 })
@@ -347,7 +348,6 @@ fun Cube222Screen(
                 })
         }
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -355,7 +355,7 @@ fun Cube222Screen(
             .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
         TopBar(goMenu = goMenu, onReset = ::resetCube)
-Row{
+/*Row{
     Button(
         onClick = {
             rotX = 0.8f
@@ -364,7 +364,7 @@ Row{
     ) {
         Text("VIEW")
     }
-}
+}*/
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -569,7 +569,7 @@ Row{
 
         Row {
 
-
+            Text("      ")
             Button(
                 onClick = {
 
@@ -588,9 +588,9 @@ Row{
                         "SOLVER", stateBefore.cornersAxes.joinToString()
                     )
 
-                   // cubelets.clear()
-                   // cubelets.addAll(createCubelets(config))
-                    Moves222.scramble(cubelets, 7)
+                    cubelets.clear()
+                    cubelets.addAll(createCubelets(config))
+                    Moves222.scramble(cubelets, 6)
 
 
                     val stateAfter = CubeState222(
@@ -614,12 +614,12 @@ Row{
                     )
 
                 }) {
-                Text("Scramle")
+                Text("SCRAMBLE")
             }
 
+            Text("    ")
 
-
-            Button(
+         /*   Button(
                 onClick = {
                     val state = CubeState222(
                         cubelets,
@@ -638,7 +638,7 @@ Row{
 
                 }) {
                 Text("Inv")
-            }
+            }*/
 
 
             Button(
@@ -662,7 +662,7 @@ Row{
                     }
                 }
             ) {
-                Text("Solve")
+                Text("SOLVE")
             }
 
             val scope = rememberCoroutineScope()
@@ -704,17 +704,16 @@ Row{
 
 
 
-
-        Row {
+        /*Row {
 
 
             Button(
                 onClick = {
-                    /*Moves222.test(
+                    Moves222.test(
                         gestureState,// cubelets = cubelets,
                         rotate = ::jumpRotation
                     )
-                    Solver222.getSolution()*/
+                    Solver222.getSolution()
 
 
                     val state = CubeState222(
@@ -754,11 +753,11 @@ Row{
 
             Button(
                 onClick = {
-                    /*Moves222.test(
+                    Moves222.test(
                         gestureState,// cubelets = cubelets,
                         rotate = ::jumpRotation
                     )
-                    Solver222.getSolution()*/
+                    Solver222.getSolution()
 
 
                     val state = CubeState222(
@@ -798,11 +797,11 @@ Row{
 
             Button(
                 onClick = {
-                    /*Moves222.test(
+                    Moves222.test(
                         gestureState,// cubelets = cubelets,
                         rotate = ::jumpRotation
                     )
-                    Solver222.getSolution()*/
+                    Solver222.getSolution()
 
 
                     val state = CubeState222(
@@ -842,11 +841,11 @@ Row{
 
             Button(
                 onClick = {
-                    /*Moves222.test(
+                    Moves222.test(
                         gestureState,// cubelets = cubelets,
                         rotate = ::jumpRotation
                     )
-                    Solver222.getSolution()*/
+                    Solver222.getSolution()
 
 
                     val state = CubeState222(
@@ -886,11 +885,11 @@ Row{
 
             Button(
                 onClick = {
-                    /*Moves222.test(
+                    Moves222.test(
                         gestureState,// cubelets = cubelets,
                         rotate = ::jumpRotation
                     )
-                    Solver222.getSolution()*/
+                    Solver222.getSolution()
 
 
                     val state = CubeState222(
@@ -930,11 +929,11 @@ Row{
 
             Button(
                 onClick = {
-                    /*Moves222.test(
+                    Moves222.test(
                         gestureState,// cubelets = cubelets,
                         rotate = ::jumpRotation
                     )
-                    Solver222.getSolution()*/
+                    Solver222.getSolution()
 
 
                     val state = CubeState222(
@@ -982,11 +981,11 @@ Row{
 
             Button(
                 onClick = {
-                    /*Moves222.test(
+                    Moves222.test(
                         gestureState,// cubelets = cubelets,
                         rotate = ::jumpRotation
                     )
-                    Solver222.getSolution()*/
+                    Solver222.getSolution()
 
 
                     val state = CubeState222(
@@ -1026,11 +1025,11 @@ Row{
 
             Button(
                 onClick = {
-                    /*Moves222.test(
+                    Moves222.test(
                         gestureState,// cubelets = cubelets,
                         rotate = ::jumpRotation
                     )
-                    Solver222.getSolution()*/
+                    Solver222.getSolution()
 
 
                     val state = CubeState222(
@@ -1070,11 +1069,11 @@ Row{
 
             Button(
                 onClick = {
-                    /*Moves222.test(
+                    Moves222.test(
                         gestureState,// cubelets = cubelets,
                         rotate = ::jumpRotation
                     )
-                    Solver222.getSolution()*/
+                    Solver222.getSolution()
 
 
                     val state = CubeState222(
@@ -1114,11 +1113,11 @@ Row{
 
             Button(
                 onClick = {
-                    /*Moves222.test(
+                    Moves222.test(
                         gestureState,// cubelets = cubelets,
                         rotate = ::jumpRotation
                     )
-                    Solver222.getSolution()*/
+                    Solver222.getSolution()
 
 
                     val state = CubeState222(
@@ -1162,11 +1161,11 @@ Row{
 
             Button(
                 onClick = {
-                    /*Moves222.test(
+                    Moves222.test(
                         gestureState,// cubelets = cubelets,
                         rotate = ::jumpRotation
                     )
-                    Solver222.getSolution()*/
+                    Solver222.getSolution()
 
 
                     val state = CubeState222(
@@ -1206,11 +1205,11 @@ Row{
 
             Button(
                 onClick = {
-                    /*Moves222.test(
+                    Moves222.test(
                         gestureState,// cubelets = cubelets,
                         rotate = ::jumpRotation
                     )
-                    Solver222.getSolution()*/
+                    Solver222.getSolution()
 
 
                     val state = CubeState222(
@@ -1249,10 +1248,13 @@ Row{
             }
 
 
-        }
+        }*/
     }
 
-}/*
+
+}
+
+/*
 
 
 "R", "R'",

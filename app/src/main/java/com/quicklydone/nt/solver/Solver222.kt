@@ -1,5 +1,6 @@
 package com.quicklydone.nt.solver
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.quicklydone.nt.common.Vec3
@@ -20,10 +21,10 @@ object Solver222 {
 
     var currentStep = 0
 
-    fun getSolution1(){
+    fun getSolution1() {
         solutionMoves.clear()
-       // solutionMoves += "F'"
-       // solutionMoves += "U'"
+        // solutionMoves += "F'"
+        // solutionMoves += "U'"
         solutionMoves += "R'"
         currentStep = 0
     }
@@ -43,9 +44,8 @@ object Solver222 {
     }
 
 
-
     fun showNextHint(
-        cubelets: SnapshotStateList<CubeletNew>,
+        //cubelets: SnapshotStateList<CubeletNew>,
         markers: MutableList<FaceMarkerNew>
     ) {
 
@@ -53,7 +53,7 @@ object Solver222 {
 
             markers.clear()
 
-         //   Log.d("qq","------>   УРА!")
+            //   Log.d("qq","------>   УРА!")
 
             return
         }
@@ -128,23 +128,22 @@ object Solver222 {
     }
 
 
-
     fun onCubeChanged(
         state: CubeState222
     ) {
 
-   /*     Log.d(
-            "SOLVER",
-            state.cornersPos.joinToString()
-        )
+        /*     Log.d(
+                 "SOLVER",
+                 state.cornersPos.joinToString()
+             )
 
-        Log.d(
-            "SOLVER",
-            state.cornersAxes.joinToString()
-        )
+             Log.d(
+                 "SOLVER",
+                 state.cornersAxes.joinToString()
+             )
 
 
-    */
+         */
 
 
     }
@@ -256,7 +255,7 @@ object Solver222 {
         Log.d("SOLVER", state.cornersPos.joinToString())
         Log.d("SOLVER", state.cornersAxes.joinToString())
 
-        val start = State(
+        val start = SolverState(
             pos = state.cornersPos.copyOf(),
             ori = state.cornersAxes.copyOf()
         )
@@ -290,7 +289,6 @@ object Solver222 {
     }
 
 
-
     fun executeAlgorithm(
         algorithm: String,
         cubelets: SnapshotStateList<CubeletNew>
@@ -310,6 +308,7 @@ object Solver222 {
             applyRotation(cubelets, axis, layer, dir)
         }
     }
+
     fun pre(state: CubeState222, algorithm: String, cubelets: SnapshotStateList<CubeletNew>) {
 
         Log.d(
@@ -317,11 +316,11 @@ object Solver222 {
             state.cornersPos.joinToString()
         )
 
-     /*   Log.d(
-            "SOLVER",
-            state.cornersAxes.joinToString()
-        )
-*/
+        /*   Log.d(
+               "SOLVER",
+               state.cornersAxes.joinToString()
+           )
+   */
 
         executeAlgorithm(
             algorithm,
@@ -330,10 +329,10 @@ object Solver222 {
 
         Log.d(
             "SOLVER",
-            "-----------------------------------------"        )
+            "-----------------------------------------"
+        )
 
     }
-
 
 
     fun inversePerm(p: IntArray): IntArray {
@@ -354,6 +353,7 @@ object Solver222 {
         6,
         5
     )
+
     fun rotateDirR(dir: Int): Int =
         when (dir) {
             0 -> 0
@@ -366,7 +366,8 @@ object Solver222 {
 
             else -> error("bad dir")
         }
-    fun moveR(state: State): State =
+
+    fun moveR(state: SolverState): SolverState =
         applyPermWithOri(
             state,
             moveR,
@@ -388,7 +389,7 @@ object Solver222 {
         }
 
     val moveRPrime = inversePerm(moveR)
-    fun moveRPrime(state: State): State =
+    fun moveRPrime(state: SolverState): SolverState =
         applyPermWithOri(
             state,
             moveRPrime,
@@ -420,11 +421,12 @@ object Solver222 {
 
             else -> error("bad dir")
         }
-    fun moveL(state: State): State =
+
+    fun moveL(state: SolverState): SolverState =
         applyPermWithOri(
             state,
             moveL,
-            intArrayOf(0,2,4,6),
+            intArrayOf(0, 2, 4, 6),
             ::rotateDirL
         )
 
@@ -441,15 +443,14 @@ object Solver222 {
 
             else -> error("bad dir")
         }
-    fun moveLPrime(state: State): State  =
-            applyPermWithOri(
-                state,
-                moveLPrime,
-                intArrayOf(0, 2, 4, 6),
-                ::rotateDirLPrime
-            )
 
-
+    fun moveLPrime(state: SolverState): SolverState =
+        applyPermWithOri(
+            state,
+            moveLPrime,
+            intArrayOf(0, 2, 4, 6),
+            ::rotateDirLPrime
+        )
 
 
     val moveU = intArrayOf(
@@ -476,13 +477,13 @@ object Solver222 {
             else -> error("bad dir")
         }
 
-    fun moveU(state: State): State  =
-            applyPermWithOri(
-                state,
-                moveU,
-                intArrayOf(2,3,6,7),
-                ::rotateDirU
-            )
+    fun moveU(state: SolverState): SolverState =
+        applyPermWithOri(
+            state,
+            moveU,
+            intArrayOf(2, 3, 6, 7),
+            ::rotateDirU
+        )
 
 
     val moveUPrime = inversePerm(moveU)
@@ -498,15 +499,16 @@ object Solver222 {
 
             else -> error("bad dir")
         }
-    fun moveUPrime(state: State): State   =
-            applyPermWithOri(
-                state,
-                moveUPrime,
-                intArrayOf(2,3,6,7),
-                ::rotateDirUPrime
-            )
 
-   val moveD = intArrayOf(
+    fun moveUPrime(state: SolverState): SolverState =
+        applyPermWithOri(
+            state,
+            moveUPrime,
+            intArrayOf(2, 3, 6, 7),
+            ::rotateDirUPrime
+        )
+
+    val moveD = intArrayOf(
         1, // 0
         5, // 1
         2, // 2
@@ -516,6 +518,7 @@ object Solver222 {
         6, // 6
         7  // 7
     )
+
     fun rotateDirD(dir: Int): Int =
         when (dir) {
             0 -> 5
@@ -528,13 +531,14 @@ object Solver222 {
 
             else -> error("bad dir")
         }
-    fun moveD(state: State): State   =
-            applyPermWithOri(
-                state,
-                moveD,
-                intArrayOf(0,1,4,5),
-                ::rotateDirD
-            )
+
+    fun moveD(state: SolverState): SolverState =
+        applyPermWithOri(
+            state,
+            moveD,
+            intArrayOf(0, 1, 4, 5),
+            ::rotateDirD
+        )
 
     val moveDPrime = inversePerm(moveD)
     fun rotateDirDPrime(dir: Int): Int =
@@ -549,13 +553,14 @@ object Solver222 {
 
             else -> error("bad dir")
         }
-    fun moveDPrime(state: State): State  =
-            applyPermWithOri(
-                state,
-                moveDPrime,
-                intArrayOf(0,1,4,5),
-                ::rotateDirDPrime
-            )
+
+    fun moveDPrime(state: SolverState): SolverState =
+        applyPermWithOri(
+            state,
+            moveDPrime,
+            intArrayOf(0, 1, 4, 5),
+            ::rotateDirDPrime
+        )
 
 
     val moveF = intArrayOf(
@@ -578,6 +583,7 @@ object Solver222 {
         5,
         4
     )
+
     fun rotateDirF(dir: Int): Int =
         when (dir) {
             0 -> 3
@@ -590,16 +596,17 @@ object Solver222 {
 
             else -> error("bad dir")
         }
-    fun moveF(state: State): State  =
-            applyPermWithOri(
-                state,
-                moveF,
-                intArrayOf(4,5,6,7),
-                ::rotateDirF
-            )
+
+    fun moveF(state: SolverState): SolverState =
+        applyPermWithOri(
+            state,
+            moveF,
+            intArrayOf(4, 5, 6, 7),
+            ::rotateDirF
+        )
 
 
-    val  moveFPrime = inversePerm(moveF)
+    val moveFPrime = inversePerm(moveF)
 
     fun rotateDirFPrime(dir: Int): Int =
         when (dir) {
@@ -613,13 +620,14 @@ object Solver222 {
 
             else -> error("bad dir")
         }
-    fun moveFPrime(state: State): State  =
-            applyPermWithOri(
-                state,
-                moveFPrime,
-                intArrayOf(4,5,6,7),
-                ::rotateDirFPrime
-            )
+
+    fun moveFPrime(state: SolverState): SolverState =
+        applyPermWithOri(
+            state,
+            moveFPrime,
+            intArrayOf(4, 5, 6, 7),
+            ::rotateDirFPrime
+        )
 
 
     val moveB = intArrayOf(
@@ -632,6 +640,7 @@ object Solver222 {
         6, // 6
         7  // 7
     )
+
     fun rotateDirB(dir: Int): Int =
         when (dir) {
             2 -> 1
@@ -644,13 +653,14 @@ object Solver222 {
 
             else -> error("bad dir")
         }
-    fun moveB(state: State): State   =
-            applyPermWithOri(
-                state,
-                moveB,
-                intArrayOf(0,1,2,3),
-                ::rotateDirB
-            )
+
+    fun moveB(state: SolverState): SolverState =
+        applyPermWithOri(
+            state,
+            moveB,
+            intArrayOf(0, 1, 2, 3),
+            ::rotateDirB
+        )
 
 
     val moveBPrime = inversePerm(moveB)
@@ -666,156 +676,158 @@ object Solver222 {
 
             else -> error("bad dir")
         }
-    fun moveBPrime(state: State): State =
-            applyPermWithOri(
-                state,
-                moveBPrime,
-                intArrayOf(0,1,2,3),
-                ::rotateDirBPrime
-            )
+
+    fun moveBPrime(state: SolverState): SolverState =
+        applyPermWithOri(
+            state,
+            moveBPrime,
+            intArrayOf(0, 1, 2, 3),
+            ::rotateDirBPrime
+        )
 
 
     data class Node(
-        val state: State,
+        val state: SolverState,
         val parent: Node?,
         val move: String?,
         val depth: Int
     )
 
-   /* fun solve(start: State): List<String> {
+    /* fun solve(start: State): List<String> {
 
-        val startTime = System.currentTimeMillis()
+         val startTime = System.currentTimeMillis()
 
-        val moves = listOf(
-            "R", "R'",
-            "L", "L'",
-            "U", "U'",
-            "D", "D'",
-            "F", "F'",
-            "B", "B'"
-        )
+         val moves = listOf(
+             "R", "R'",
+             "L", "L'",
+             "U", "U'",
+             "D", "D'",
+             "F", "F'",
+             "B", "B'"
+         )
 
-        val queue = ArrayDeque<Node>()
-        val visited = HashSet<State>()
+         val queue = ArrayDeque<Node>()
+         val visited = HashSet<State>()
 
-        val root = Node(
-            state = start,
-            parent = null,
-            move = null,
-            depth = 0
-        )
+         val root = Node(
+             state = start,
+             parent = null,
+             move = null,
+             depth = 0
+         )
 
-        queue.add(root)
-        visited.add(start)
+         queue.add(root)
+         visited.add(start)
 
-        while (queue.isNotEmpty()) {
+         while (queue.isNotEmpty()) {
 
-            val node = queue.removeFirst()
-            val state = node.state
+             val node = queue.removeFirst()
+             val state = node.state
 
-            if (
-                state.ori.contentEquals(
-                    intArrayOf(
-                        0,2,4, 0,2,4,
-                        0,2,4, 0,2,4,
-                        0,2,4, 0,2,4,
-                        0,2,4, 0,2,4
-                    )
-                )
-            ) {
+             if (
+                 state.ori.contentEquals(
+                     intArrayOf(
+                         0,2,4, 0,2,4,
+                         0,2,4, 0,2,4,
+                         0,2,4, 0,2,4,
+                         0,2,4, 0,2,4
+                     )
+                 )
+             ) {
 
-                val path = mutableListOf<String>()
+                 val path = mutableListOf<String>()
 
-                var current: Node? = node
+                 var current: Node? = node
 
-                while (current != null) {
-                    current.move?.let { path.add(it) }
-                    current = current.parent
-                }
+                 while (current != null) {
+                     current.move?.let { path.add(it) }
+                     current = current.parent
+                 }
 
-                path.reverse()
+                 path.reverse()
 
-                val elapsed =
-                    System.currentTimeMillis() - startTime
+                 val elapsed =
+                     System.currentTimeMillis() - startTime
 
-                Log.d(
-                    "SOLVER",
-                    "FOUND in ${elapsed}ms : ${path.joinToString(" ")}"
-                )
+                 Log.d(
+                     "SOLVER",
+                     "FOUND in ${elapsed}ms : ${path.joinToString(" ")}"
+                 )
 
-                return path
-            }
+                 return path
+             }
 
-            if (node.depth >= 9) {
-                continue
-            }
+             if (node.depth >= 9) {
+                 continue
+             }
 
-            for (move in moves) {
+             for (move in moves) {
 
-                val nextState = applyMove(state, move)
+                 val nextState = applyMove(state, move)
 
-                if (visited.add(nextState)) {
+                 if (visited.add(nextState)) {
 
-                    queue.add(
-                        Node(
-                            state = nextState,
-                            parent = node,
-                            move = move,
-                            depth = node.depth + 1
-                        )
-                    )
-                }
-            }
+                     queue.add(
+                         Node(
+                             state = nextState,
+                             parent = node,
+                             move = move,
+                             depth = node.depth + 1
+                         )
+                     )
+                 }
+             }
 
-            if (visited.size % 10000 == 0) {
+             if (visited.size % 10000 == 0) {
 
-                val rt = Runtime.getRuntime()
+                 val rt = Runtime.getRuntime()
 
-                val usedMb =
-                    (rt.totalMemory() - rt.freeMemory()) /
-                            1024 / 1024
+                 val usedMb =
+                     (rt.totalMemory() - rt.freeMemory()) /
+                             1024 / 1024
 
-                Log.d(
-                    "SOLVER",
-                    "visited=${visited.size} queue=${queue.size} mem=${usedMb}MB"
-                )
-            }
-        }
+                 Log.d(
+                     "SOLVER",
+                     "visited=${visited.size} queue=${queue.size} mem=${usedMb}MB"
+                 )
+             }
+         }
 
-        Log.d("SOLVER", "NO SOLUTION")
+         Log.d("SOLVER", "NO SOLUTION")
 
-        return emptyList()
-    }*/
-    fun applyMove(state: State, move: String): State {
-        val result = when(move) {
-            "R"  -> moveR(state)
+         return emptyList()
+     }*/
+    fun applyMove(state: SolverState, move: String): SolverState {
+        val result = when (move) {
+            "R" -> moveR(state)
             "R'" -> moveRPrime(state)
 
-            "L"  -> moveL(state)
+            "L" -> moveL(state)
             "L'" -> moveLPrime(state)
 
-            "U"  -> moveU(state)
+            "U" -> moveU(state)
             "U'" -> moveUPrime(state)
 
-            "D"  -> moveD(state)
+            "D" -> moveD(state)
             "D'" -> moveDPrime(state)
 
-            "F"  -> moveF(state)
+            "F" -> moveF(state)
             "F'" -> moveFPrime(state)
 
-            "B"  -> moveB(state)
+            "B" -> moveB(state)
             "B'" -> moveBPrime(state)
 
             else -> state
         }
 
-    /*    Log.d(
-            "SOLVER",
-            "- applyMove() ->>   $move : ${state.pos.joinToString()} -> ${result.pos.joinToString()}  ${result.ori.joinToString()}"
-        )
-*/
+        /*    Log.d(
+                "SOLVER",
+                "- applyMove() ->>   $move : ${state.pos.joinToString()} -> ${result.pos.joinToString()}  ${result.ori.joinToString()}"
+            )
+    */
         return result
     }
+
     fun compose(a: IntArray, b: IntArray): IntArray {
         val r = IntArray(8)
 
@@ -827,16 +839,12 @@ object Solver222 {
     }
 
 
-
-
-
-
     fun applyPermWithOri(
-        state: State,
+        state: SolverState,
         perm: IntArray,
         affected: IntArray,
         rotate: (Int) -> Int
-    ): State {
+    ): SolverState {
 
         val newPos = IntArray(8)
         val newOri = IntArray(24)
@@ -864,41 +872,34 @@ object Solver222 {
             newOri[base + 2] = rotate(newOri[base + 2])
         }
 
-        return State(newPos, newOri)
+        return SolverState(newPos, newOri)
     }
 
-  //  fun rotateIdentity(dir: Int) = dir
+    //  fun rotateIdentity(dir: Int) = dir
 
-    val RIGHT = intArrayOf(1,3,5,7)
-    val LEFT  = intArrayOf(0,2,4,6)
+    val RIGHT = intArrayOf(1, 3, 5, 7)
+    val LEFT = intArrayOf(0, 2, 4, 6)
 
-    val UP    = intArrayOf(2,3,6,7)
-    val DOWN  = intArrayOf(0,1,4,5)
+    val UP = intArrayOf(2, 3, 6, 7)
+    val DOWN = intArrayOf(0, 1, 4, 5)
 
-    val FRONT = intArrayOf(4,5,6,7)
-    val BACK  = intArrayOf(0,1,2,3)
-
-
+    val FRONT = intArrayOf(4, 5, 6, 7)
+    val BACK = intArrayOf(0, 1, 2, 3)
 
 
-
-
-
-
-
-    fun isSolved(state: State): Boolean {
+    fun isSolved(state: SolverState): Boolean {
 
         return state.ori.contentEquals(
             intArrayOf(
-                0,2,4, 0,2,4,
-                0,2,4, 0,2,4,
-                0,2,4, 0,2,4,
-                0,2,4, 0,2,4
+                0, 2, 4, 0, 2, 4,
+                0, 2, 4, 0, 2, 4,
+                0, 2, 4, 0, 2, 4,
+                0, 2, 4, 0, 2, 4
             )
         )
     }
 
-    fun solve(start: State): List<String> {
+    fun solve(start: SolverState): List<String> {
 
         val startTime = System.currentTimeMillis()
 
@@ -934,8 +935,9 @@ object Solver222 {
         return emptyList()
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun dfs(
-        state: State,
+        state: SolverState,
         depth: Int,
         maxDepth: Int,
         path: MutableList<String>
@@ -962,7 +964,7 @@ object Solver222 {
 
             val next = applyMove(state, move)
 
-                path.add(move)
+            path.add(move)
 
             if (
                 dfs(
@@ -989,19 +991,15 @@ data class CubeState222(
     val cornersAxes: IntArray
 )
 
-data class Node(
-    val state: State,
-    val parent: Node?,
-    val move: String?
-)
 
 
-data class State(
+
+data class SolverState(
     val pos: IntArray,
     val ori: IntArray
 ) {
     override fun equals(other: Any?): Boolean {
-        if (other !is State) return false
+        if (other !is SolverState) return false
 
         return pos.contentEquals(other.pos) &&
                 ori.contentEquals(other.ori)
