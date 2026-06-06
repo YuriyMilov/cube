@@ -255,7 +255,7 @@ object Solver222 {
         Log.d("SOLVER", state.cornersAxes.joinToString())
 
         val start = SolverState(
-            pos = state.cornersPos.copyOf(),
+            //pos = state.cornersPos.copyOf(),
             ori = state.cornersAxes.copyOf()
         )
 
@@ -853,7 +853,7 @@ object Solver222 {
 
             val src = perm[i]
 
-            newPos[i] = state.pos[src]
+          //  newPos[i] = state.pos[src]
 
             for (k in 0 until 3) {
                 newOri[i * 3 + k] =
@@ -871,7 +871,8 @@ object Solver222 {
             newOri[base + 2] = rotate(newOri[base + 2])
         }
 
-        return SolverState(newPos, newOri)
+        //return SolverState(newPos, newOri)
+        return SolverState(newOri)
     }
 
     //  fun rotateIdentity(dir: Int) = dir
@@ -978,7 +979,11 @@ object Solver222 {
             "B", "B'"
         )
 
+        val lastMove = path.lastOrNull()
+
         for (move in moves) {
+
+            if (lastMove != null && isInverse(lastMove, move)) continue
 
             val next = applyMove(state, move)
 
@@ -1000,6 +1005,24 @@ object Solver222 {
 
         return false
     }
+
+
+    private fun isInverse(a: String, b: String): Boolean {
+        return a == "R" && b == "R'" ||
+                a == "R'" && b == "R" ||
+                a == "L" && b == "L'" ||
+                a == "L'" && b == "L" ||
+                a == "U" && b == "U'" ||
+                a == "U'" && b == "U" ||
+                a == "D" && b == "D'" ||
+                a == "D'" && b == "D" ||
+                a == "F" && b == "F'" ||
+                a == "F'" && b == "F" ||
+                a == "B" && b == "B'" ||
+                a == "B'" && b == "B"
+    }
+
+
 }
 
 
@@ -1013,18 +1036,15 @@ data class CubeState222(
 
 
 data class SolverState(
-    val pos: IntArray,
+ //   val pos: IntArray,
     val ori: IntArray
 ) {
     override fun equals(other: Any?): Boolean {
-        if (other !is SolverState) return false
-
-        return pos.contentEquals(other.pos) &&
+        return other is SolverState &&
                 ori.contentEquals(other.ori)
     }
 
     override fun hashCode(): Int {
-        return 31 * pos.contentHashCode() +
-                ori.contentHashCode()
+        return ori.contentHashCode()
     }
 }

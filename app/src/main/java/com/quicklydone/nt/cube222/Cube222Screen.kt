@@ -279,7 +279,7 @@ fun Cube222Screen(
             rotateAll = { dx, dy ->
 
                 rotY += dx * 0.01f
-                rotX -= dy * 0.01f
+                rotX += dy * 0.01f
             },
 
             startRotation = { axis, layer, dir ->
