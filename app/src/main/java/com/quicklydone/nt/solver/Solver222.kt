@@ -132,7 +132,7 @@ object Solver222 {
         state: CubeState222
     ) {
 
-        /*     Log.d(
+             Log.d(
                  "SOLVER",
                  state.cornersPos.joinToString()
              )
@@ -143,7 +143,6 @@ object Solver222 {
              )
 
 
-         */
 
 
     }
@@ -887,7 +886,7 @@ object Solver222 {
     val BACK = intArrayOf(0, 1, 2, 3)
 
 
-    fun isSolved(state: SolverState): Boolean {
+  /*  fun isSolved(state: SolverState): Boolean {
 
         return state.ori.contentEquals(
             intArrayOf(
@@ -897,6 +896,25 @@ object Solver222 {
                 0, 2, 4, 0, 2, 4
             )
         )
+    }*/
+
+
+    fun isSolved(state: SolverState): Boolean {
+
+        val a = state.ori[0]
+        val b = state.ori[1]
+        val c = state.ori[2]
+
+        for (i in 0 until 8) {
+
+            val p = i * 3
+
+            if (state.ori[p] != a) return false
+            if (state.ori[p + 1] != b) return false
+            if (state.ori[p + 2] != c) return false
+        }
+
+        return true
     }
 
     fun solve(start: SolverState): List<String> {
