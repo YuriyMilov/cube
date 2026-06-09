@@ -99,6 +99,7 @@ fun Cube222Screen(
 
         rotX = 0.8f
         rotY = -0.8f
+        Solver222.n=0
 
         markers.clear()
         markers += FaceMarkerNew(
@@ -239,8 +240,8 @@ fun Cube222Screen(
                     val pos = buildCornersPos(cubelets)
                     val ori = buildCornerAxes(cubelets)
 
-                    Log.d("SOLVER", "POS -> ${pos.joinToString()}")
-                    Log.d("SOLVER", "ORI -> ${ori.joinToString()}")
+                   // Log.d("SOLVER", "POS -> ${pos.joinToString()}")
+                   // Log.d("SOLVER", "ORI -> ${ori.joinToString()}")
 
 
 
@@ -339,8 +340,10 @@ fun Cube222Screen(
                   )*/
             }
         }
+        Row {  Text(" Hint -> " + Solver222.logText.value + "  ",
+            color = Color.White)}
         Row {
-            Text("      ")
+            Text("")
             Button(
                 onClick = {
 
@@ -385,10 +388,10 @@ fun Cube222Screen(
                     )
 
                 }) {
-                Text("SCRAMBLE")
+                Text("MIX")
             }
+            Text("")
 
-            Text("    ")
 
             Button(
                 onClick = {
@@ -412,6 +415,45 @@ fun Cube222Screen(
                 }
             ) {
                 Text("SOLVE")
+            }
+
+            Text("")
+
+
+            Button(
+                onClick = {
+                    rotX = 0.8f
+                    rotY = -0.8f
+                    Solver222.n=0
+                }
+            ) {
+                Text("View")
+            }
+            Text("")
+
+
+            Button(
+                onClick = {
+                    scope.launch(Dispatchers.Default) {
+
+                        val state = CubeState222(
+                            cubelets,
+                            cornersPos = buildCornersPos(cubelets),
+                            cornersAxes = buildCornerAxes(cubelets)
+                        )
+
+                        Solver222.getArrows()
+
+                        withContext(Dispatchers.Main) {
+                            Solver222.showNextHintRGW(
+                                cubelets,
+                                markers
+                            )
+                        }
+                    }
+                }
+            ) {
+                Text("Arr")
             }
         }
     }

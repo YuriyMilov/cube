@@ -2,6 +2,7 @@ package com.quicklydone.nt.solver
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.quicklydone.nt.common.Vec3
 import com.quicklydone.nt.common.onLayer
@@ -21,10 +22,10 @@ object Solver222 {
 
     var currentStep = 0
 
-    fun getSolution1() {
+    fun getArrows() {
         solutionMoves.clear()
-        // solutionMoves += "F'"
-        // solutionMoves += "U'"
+         solutionMoves += "F'"
+         solutionMoves += "U'"
         solutionMoves += "R'"
         currentStep = 0
     }
@@ -131,18 +132,16 @@ object Solver222 {
     fun onCubeChanged(
         state: CubeState222
     ) {
+        /*
+                Log.d(
+                    "SOLVER",
+                    state.cornersPos.joinToString()
+                )*/
 
-             Log.d(
-                 "SOLVER",
-                 state.cornersPos.joinToString()
-             )
-
-             Log.d(
-                 "SOLVER",
-                 state.cornersAxes.joinToString()
-             )
-
-
+        Log.d(
+            "SOLVER",
+            state.cornersAxes.joinToString()
+        )
 
 
     }
@@ -853,7 +852,7 @@ object Solver222 {
 
             val src = perm[i]
 
-          //  newPos[i] = state.pos[src]
+            //  newPos[i] = state.pos[src]
 
             for (k in 0 until 3) {
                 newOri[i * 3 + k] =
@@ -887,39 +886,62 @@ object Solver222 {
     val BACK = intArrayOf(0, 1, 2, 3)
 
 
-  /*  fun isSolved(state: SolverState): Boolean {
+    /*  fun isSolved(state: SolverState): Boolean {
 
-        return state.ori.contentEquals(
-            intArrayOf(
-                0, 2, 4, 0, 2, 4,
-                0, 2, 4, 0, 2, 4,
-                0, 2, 4, 0, 2, 4,
-                0, 2, 4, 0, 2, 4
-            )
+          return state.ori.contentEquals(
+              intArrayOf(
+                  0, 2, 4, 0, 2, 4,
+                  0, 2, 4, 0, 2, 4,
+                  0, 2, 4, 0, 2, 4,
+                  0, 2, 4, 0, 2, 4
+              )
+          )
+      }*/
+
+    fun isSolved1(state: SolverState): Boolean {
+
+        // Log.d("qq",state.ori[0].toString())
+        if (
+            state.ori[0] == 0 && state.ori[1] == 2 && state.ori[2] == 4
+            &&
+            state.ori[3] == 0 && state.ori[4] == 2 && state.ori[5] == 4 &&
+            state.ori[6] == 0 && state.ori[7] == 2 && state.ori[8] == 4 &&
+            state.ori[9] == 0 && state.ori[10] == 2 && state.ori[11] == 4 &&
+            state.ori[12] == 0 && state.ori[13] == 2 && state.ori[14] == 4 &&
+            state.ori[15] == 0 && state.ori[16] == 2 && state.ori[17] == 4
+
         )
-    }*/
+            return true
 
+        return false
+    }
 
-    fun isSolved(state: SolverState): Boolean {
+    fun isSolved(state: SolverState, i:Int): Boolean {
 
-        val a = state.ori[0]
-        val b = state.ori[1]
-        val c = state.ori[2]
-
-        for (i in 0 until 8) {
-
-            val p = i * 3
-
-            if (state.ori[p] != a) return false
-            if (state.ori[p + 1] != b) return false
-            if (state.ori[p + 2] != c) return false
+        if(i==3 && state.ori[21]==0 && state.ori[22]==2 && state.ori[23]==4)
+        {
+            return true
         }
+
+            val a = state.ori[0]
+            val b = state.ori[1]
+            val c = state.ori[2]
+
+            for (i in 0 until 8) {
+
+                val p = i * 3
+
+                if (state.ori[p] != a) return false
+                if (state.ori[p + 1] != b) return false
+                if (state.ori[p + 2] != c) return false
+            }
 
         return true
     }
 
     fun solve(start: SolverState): List<String> {
 
+        log("\nsolve pushed\n")
         val startTime = System.currentTimeMillis()
 
         for (maxDepth in 0..8) {
@@ -962,7 +984,7 @@ object Solver222 {
         path: MutableList<String>
     ): Boolean {
 
-        if (isSolved(state)) {
+        if (isSolved(state, n)) {
             return true
         }
 
@@ -1023,6 +1045,16 @@ object Solver222 {
     }
 
 
+    val logText = mutableStateOf("Push button")
+
+    var n = 1
+    fun log(text: String) {
+        n++
+        logText.value = "$text + $n"
+
+
+    }
+
 }
 
 
@@ -1033,10 +1065,8 @@ data class CubeState222(
 )
 
 
-
-
 data class SolverState(
- //   val pos: IntArray,
+    //   val pos: IntArray,
     val ori: IntArray
 ) {
     override fun equals(other: Any?): Boolean {
