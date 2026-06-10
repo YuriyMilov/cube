@@ -29,6 +29,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
 import com.quicklydone.nt.animation.anima
 import com.quicklydone.nt.animation.rotateLayer222
+import com.quicklydone.nt.animation.rotateLayer222TwoLayers
 import com.quicklydone.nt.common.GestureState222
 import com.quicklydone.nt.common.TopBar
 import com.quicklydone.nt.common.Vec3
@@ -71,6 +72,10 @@ fun Cube222Screen(
     var animLayer by remember {
         mutableFloatStateOf(0f)
     }
+    var animLayer2 by remember {
+        mutableFloatStateOf(0f)
+    }
+
 
     var animAngle by remember {
         mutableFloatStateOf(0f)
@@ -273,6 +278,59 @@ fun Cube222Screen(
         }
     }
 
+    fun startRotation2(
+        axis: Vec3,
+        layer1: Float,
+        layer2: Float,
+        dir: Float
+    ) {
+
+        if (animAxis != null) return
+
+        scope.launch {
+
+            rotateLayer222TwoLayers(
+                cubelets = cubelets,
+                axis = axis,
+                layer1 = layer1,
+                layer2 = layer2,
+                dir = dir,
+
+                onStart = {
+
+                    animAxis = axis
+                    animLayer = layer1
+                    animLayer2 = layer2
+                },
+
+                onStep = {
+                    animAngle = it
+                },
+
+                onEnd = {
+
+                    val state222 = CubeState222(
+                        cubelets = cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Solver222.onCubeChanged(state222)
+
+                    animAxis = null
+                    animLayer = 0f
+                    animAngle = 0f
+
+                    markers.clear()
+
+                    Solver222.currentStep++
+
+                    Solver222.showNextHint(markers)
+                }
+            )
+        }
+    }
+
     val gestureState = remember {
 
         GestureState222(
@@ -322,25 +380,38 @@ fun Cube222Screen(
                     .cubeGestures222(
                         state = gestureState, canvasSize = canvasSize
                     )) {
-                CubeRenderer222.drawNew(
-                    config = config,
-                    cubelets = cubelets,
-                    rotX = rotX,
-                    rotY = rotY,
-                    animAxis = animAxis,
-                    animLayer = animLayer,
-                    animAngle = animAngle,
-                    //visibleFaces = visibleFaces,
-                    drawScope = this,
-                    markers = markers   // 👈 ВОТ ЭТО
-                )
+            CubeRenderer222.drawNew(
+                cubelets = cubelets,
+                config = config,
+                rotX = rotX,
+                rotY = rotY,
+                animAxis = animAxis,
+                animLayer = animLayer,
+                animLayer2 = animLayer2,   // ✔️ ВОТ ЭТО ДОБАВЬ
+                animAngle = animAngle,
+                drawScope = this,
+                markers = markers
+            )
 
                 /* InputCube222.drawInputCube(
                       drawScope = this, yaw = rotY, pitch = rotX, w = size.width, h = size.height
                   )*/
             }
         }
-        Row {  Text(" Hint -> " + Solver222.logText.value + "  ",
+        Row {
+
+            Button(
+                onClick = {
+                    Moves222.upa(::startRotation2)
+                }
+            ) {
+                Text("Move")
+            }
+
+
+            Text("   ")
+
+            Text("   Hint -> " + Solver222.logText.value + "  ",
             color = Color.White)}
         Row {
             Text("")
