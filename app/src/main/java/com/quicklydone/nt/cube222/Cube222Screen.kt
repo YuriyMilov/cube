@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
 import com.quicklydone.nt.animation.rotateLayer222
+import com.quicklydone.nt.animation.rotateLayer222TwoLayers
 import com.quicklydone.nt.common.GestureState222
 import com.quicklydone.nt.common.TopBar
 import com.quicklydone.nt.common.Vec3
@@ -68,8 +69,8 @@ fun Cube222Screen(
         mutableStateOf<Vec3?>(null)
     }
 
-    var animLayer by remember {
-        mutableFloatStateOf(0f)
+    var animLayers by remember {
+        mutableStateOf<List<Float>>(emptyList())
     }
 
     var animAngle by remember {
@@ -204,7 +205,7 @@ fun Cube222Screen(
                 onStart = {
 
                     animAxis = axis
-                    animLayer = layer
+                    animLayers = listOf(layer)
 
                     /*
                                        val cornersPos =  buildCornersPos(cubelets)
@@ -256,7 +257,7 @@ fun Cube222Screen(
 
 
                     animAxis = null
-                    animLayer = 0f
+                    animLayers = emptyList()
                     animAngle = 0f
 
 
@@ -296,6 +297,60 @@ fun Cube222Screen(
     gestureState.yaw = rotY
     gestureState.pitch = rotX
 
+    fun startRotation2(
+        axis: Vec3,
+        layer1: Float,
+        layer2: Float,
+        dir: Float
+    ) {
+
+        if (animAxis != null) return
+
+        scope.launch {
+
+            rotateLayer222TwoLayers(
+                cubelets = cubelets,
+                axis = axis,
+                layer1 = layer1,
+                layer2 = layer2,
+                dir = dir,
+
+                onStart = {
+
+                    animAxis = axis
+                    animLayers = listOf(
+                        layer1,
+                        layer2
+                    )
+                },
+
+                onStep = {
+                    animAngle = it
+                },
+
+                onEnd = {
+
+                    val state222 = CubeState222(
+                        cubelets = cubelets,
+                        cornersPos = buildCornersPos(cubelets),
+                        cornersAxes = buildCornerAxes(cubelets)
+                    )
+
+                    Solver222.onCubeChanged(state222)
+
+                    animAxis = null
+                    animLayers = emptyList()
+                    animAngle = 0f
+
+                    markers.clear()
+
+                    Solver222.currentStep++
+
+                    Solver222.showNextHint(markers)
+                }
+            )
+        }
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -329,7 +384,7 @@ fun Cube222Screen(
                     rotX = rotX,
                     rotY = rotY,
                     animAxis = animAxis,
-                    animLayer = animLayer,
+                    animLayers = animLayers,
                     animAngle = animAngle,
                     drawScope = this,
                     markers = markers
@@ -345,7 +400,7 @@ fun Cube222Screen(
             Button(
                 onClick = {
                     Moves222.upa(
-                        rotate = ::startRotation
+                        rotate = ::startRotation2
                     )
                 }
             ) {

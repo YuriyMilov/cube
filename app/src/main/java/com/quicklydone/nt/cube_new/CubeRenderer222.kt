@@ -35,7 +35,7 @@ object CubeRenderer222 {
         rotY: Float,
 
         animAxis: Vec3?,
-        animLayer: Float,
+        animLayers: List<Float>,
         animAngle: Float,
 
         drawScope: DrawScope,
@@ -55,11 +55,14 @@ object CubeRenderer222 {
 
                 val inAnimatedLayer =
                     animAxis != null &&
-                            onLayerNew(
-                                cube.pos,
-                                animAxis,
-                                animLayer
-                            )
+                            animLayers.any { layer ->
+
+                                onLayerNew(
+                                    cube.pos,
+                                    animAxis,
+                                    layer
+                                )
+                            }
 
                 val position =
                     animatedPositionNew(

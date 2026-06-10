@@ -46,10 +46,13 @@ object Moves222 {
             }
         }
     }
-    fun upa(rotate: (Vec3, Float, Float) -> Unit) {
+    fun upa(
+        rotate: (Vec3, Float, Float, Float) -> Unit
+    ) {
         rotate(
             Vec3(0f, 1f, 0f),
             0.5f,
+            -0.5f,
             -1f
         )
     }
