@@ -3,23 +3,57 @@ package com.quicklydone.nt.solver
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.quicklydone.nt.common.GestureState222
 import com.quicklydone.nt.common.Vec3
+import com.quicklydone.nt.common.rotateAroundAxis
 import com.quicklydone.nt.cube_new.CubeletNew
 import com.quicklydone.nt.solver.Solver222.applyRotation
+import com.quicklydone.nt.common.onLayer
+import com.quicklydone.nt.common.snap222
+import kotlin.math.PI
 
 
 object Moves222 {
 
-    fun upa(
-        rotate: (Vec3, Float, Float, Float) -> Unit
+
+    fun applyMoveInstant(
+        cubelets: SnapshotStateList<CubeletNew>,
+        axis: Vec3,
+        layer1: Float,
+        layer2: Float,
+        dir: Float
     ) {
+        val angle = dir * (PI.toFloat() / 2f)
+
+        cubelets.forEach { cube ->
+
+            if (
+                onLayer(cube.pos, axis, layer1) ||
+                onLayer(cube.pos, axis, layer2)
+            ) {
+
+                // POSITION
+                cube.pos = snap222(
+                    rotateAroundAxis(
+                        cube.pos,
+                        axis,
+                        angle
+                    )
+                )
+
+                // ORIENTATION AXES
+                cube.axisX = rotateAroundAxis(cube.axisX, axis, angle)
+                cube.axisY = rotateAroundAxis(cube.axisY, axis, angle)
+                cube.axisZ = rotateAroundAxis(cube.axisZ, axis, angle)
+            }
+        }
+    }
+    fun upa(rotate: (Vec3, Float, Float) -> Unit) {
         rotate(
             Vec3(0f, 1f, 0f),
             0.5f,
-            -0.5f,
             -1f
         )
     }
-
+    
     fun test(
         gestureState: GestureState222,
         rotate: (Vec3, Float, Float) -> Unit

@@ -26,6 +26,7 @@ object CubeRenderer222 {
     // =========================================================
 
     fun drawNew(
+
         cubelets: SnapshotStateList<CubeletNew>,
 
         config: CubeConfig,
@@ -35,28 +36,30 @@ object CubeRenderer222 {
 
         animAxis: Vec3?,
         animLayer: Float,
-        animLayer2: Float,   // ✔️ ДОБАВИЛИ
         animAngle: Float,
 
         drawScope: DrawScope,
 
         markers: List<FaceMarkerNew> = emptyList()
     ) {
+
         with(drawScope) {
 
             val cx = size.width / 2f
             val cy = size.height / 2f
 
-            val facesToDraw = mutableListOf<DrawFaceNew>()
+            val facesToDraw =
+                mutableListOf<DrawFaceNew>()
 
             cubelets.forEach { cube ->
 
                 val inAnimatedLayer =
                     animAxis != null &&
-                            (
-                                    onLayerNew(cube.pos, animAxis, animLayer) ||
-                                            onLayerNew(cube.pos, animAxis, animLayer2)
-                                    )
+                            onLayerNew(
+                                cube.pos,
+                                animAxis,
+                                animLayer
+                            )
 
                 val position =
                     animatedPositionNew(
@@ -88,20 +91,34 @@ object CubeRenderer222 {
 
                     val rotatedVerts =
                         worldVerts.map {
-                            cameraRotateNew(it, rotX, rotY)
+                            cameraRotateNew(
+                                it,
+                                rotX,
+                                rotY
+                            )
                         }
 
                     var normal =
-                        rotateNormalNew(face.normal, orientation)
+                        rotateNormalNew(
+                            face.normal,
+                            orientation
+                        )
 
                     normal =
-                        cameraRotateNew(normal, rotX, rotY)
+                        cameraRotateNew(
+                            normal,
+                            rotX,
+                            rotY
+                        )
+
+                    // BACKFACE CULLING
 
                     if (normal.z <= 0f)
                         return@forEach
 
                     val projected =
                         rotatedVerts.map {
+
                             project(
                                 it,
                                 cx,
@@ -117,29 +134,47 @@ object CubeRenderer222 {
                             .average()
                             .toFloat()
 
-                    facesToDraw += DrawFaceNew(
-                        points = projected,
-                        depth = depth,
-                        color = face.color,
-                        side = face.side,
-                        cubePos = cube.pos
-                    )
+                    facesToDraw +=
+                        DrawFaceNew(
+
+                            points = projected,
+
+                            depth = depth,
+
+                            color = face.color,
+
+                            side = face.side,
+
+                            cubePos = cube.pos
+                        )
                 }
             }
+
+            // =====================================================
+            // DRAW SORTED
+            // =====================================================
 
             facesToDraw
                 .sortedBy { it.depth }
                 .forEach { face ->
+
                     drawPath(
                         path = buildPathNew(face.points),
                         color = face.color
                     )
                 }
 
+            // =====================================================
+            // INPUT CUBE ARROWS ONLY
+            // =====================================================
+
             drawInputCubeArrows(
+
                 markers = markers,
+
                 yaw = rotY,
                 pitch = rotX,
+
                 w = size.width,
                 h = size.height
             )

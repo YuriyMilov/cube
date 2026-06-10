@@ -9,8 +9,6 @@ import com.quicklydone.nt.cube_new.CubeletNew
 import kotlinx.coroutines.delay
 import kotlin.math.PI
 
-
-
 suspend fun rotateLayer222TwoLayers(
     cubelets: SnapshotStateList<CubeletNew>,
     axis: Vec3,
@@ -23,8 +21,8 @@ suspend fun rotateLayer222TwoLayers(
 ) {
 
     onStart()
-    val steps = 20
 
+    val steps = 20
     val stepAngle =
         (PI.toFloat() / 2f) / steps * dir
 
