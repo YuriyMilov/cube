@@ -46,7 +46,7 @@ object Moves222 {
             }
         }
     }
-    fun upa(
+    fun upaY(
         rotate: (Vec3, Float, Float, Float) -> Unit
     ) {
         rotate(
@@ -56,7 +56,28 @@ object Moves222 {
             -1f
         )
     }
-    
+    fun upaX(
+        rotate: (Vec3, Float, Float, Float) -> Unit
+    ) {
+        rotate(
+            Vec3(1f, 0f, 0f),
+            0.5f,
+            -0.5f,
+            -1f
+        )
+    }
+    fun upaZ(
+        rotate: (Vec3, Float, Float, Float) -> Unit
+    ) {
+        rotate(
+            Vec3(0f, 0f, 1f),
+            0.5f,
+            -0.5f,
+            -1f
+        )
+    }
+
+
     fun test(
         gestureState: GestureState222,
         rotate: (Vec3, Float, Float) -> Unit
@@ -272,6 +293,10 @@ object Moves222 {
             Solver222.scrambleMoves += move
         }
     }
+
+
+
+
 }
 
 

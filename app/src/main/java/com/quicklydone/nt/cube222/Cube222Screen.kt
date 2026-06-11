@@ -351,6 +351,85 @@ fun Cube222Screen(
             )
         }
     }
+    suspend fun moveX() {
+
+        rotateLayer222TwoLayers(
+            cubelets = cubelets,
+            axis = Vec3(1f, 0f, 0f),
+            layer1 = 0.5f,
+            layer2 = -0.5f,
+            dir = -1f,
+
+            onStart = {
+                animAxis = Vec3(1f, 0f, 0f)
+                animLayers = listOf(0.5f, -0.5f)
+            },
+
+            onStep = {
+                animAngle = it
+            },
+
+            onEnd = {
+                animAxis = null
+                animLayers = emptyList()
+                animAngle = 0f
+            }
+        )
+    }
+
+    suspend fun moveY() {
+
+        rotateLayer222TwoLayers(
+            cubelets = cubelets,
+            axis = Vec3(0f, 1f, 0f),
+            layer1 = 0.5f,
+            layer2 = -0.5f,
+            dir = -1f,
+
+            onStart = {
+                animAxis = Vec3(0f, 1f, 0f)
+                animLayers = listOf(0.5f, -0.5f)
+            },
+
+            onStep = {
+                animAngle = it
+            },
+
+            onEnd = {
+                animAxis = null
+                animLayers = emptyList()
+                animAngle = 0f
+            }
+        )
+    }
+
+    suspend fun moveZ() {
+
+        rotateLayer222TwoLayers(
+            cubelets = cubelets,
+            axis = Vec3(0f, 0f, 1f),
+            layer1 = 0.5f,
+            layer2 = -0.5f,
+            dir = -1f,
+
+            onStart = {
+                animAxis = Vec3(0f, 0f, 1f)
+                animLayers = listOf(0.5f, -0.5f)
+            },
+
+            onStep = {
+                animAngle = it
+            },
+
+            onEnd = {
+                animAxis = null
+                animLayers = emptyList()
+                animAngle = 0f
+            }
+        )
+    }
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -399,15 +478,115 @@ fun Cube222Screen(
 
             Button(
                 onClick = {
-                    Moves222.upa(
+
+                 /*   rotX = 0.8f
+                    rotY = -0.8f
+                    Solver222.n=0
+*/
+                    var n = Solver222.n
+                    scope.launch {
+
+                        if(n==1)
+                        {moveY()
+                        moveY()}
+                        if(n==2)
+
+                        { moveX()}
+
+                        if(n==3)
+                        { moveZ()
+                        moveZ()}
+                    }
+                }
+            ) {
+                Text("Test")
+            }
+
+/*
+
+            Button(
+                onClick = {
+
+                    scope.launch {
+
+                        rotateLayer222TwoLayers(
+                            cubelets = cubelets,
+                            axis = Vec3(0f, 1f, 0f),
+                            layer1 = 0.5f,
+                            layer2 = -0.5f,
+                            dir = -1f,
+
+                            onStart = {
+                                animAxis = Vec3(0f, 1f, 0f)
+                                animLayers = listOf(0.5f, -0.5f)
+                            },
+
+                            onStep = {
+                                animAngle = it
+                            },
+
+                            onEnd = {
+                                animAxis = null
+                                animLayers = emptyList()
+                                animAngle = 0f
+                            }
+                        )
+
+                        rotateLayer222TwoLayers(
+                            cubelets = cubelets,
+                            axis = Vec3(1f, 0f, 0f),
+                            layer1 = 0.5f,
+                            layer2 = -0.5f,
+                            dir = -1f,
+
+                            onStart = {
+                                animAxis = Vec3(1f, 0f, 0f)
+                                animLayers = listOf(0.5f, -0.5f)
+                            },
+
+                            onStep = {
+                                animAngle = it
+                            },
+
+                            onEnd = {
+                                animAxis = null
+                                animLayers = emptyList()
+                                animAngle = 0f
+                            }
+                        )
+                    }
+                }
+            ) {
+                Text("XY")
+            }
+            Button(
+                onClick = {
+                    Moves222.upaX(rotate = ::startRotation2)
+                }
+            ) {
+                Text("X")
+            }
+            Button(
+                onClick = {
+                    Moves222.upaY(
                         rotate = ::startRotation2
                     )
                 }
             ) {
-                Text("Move")
+                Text("Y")
             }
-
             Button(
+                onClick = {
+                    Moves222.upaZ(
+                        rotate = ::startRotation2
+                    )
+                }
+            ) {
+                Text("Z")
+            }
+*/
+
+ /*           Button(
                 onClick = {
                     applyMoveInstant(
                         cubelets,
@@ -420,11 +599,11 @@ fun Cube222Screen(
             ) {
                 Text("Instant move")
             }
-
+*/
 
             Text("   ")
 
-            Text("   Hint -> " + Solver222.logText.value + "  ",
+            Text("   Hint -> " + Solver222.logText.value + "  " + Solver222.n,
             color = Color.White)}
         Row {
             Text("")

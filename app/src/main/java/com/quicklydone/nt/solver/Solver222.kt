@@ -985,6 +985,8 @@ object Solver222 {
     ): Boolean {
 
         if (isSolved(state, n)) {
+
+
             return true
         }
 
@@ -1045,12 +1047,12 @@ object Solver222 {
     }
 
 
-    val logText = mutableStateOf("Push button")
+    val logText = mutableStateOf("n =")
 
     var n = 1
     fun log(text: String) {
         n++
-        logText.value = "$text + $n"
+        logText.value = "$text  $n"
 
 
     }
