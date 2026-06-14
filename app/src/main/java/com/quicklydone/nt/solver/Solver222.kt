@@ -24,8 +24,8 @@ object Solver222 {
 
     fun getArrows() {
         solutionMoves.clear()
-         solutionMoves += "F'"
-         solutionMoves += "U'"
+        solutionMoves += "F'"
+        solutionMoves += "U'"
         solutionMoves += "R'"
         currentStep = 0
     }
@@ -261,6 +261,25 @@ object Solver222 {
         val result = solve(start)
 
         solutionMoves.addAll(result)
+
+        currentStep = 0
+    }
+
+    fun getSolutionRGW2(state: CubeState222) {
+
+        solutionMoves.clear()
+
+        Log.d("SOLVER", state.cornersPos.joinToString())
+        Log.d("SOLVER", state.cornersAxes.joinToString())
+
+        val start = SolverState(
+            //pos = state.cornersPos.copyOf(),
+            ori = state.cornersAxes.copyOf()
+        )
+
+        val result = solve2(start)
+
+        // solutionMoves.addAll(result)
 
         currentStep = 0
     }
@@ -691,110 +710,6 @@ object Solver222 {
         val depth: Int
     )
 
-    /* fun solve(start: State): List<String> {
-
-         val startTime = System.currentTimeMillis()
-
-         val moves = listOf(
-             "R", "R'",
-             "L", "L'",
-             "U", "U'",
-             "D", "D'",
-             "F", "F'",
-             "B", "B'"
-         )
-
-         val queue = ArrayDeque<Node>()
-         val visited = HashSet<State>()
-
-         val root = Node(
-             state = start,
-             parent = null,
-             move = null,
-             depth = 0
-         )
-
-         queue.add(root)
-         visited.add(start)
-
-         while (queue.isNotEmpty()) {
-
-             val node = queue.removeFirst()
-             val state = node.state
-
-             if (
-                 state.ori.contentEquals(
-                     intArrayOf(
-                         0,2,4, 0,2,4,
-                         0,2,4, 0,2,4,
-                         0,2,4, 0,2,4,
-                         0,2,4, 0,2,4
-                     )
-                 )
-             ) {
-
-                 val path = mutableListOf<String>()
-
-                 var current: Node? = node
-
-                 while (current != null) {
-                     current.move?.let { path.add(it) }
-                     current = current.parent
-                 }
-
-                 path.reverse()
-
-                 val elapsed =
-                     System.currentTimeMillis() - startTime
-
-                 Log.d(
-                     "SOLVER",
-                     "FOUND in ${elapsed}ms : ${path.joinToString(" ")}"
-                 )
-
-                 return path
-             }
-
-             if (node.depth >= 9) {
-                 continue
-             }
-
-             for (move in moves) {
-
-                 val nextState = applyMove(state, move)
-
-                 if (visited.add(nextState)) {
-
-                     queue.add(
-                         Node(
-                             state = nextState,
-                             parent = node,
-                             move = move,
-                             depth = node.depth + 1
-                         )
-                     )
-                 }
-             }
-
-             if (visited.size % 10000 == 0) {
-
-                 val rt = Runtime.getRuntime()
-
-                 val usedMb =
-                     (rt.totalMemory() - rt.freeMemory()) /
-                             1024 / 1024
-
-                 Log.d(
-                     "SOLVER",
-                     "visited=${visited.size} queue=${queue.size} mem=${usedMb}MB"
-                 )
-             }
-         }
-
-         Log.d("SOLVER", "NO SOLUTION")
-
-         return emptyList()
-     }*/
     fun applyMove(state: SolverState, move: String): SolverState {
         val result = when (move) {
             "R" -> moveR(state)
@@ -818,11 +733,26 @@ object Solver222 {
             else -> state
         }
 
-        /*    Log.d(
-                "SOLVER",
-                "- applyMove() ->>   $move : ${state.pos.joinToString()} -> ${result.pos.joinToString()}  ${result.ori.joinToString()}"
-            )
-    */
+        return result
+    }
+
+
+    fun applyMove2(state: SolverState, move: String): SolverState {
+        val result = when (move) {
+
+
+            "X" -> applyMove(applyMove(state, "R"), "L'")
+            "X'" -> applyMove(applyMove(state, "R'"), "L")
+
+            "Y" -> applyMove(applyMove(state, "U"), "D'")
+            "Y'" -> applyMove(applyMove(state, "U'"), "D")
+
+            "Z" -> applyMove(applyMove(state, "F"), "B'")
+            "Z'" -> applyMove(applyMove(state, "F'"), "B")
+
+            else -> state
+        }
+
         return result
     }
 
@@ -886,62 +816,32 @@ object Solver222 {
     val BACK = intArrayOf(0, 1, 2, 3)
 
 
-    /*  fun isSolved(state: SolverState): Boolean {
-
-          return state.ori.contentEquals(
-              intArrayOf(
-                  0, 2, 4, 0, 2, 4,
-                  0, 2, 4, 0, 2, 4,
-                  0, 2, 4, 0, 2, 4,
-                  0, 2, 4, 0, 2, 4
-              )
-          )
-      }*/
-
-    fun isSolved1(state: SolverState): Boolean {
-
-        // Log.d("qq",state.ori[0].toString())
-        if (
-            state.ori[0] == 0 && state.ori[1] == 2 && state.ori[2] == 4
-            &&
-            state.ori[3] == 0 && state.ori[4] == 2 && state.ori[5] == 4 &&
-            state.ori[6] == 0 && state.ori[7] == 2 && state.ori[8] == 4 &&
-            state.ori[9] == 0 && state.ori[10] == 2 && state.ori[11] == 4 &&
-            state.ori[12] == 0 && state.ori[13] == 2 && state.ori[14] == 4 &&
-            state.ori[15] == 0 && state.ori[16] == 2 && state.ori[17] == 4
-
-        )
+    fun isSolved2(state: SolverState): Boolean {
+        if (state.ori[21] == 0 && state.ori[22] == 2 && state.ori[23] == 4)
             return true
-
         return false
     }
 
-    fun isSolved(state: SolverState, i:Int): Boolean {
+    fun isSolved(state: SolverState): Boolean {
+        val a = state.ori[0]
+        val b = state.ori[1]
+        val c = state.ori[2]
 
-        if(i==3 && state.ori[21]==0 && state.ori[22]==2 && state.ori[23]==4)
-        {
-            return true
+        for (i in 0 until 8) {
+
+            val p = i * 3
+
+            if (state.ori[p] != a) return false
+            if (state.ori[p + 1] != b) return false
+            if (state.ori[p + 2] != c) return false
         }
-
-            val a = state.ori[0]
-            val b = state.ori[1]
-            val c = state.ori[2]
-
-            for (i in 0 until 8) {
-
-                val p = i * 3
-
-                if (state.ori[p] != a) return false
-                if (state.ori[p + 1] != b) return false
-                if (state.ori[p + 2] != c) return false
-            }
 
         return true
     }
 
     fun solve(start: SolverState): List<String> {
 
-        log("\nsolve pushed\n")
+        //  numLog("solve")
         val startTime = System.currentTimeMillis()
 
         for (maxDepth in 0..8) {
@@ -958,15 +858,44 @@ object Solver222 {
                     path = path
                 )
             ) {
+                Log.d(
+                    "SOLVER",
+                    "FOUND: ${path.joinToString(" ")}"
+                )
+                numLog(" ${path.joinToString(" ")}")
+                return path
+            }
+        }
 
-                val elapsed =
-                    System.currentTimeMillis() - startTime
+        Log.d("SOLVER", "NO SOLUTION")
+
+        return emptyList()
+    }
+
+    fun solve2(start: SolverState): List<String> {
+
+        // numLog("solve2")
+        for (maxDepth in 0..22) {
+
+            Log.d("SOLVER", "depth(solve2) = $maxDepth")
+
+            val path = mutableListOf<String>()
+
+            if (
+                dfs2(
+                    state = start,
+                    depth = 0,
+                    maxDepth = maxDepth,
+                    path = path
+                )
+            ) {
 
                 Log.d(
                     "SOLVER",
-                    "FOUND in ${elapsed}ms : ${path.joinToString(" ")}"
+                    "FOUND 2: ${path.joinToString(" ")}"
                 )
 
+                numLog(" ${path.joinToString(" ")}")
                 return path
             }
         }
@@ -984,7 +913,7 @@ object Solver222 {
         path: MutableList<String>
     ): Boolean {
 
-        if (isSolved(state, n)) {
+        if (isSolved(state)) {
 
 
             return true
@@ -1031,6 +960,58 @@ object Solver222 {
     }
 
 
+    @SuppressLint("SuspiciousIndentation")
+    private fun dfs2(
+        state: SolverState,
+        depth: Int,
+        maxDepth: Int,
+        path: MutableList<String>
+    ): Boolean {
+
+        if (isSolved2(state)) {
+            return true
+        }
+
+        if (depth >= maxDepth) {
+            return false
+        }
+
+        val moves = listOf(
+            "X", "X'",
+            "Y", "Y'",
+            "Z", "Z'"
+        )
+
+        val lastMove = path.lastOrNull()
+
+        for (move in moves) {
+            // if (lastMove != null && isInverse(lastMove, move)) continue
+            val next = applyMove2(state, move)
+            path.add(move)
+
+            Log.d(
+                "SOLVER",
+                "dfs2: ${path.joinToString(" ")}"
+            )
+
+            if (
+                dfs2(
+                    state = next,
+                    depth = depth + 1,
+                    maxDepth = maxDepth,
+                    path = path
+                )
+            ) {
+                return true
+            }
+
+            path.removeAt(path.lastIndex)
+        }
+
+        return false
+    }
+
+
     private fun isInverse(a: String, b: String): Boolean {
         return a == "R" && b == "R'" ||
                 a == "R'" && b == "R" ||
@@ -1047,14 +1028,10 @@ object Solver222 {
     }
 
 
-    val logText = mutableStateOf("n =")
+    val logText = mutableStateOf("")
 
-    var n = 1
-    fun log(text: String) {
-        n++
-        logText.value = "$text  $n"
-
-
+    fun numLog(text: String) {
+        logText.value = "$text"
     }
 
 }
