@@ -552,13 +552,15 @@ fun Cube222Screen(
             }
         }
         Row {
+            Text(  "   " + Solver222.logText.value + " \n ",
+                color = Color.White
+            )
+        }
 
-            Text("   ")
-
+        Row {
 
             Button(
                 onClick = {
-
                     val stateBefore = CubeState222(
                         cubelets,
                         cornersPos = buildCornersPos(cubelets),
@@ -603,7 +605,7 @@ fun Cube222Screen(
                 }) {
                 Text("MIX")
             }
-            Text("   ")
+            Text(" ")
             Button(
                 onClick = {
                     rotX = 0.8f
@@ -638,21 +640,9 @@ fun Cube222Screen(
                     }
                 }
             ) {
-                Text("Find RGW")
+                Text("Init")
             }
-
-
-            Text("   ")
-
-            Text(
-                Solver222.logText.value,
-                color = Color.White
-            )
-        }
-        Row {
-            Text("  ")
-
-
+            Text(" ")
             Button(
                 onClick = {
                     scope.launch(Dispatchers.Default) {
@@ -677,19 +667,7 @@ fun Cube222Screen(
                 Text("SOLVE")
             }
 
-            Text("")
-
-
-            Button(
-                onClick = {
-                    rotX = 0.8f
-                    rotY = -0.8f
-
-                }
-            ) {
-                Text("View")
-            }
-            Text("")
+            Text(" ")
 
 
             Button(
