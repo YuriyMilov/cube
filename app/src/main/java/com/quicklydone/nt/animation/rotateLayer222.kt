@@ -34,7 +34,7 @@ suspend fun rotateLayer222(
         angle += stepAngle
         onStep(angle)
 
-        delay(16)
+        delay(26)
     }
 
     val finalAngle =

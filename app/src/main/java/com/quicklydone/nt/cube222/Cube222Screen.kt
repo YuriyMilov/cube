@@ -44,6 +44,7 @@ import com.quicklydone.nt.solver.CubeState222
 import com.quicklydone.nt.solver.Moves222
 import com.quicklydone.nt.solver.Solver222
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -551,8 +552,115 @@ fun Cube222Screen(
                   )*/
             }
         }
+
+        suspend fun animateView(
+            targetX: Float,
+            targetY: Float
+        ) {
+            val startX = rotX
+            val startY = rotY
+
+            val steps = 20
+
+            repeat(steps) { i ->
+                val t = (i + 1).toFloat() / steps
+
+                rotX = startX + (targetX - startX) * t
+                rotY = startY + (targetY - startY) * t
+
+                delay(26) // ~60 FPS
+            }
+        }
+
+        suspend fun init() {
+
+            // rotX = 0.8f
+            //  rotY = -0.8f
+
+            Solver222.numLog("")
+            markers.clear()
+
+            animateView(
+                targetX = 0.8f,
+                targetY = -0.8f
+            )
+
+
+
+            val state = CubeState222(
+                cubelets,
+                cornersPos = buildCornersPos(cubelets),
+                cornersAxes = buildCornerAxes(cubelets)
+            )
+
+            Solver222.getSolutionRGW2(state)
+
+            Solver222.logText.value
+                .split(Regex("\\s+"))
+                .filter { it.isNotBlank() }
+                .forEach { move ->
+                    when (move) {
+                        "X" -> moveX()
+                        "Y" -> moveY()
+                        "Z" -> moveZ()
+                        "X'" -> moveXprim()
+                        "Y'" -> moveYprim()
+                        "Z'" -> moveZprim()
+                    }
+                }
+        }
+
+
         Row {
-            Text(  "   " + Solver222.logText.value + " \n ",
+
+
+            Button(
+                onClick = {
+                    var n=10
+                    Solver222.numLog("Scramble depth: ${n}")
+                    cubelets.clear()
+                    markers.clear()
+                    cubelets.addAll(createCubelets(config))
+                    Moves222.scramble(cubelets, n)
+
+                }) {
+                Text("Scramble")
+            }
+
+
+            Button(
+                onClick = {
+                    scope.launch(Dispatchers.Default) {
+
+                        init()
+
+                        val state = CubeState222(
+                            cubelets,
+                            cornersPos = buildCornersPos(cubelets),
+                            cornersAxes = buildCornerAxes(cubelets)
+                        )
+
+                        Solver222.getSolutionRGW3(state)
+                        Solver222.getSolutionRGW4(state)
+
+                        withContext(Dispatchers.Main) {
+                            Solver222.showNextHintRGW(
+                                cubelets,
+                                markers
+                            )
+                        }
+                    }
+                }
+            ) {
+                Text("Solve")
+            }
+            Text(" ")
+
+
+            Text(" ")
+
+            Text(
+                "   " + Solver222.logText.value + " \n ",
                 color = Color.White
             )
         }
@@ -561,58 +669,7 @@ fun Cube222Screen(
 
             Button(
                 onClick = {
-                    val stateBefore = CubeState222(
-                        cubelets,
-                        cornersPos = buildCornersPos(cubelets),
-                        cornersAxes = buildCornerAxes(cubelets)
-                    )
-                    Log.d(
-                        "SOLVER", "---   INIT   ---"
-                    )
-                    Log.d(
-                        "SOLVER", stateBefore.cornersPos.joinToString()
-                    )
-                    Log.d(
-                        "SOLVER", stateBefore.cornersAxes.joinToString()
-                    )
-
-                    cubelets.clear()
-                    markers.clear()
-                    cubelets.addAll(createCubelets(config))
-                    Moves222.scramble(cubelets, 6)
-
-
-                    val stateAfter = CubeState222(
-                        cubelets,
-                        cornersPos = buildCornersPos(cubelets),
-                        cornersAxes = buildCornerAxes(cubelets)
-                    )
-
-
-                    Log.d(
-                        "SOLVER", "--------------------------"
-                    )
-                    Log.d(
-                        "SOLVER", stateAfter.cornersPos.joinToString()
-                    )
-                    Log.d(
-                        "SOLVER", "stateAfter -> " + stateAfter.cornersAxes.joinToString()
-                    )
-                    Log.d(
-                        "SOLVER", "==================================================="
-                    )
-
-                }) {
-                Text("MIX")
-            }
-            Text(" ")
-            Button(
-                onClick = {
-                    rotX = 0.8f
-                    rotY = -0.8f
-                    Solver222.numLog("")
-                    markers.clear()
-                    scope.launch {
+                    scope.launch(Dispatchers.Default) {
 
                         val state = CubeState222(
                             cubelets,
@@ -620,23 +677,24 @@ fun Cube222Screen(
                             cornersAxes = buildCornerAxes(cubelets)
                         )
 
-                        Solver222.getSolutionRGW2(state)
+                        Solver222.getSolutionRGW4(state)
 
-                        var s = Solver222.logText.value
-
-                        s.split(Regex("\\s+"))
-                            .filter { it.isNotBlank() }
-                            .forEach { move ->
-
-                                when (move) {
-                                    "X" -> moveX()
-                                    "Y" -> moveY()
-                                    "Z" -> moveZ()
-                                    "X'" -> moveXprim()
-                                    "Y'" -> moveYprim()
-                                    "Z'" -> moveZprim()
-                                }
-                            }
+                        withContext(Dispatchers.Main) {
+                            Solver222.showNextHintRGW(
+                                cubelets,
+                                markers
+                            )
+                        }
+                    }
+                }
+            ) {
+                Text("Test")
+            }
+            Text(" ")
+            Button(
+                onClick = {
+                    scope.launch(Dispatchers.Default) {
+                        init()
                     }
                 }
             ) {
@@ -664,7 +722,7 @@ fun Cube222Screen(
                     }
                 }
             ) {
-                Text("SOLVE")
+                Text("SLV")
             }
 
             Text(" ")
@@ -695,4 +753,5 @@ fun Cube222Screen(
             }
         }
     }
+
 }

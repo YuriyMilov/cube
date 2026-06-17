@@ -284,6 +284,46 @@ object Solver222 {
         currentStep = 0
     }
 
+    fun getSolutionRGW3(state: CubeState222) {
+
+        solutionMoves.clear()
+
+        Log.d("SOLVER", state.cornersPos.joinToString())
+        Log.d("SOLVER", state.cornersAxes.joinToString())
+
+        val start = SolverState(
+            //pos = state.cornersPos.copyOf(),
+            ori = state.cornersAxes.copyOf()
+        )
+
+        val result = solve3(start)
+
+        solutionMoves.addAll(result)
+
+        currentStep = 0
+    }
+
+
+    fun getSolutionRGW4(state: CubeState222) {
+
+        solutionMoves.clear()
+
+        Log.d("SOLVER", state.cornersPos.joinToString())
+        Log.d("SOLVER", state.cornersAxes.joinToString())
+
+        val start = SolverState(
+            //pos = state.cornersPos.copyOf(),
+            ori = state.cornersAxes.copyOf()
+        )
+
+        val result = solve4(start)
+
+        solutionMoves.addAll(result)
+
+        currentStep = 0
+    }
+
+
     fun getSolutionRGW1(state: CubeState222) {
         solutionMoves.clear()
 
@@ -756,6 +796,26 @@ object Solver222 {
         return result
     }
 
+
+    fun applyMove4(state: SolverState, move: String): SolverState {
+        val result = when (move) {
+
+
+            "X" -> applyMove(applyMove(state, "R"), "L'")
+            "X'" -> applyMove(applyMove(state, "R'"), "L")
+
+            "Y" -> applyMove(applyMove(state, "U"), "D'")
+            "Y'" -> applyMove(applyMove(state, "U'"), "D")
+
+            "Z" -> applyMove(applyMove(state, "F"), "B'")
+            "Z'" -> applyMove(applyMove(state, "F'"), "B")
+
+            else -> state
+        }
+
+        return result
+    }
+
     fun compose(a: IntArray, b: IntArray): IntArray {
         val r = IntArray(8)
 
@@ -839,13 +899,42 @@ object Solver222 {
         return true
     }
 
+    fun isSolved3(state: SolverState): Boolean {
+        if (
+            state.ori[21] == 0 && state.ori[22] == 2 && state.ori[23] == 4
+            && state.ori[18] == 0 && state.ori[19] == 2 && state.ori[20] == 4
+            && state.ori[15] == 0 && state.ori[16] == 2 && state.ori[17] == 4
+            && state.ori[12] == 0 && state.ori[13] == 2 && state.ori[14] == 4
+        )
+            return true
+        return false
+    }
+
+    fun isSolved4(state: SolverState): Boolean {
+        if (
+            state.ori[0] == 0 && state.ori[1] == 2 && state.ori[2] == 4
+            && state.ori[3] == 0 && state.ori[4] == 2 && state.ori[5] == 4
+            && state.ori[6] == 0 && state.ori[7] == 2 && state.ori[8] == 4
+            &&
+                state.ori[9] == 0 && state.ori[10] == 2 && state.ori[11] == 4
+
+            && state.ori[12] == 0 && state.ori[13] == 2 && state.ori[14] == 4
+            && state.ori[15] == 0 && state.ori[16] == 2 && state.ori[17] == 4
+            && state.ori[18] == 0 && state.ori[19] == 2 && state.ori[20] == 4
+            && state.ori[21] == 0 && state.ori[22] == 2 && state.ori[23] == 4
+
+        )
+            return true
+        return false
+    }
+
     fun solve(start: SolverState): List<String> {
 
         //  numLog("solve")
         val startTime = System.currentTimeMillis()
 
         for (maxDepth in 0..8) {
-
+            numLog("depth: $maxDepth")
             Log.d("SOLVER", "depth = $maxDepth")
 
             val path = mutableListOf<String>()
@@ -862,7 +951,7 @@ object Solver222 {
                     "SOLVER",
                     "FOUND: ${path.joinToString(" ")}"
                 )
-                numLog(" ${path.joinToString(" ")}")
+               // numLog(" ${path.joinToString(" ")}")
                 return path
             }
         }
@@ -875,7 +964,7 @@ object Solver222 {
     fun solve2(start: SolverState): List<String> {
 
         // numLog("solve2")
-        for (maxDepth in 0..22) {
+        for (maxDepth in 0..11) {
 
             Log.d("SOLVER", "depth(solve2) = $maxDepth")
 
@@ -904,6 +993,78 @@ object Solver222 {
 
         return emptyList()
     }
+
+
+
+    fun solve3(start: SolverState): List<String> {
+
+          numLog("solve3")
+       // val startTime = System.currentTimeMillis()
+
+        for (maxDepth in 0..8) {
+
+            Log.d("SOLVER", "3  depth = $maxDepth")
+
+            val path = mutableListOf<String>()
+
+            if (
+                dfs3(
+                    state = start,
+                    depth = 0,
+                    maxDepth = maxDepth,
+                    path = path
+                )
+            ) {
+                Log.d(
+                    "SOLVER",
+                    "FOUND: ${path.joinToString(" ")}"
+                )
+                numLog(" ${path.joinToString(" ")}")
+                return path
+            }
+        }
+
+        Log.d("SOLVER", "NO SOLUTION")
+
+        return emptyList()
+    }
+
+
+
+    fun solve4(start: SolverState): List<String> {
+
+
+        // val startTime = System.currentTimeMillis()
+
+        for (maxDepth in 0..11) {
+
+            Log.d("SOLVER", "4  depth = $maxDepth")
+            numLog("solving depth: $maxDepth ")
+            val path = mutableListOf<String>()
+
+            if (
+                dfs4(
+                    state = start,
+                    depth = 0,
+                    maxDepth = maxDepth,
+                    path = path
+                )
+            ) {
+                Log.d(
+                    "SOLVER",
+                    "FOUND: ${path.joinToString(" ")}"
+                )
+               // numLog(" ${path.joinToString(" ")}")
+                return path
+            }
+        }
+
+        Log.d("SOLVER", "NO SOLUTION")
+        numLog("NO SOLUTION")
+        return emptyList()
+    }
+
+
 
     @SuppressLint("SuspiciousIndentation")
     private fun dfs(
@@ -1011,6 +1172,112 @@ object Solver222 {
         return false
     }
 
+    @SuppressLint("SuspiciousIndentation")
+    private fun dfs3(
+        state: SolverState,
+        depth: Int,
+        maxDepth: Int,
+        path: MutableList<String>
+    ): Boolean {
+
+        if (isSolved3(state)) {
+            return true
+        }
+
+        if (depth >= maxDepth) {
+            return false
+        }
+
+        val moves = listOf(
+           // "R", "R'",
+            "L", "L'",
+           // "U", "U'",
+            "D", "D'",
+           // "F", "F'",
+            "B", "B'"
+        )
+
+        val lastMove = path.lastOrNull()
+
+        for (move in moves) {
+
+            if (lastMove != null && isInverse(lastMove, move)) continue
+
+            val next = applyMove(state, move)
+
+            path.add(move)
+
+            if (
+                dfs3(
+                    state = next,
+                    depth = depth + 1,
+                    maxDepth = maxDepth,
+                    path = path
+                )
+            ) {
+                return true
+            }
+
+            path.removeAt(path.lastIndex)
+        }
+
+        return false
+    }
+
+
+
+
+    @SuppressLint("SuspiciousIndentation")
+    private fun dfs4(
+        state: SolverState,
+        depth: Int,
+        maxDepth: Int,
+        path: MutableList<String>
+    ): Boolean {
+
+        if (isSolved4(state)) {
+            return true
+        }
+
+        if (depth >= maxDepth) {
+            return false
+        }
+
+        val moves = listOf(
+           //  "R", "R'",
+            "L", "L'",
+          //  "U", "U'",
+            "D", "D'",
+           //  "F", "F'",
+            "B", "B'"
+        )
+
+        val lastMove = path.lastOrNull()
+
+        for (move in moves) {
+
+            if (lastMove != null && isInverse(lastMove, move)) continue
+
+            val next = applyMove(state, move)
+
+            path.add(move)
+
+            if (
+                dfs4(
+                    state = next,
+                    depth = depth + 1,
+                    maxDepth = maxDepth,
+                    path = path
+                )
+            ) {
+                return true
+            }
+
+            path.removeAt(path.lastIndex)
+        }
+
+        return false
+    }
 
     private fun isInverse(a: String, b: String): Boolean {
         return a == "R" && b == "R'" ||
