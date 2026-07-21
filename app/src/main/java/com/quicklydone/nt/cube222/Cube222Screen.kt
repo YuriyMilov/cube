@@ -429,7 +429,7 @@ fun Cube222Screen(
             }
         )
     }
-
+ //test
 
     suspend fun moveYprim() {
 
