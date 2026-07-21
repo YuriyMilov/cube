@@ -43,6 +43,7 @@ import com.quicklydone.nt.cube_new.VisibleFaceNew
 import com.quicklydone.nt.solver.CubeState222
 import com.quicklydone.nt.solver.Moves222
 import com.quicklydone.nt.solver.Solver222
+import com.quicklydone.nt.solver.Solver2a
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -251,6 +252,7 @@ fun Cube222Screen(
 
 
                     Solver222.onCubeChanged(state222)
+                    Solver2a.aLog(state222)
 
 
                     animAxis = null
@@ -586,7 +588,6 @@ fun Cube222Screen(
             )
 
 
-
             val state = CubeState222(
                 cubelets,
                 cornersPos = buildCornersPos(cubelets),
@@ -595,7 +596,7 @@ fun Cube222Screen(
 
             Solver222.getSolutionRGW2(state)
 
-            Solver222.logText.value
+            Solver222.mm.value
                 .split(Regex("\\s+"))
                 .filter { it.isNotBlank() }
                 .forEach { move ->
@@ -616,7 +617,7 @@ fun Cube222Screen(
 
             Button(
                 onClick = {
-                    var n=10
+                    var n = 60
                     Solver222.numLog("Scramble depth: ${n}")
                     cubelets.clear()
                     markers.clear()
@@ -657,8 +658,6 @@ fun Cube222Screen(
             Text(" ")
 
 
-            Text(" ")
-
             Text(
                 "   " + Solver222.logText.value + " \n ",
                 color = Color.White
@@ -671,13 +670,22 @@ fun Cube222Screen(
                 onClick = {
                     scope.launch(Dispatchers.Default) {
 
+                        init()
+
                         val state = CubeState222(
                             cubelets,
                             cornersPos = buildCornersPos(cubelets),
                             cornersAxes = buildCornerAxes(cubelets)
                         )
+                        Log.d("SOLVER", "Test  ->  " + state.cornersPos.joinToString())
+                        Log.d("SOLVER", "Test  ->  " + state.cornersAxes.joinToString())
 
-                        Solver222.getSolutionRGW4(state)
+                        // Solver222.getSolutionRGW3(state)
+                        //  Solver2a.get2a (state)
+                        // Solver222.getSolutionRGW4(state)
+
+                        //  Solver2a.applyMoves(state,"R U R' U'")
+
 
                         withContext(Dispatchers.Main) {
                             Solver222.showNextHintRGW(
@@ -695,6 +703,14 @@ fun Cube222Screen(
                 onClick = {
                     scope.launch(Dispatchers.Default) {
                         init()
+                        val state = CubeState222(
+                            cubelets,
+                            cornersPos = buildCornersPos(cubelets),
+                            cornersAxes = buildCornerAxes(cubelets)
+                        )
+                        Log.d("SOLVER", "INIT " + state.cornersPos.joinToString())
+                        Log.d("SOLVER", "INIT " + state.cornersAxes.joinToString())
+
                     }
                 }
             ) {
@@ -751,6 +767,63 @@ fun Cube222Screen(
             ) {
                 Text("Arr")
             }
+        }
+
+        Row {
+            Button(
+                onClick = {
+                    scope.launch(Dispatchers.Default) {
+
+                        init()
+
+                        val state = CubeState222(
+                            cubelets,
+                            cornersPos = buildCornersPos(cubelets),
+                            cornersAxes = buildCornerAxes(cubelets)
+                        )
+
+                        Solver222.getSolutionRGW3(state)
+                        //Solver222.getSolutionRGW4(state)
+
+                        withContext(Dispatchers.Main) {
+                            Solver222.showNextHintRGW(
+                                cubelets,
+                                markers
+                            )
+                        }
+                    }
+                }
+            ) {
+                Text("1st Layer")
+            }
+            Text(" ")
+            Button(
+                onClick = {
+                    scope.launch(Dispatchers.Default) {
+                        val state = CubeState222(
+                            cubelets,
+                            cornersPos = buildCornersPos(cubelets),
+                            cornersAxes = buildCornerAxes(cubelets)
+                        )
+
+
+                        Solver2a.get2a(state)
+
+
+                        Log.d("SOLVER", "Button(slv2a)  " + state.cornersPos.joinToString())
+                        Log.d("SOLVER", "Button(slv2a)  " + state.cornersAxes.joinToString())
+                        withContext(Dispatchers.Main) {
+                            Solver222.showNextHintRGW(
+                                cubelets,
+                                markers
+                            )
+                        }
+                    }
+                }
+            ) {
+                Text("slv2a")
+            }
+
         }
     }
 
