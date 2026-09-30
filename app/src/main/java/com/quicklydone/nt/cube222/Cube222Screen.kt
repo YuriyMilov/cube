@@ -608,7 +608,7 @@ fun Cube222Screen(
         "F", "L", "F", "L",
         "F", "L", "F", "L",
         "F", "L", "F", "L",
-        "L", "R", "R", "U'", "D"
+        "L", "R'", "R'", "U'", "D"
     )
 
     suspend fun runManualMove(move: String) = suspendCancellableCoroutine<Unit> { cont ->
@@ -858,6 +858,8 @@ fun Cube222Screen(
                 .padding(horizontal = 4.dp, vertical = 2.dp)
         ) {
             Row(Modifier.fillMaxWidth()) {
+
+
                 Button(
                     modifier = Modifier.weight(1f).padding(2.dp),
                     onClick = {
@@ -913,7 +915,7 @@ fun Cube222Screen(
                             }
                         }
                     }
-                ) { Text("Solve") }
+                ) { Text("Arrows") }
 
                 Button(
                     modifier = Modifier.weight(1f).padding(2.dp),
@@ -927,13 +929,13 @@ fun Cube222Screen(
                 ) { Text("Auto") }
             }
 
-            if (wrongMoveMessage.isNotBlank()) {
-                Text(text = wrongMoveMessage, color = Color.Red)
-            }
 
-            if (customCase.isNotBlank()) {
-                Text(text = "CUSTOM CASE: $customCase", color = Color.White)
-            }
+            Text(text = "Solve the rest using these algorithms", color = Color.White)
+
+
+           // if (customCase.isNotBlank()) {
+           //     Text(text = "CUSTOM CASE: $customCase", color = Color.White)
+           // }
 
             Row(Modifier.fillMaxWidth()) {
                 Button(
@@ -965,15 +967,26 @@ fun Cube222Screen(
                 ) { Text("B2") }
             }
 
-            Text(
-                text = "SOLUTION: ${manualSolutionLog.ifBlank { "—" }}",
-                color = Color.Yellow
-            )
+
+
+         //   Text(
+          //      text = "CUSTOM CASE: $customCase SOLUTION: ${manualSolutionLog.ifBlank { "—" }}",
+          //      color = Color.Yellow
+          // )
 
             Text(
                 text = Solver222.logText.value,
-                color = Color.LightGray
-            )
+               color = Color.LightGray
+           )
+
+
+           //  if (customCase.isNotBlank()) {
+            //     Text(text = "CUSTOM CASE: $customCase", color = Color.White)
+           //  }
+
+            if (wrongMoveMessage.isNotBlank()) {
+                Text(text = wrongMoveMessage, color = Color.Red)
+            }
         }
     }
 
