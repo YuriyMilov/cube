@@ -16,6 +16,26 @@ data class RotationMove(
 // INPUT -> ROTATION
 // =========================================================
 
+/** Convert the low-level rotation produced by a swipe to standard cube notation. */
+fun RotationMove.notation(): String = when {
+    axis.x > 0.9f && layer > 0f && dir < 0f -> "R"
+    axis.x > 0.9f && layer > 0f && dir > 0f -> "R'"
+    axis.x > 0.9f && layer < 0f && dir > 0f -> "L"
+    axis.x > 0.9f && layer < 0f && dir < 0f -> "L'"
+
+    axis.y > 0.9f && layer > 0f && dir < 0f -> "U"
+    axis.y > 0.9f && layer > 0f && dir > 0f -> "U'"
+    axis.y > 0.9f && layer < 0f && dir > 0f -> "D"
+    axis.y > 0.9f && layer < 0f && dir < 0f -> "D'"
+
+    axis.z > 0.9f && layer > 0f && dir < 0f -> "F"
+    axis.z > 0.9f && layer > 0f && dir > 0f -> "F'"
+    axis.z > 0.9f && layer < 0f && dir > 0f -> "B"
+    axis.z > 0.9f && layer < 0f && dir < 0f -> "B'"
+
+    else -> ""
+}
+
 fun mapInputToRotation222(
     cell: InputCube222.InputCell,
     swipe: InputCube222.SwipeDirection

@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
@@ -27,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 import com.quicklydone.nt.animation.rotateLayer222
 import com.quicklydone.nt.animation.rotateLayer222TwoLayers
 import com.quicklydone.nt.common.GestureState222
@@ -44,10 +49,13 @@ import com.quicklydone.nt.solver.CubeState222
 import com.quicklydone.nt.solver.Moves222
 import com.quicklydone.nt.solver.Solver222
 import com.quicklydone.nt.solver.Solver2a
+import com.quicklydone.nt.solver.Algorithm222
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
 
 @Composable
 fun Cube222Screen(
@@ -85,6 +93,14 @@ fun Cube222Screen(
         mutableStateListOf<FaceMarkerNew>()
     }
 
+    var customAlgorithmMode by remember { mutableStateOf(false) }
+    var firstLayerMode by remember { mutableStateOf(false) }
+    var customCase by remember { mutableStateOf("") }
+    var firstLayerCase by remember { mutableStateOf("") }
+    var customMove by remember { mutableStateOf<String?>(null) }
+    var wrongMoveMessage by remember { mutableStateOf("") }
+    var manualSolutionLog by remember { mutableStateOf("") }
+
     LaunchedEffect(Unit) {
         markers += FaceMarkerNew(
             side = SideNew.RIGHT, color = Color.White, radius = 24f
@@ -102,6 +118,15 @@ fun Cube222Screen(
         // Solver222.n=0
         Solver222.numLog("")
         markers.clear()
+        customAlgorithmMode = false
+        firstLayerMode = false
+        customCase = ""
+        firstLayerCase = ""
+        customMove = null
+        wrongMoveMessage = ""
+        manualSolutionLog = ""
+        Solver222.currentStep = 0
+        Solver222.solutionMoves.clear()
         markers += FaceMarkerNew(
             side = SideNew.RIGHT, color = Color.White, radius = 24f
         )
@@ -190,6 +215,26 @@ fun Cube222Screen(
         return result
     }
 
+    fun updateCustomCase() {
+        val state = CubeState222(
+            cubelets = cubelets,
+            cornersPos = buildCornersPos(cubelets),
+            cornersAxes = buildCornerAxes(cubelets)
+        )
+
+        customCase = Algorithm222.detectCase(state)
+        val step = Algorithm222.stepFor(state)
+        customMove = step?.move
+        wrongMoveMessage = ""
+
+        markers.clear()
+        if (step != null) {
+            Algorithm222.showMoveHint(step.move, markers)
+        }
+
+        Log.d("CUSTOM222", "case=$customCase move=${step?.move}")
+    }
+
     fun startRotation(
         axis: Vec3, layer: Float, dir: Float
     ) {
@@ -262,11 +307,23 @@ fun Cube222Screen(
 
 
                     markers.clear()
+                    wrongMoveMessage = ""
 
-                    Solver222.currentStep++
-
-                    //Solver222.showNextHint(cubelets, markers)
-                    Solver222.showNextHint(markers)
+                    if (firstLayerMode) {
+                        Solver222.currentStep++
+                        if (Solver222.currentStep < Solver222.solutionMoves.size) {
+                            Solver222.showNextHint(markers)
+                        } else {
+                            firstLayerMode = false
+                            customAlgorithmMode = true
+                            updateCustomCase()
+                        }
+                    } else if (customAlgorithmMode) {
+                        updateCustomCase()
+                    } else {
+                        Solver222.currentStep++
+                        Solver222.showNextHint(markers)
+                    }
 
 
                 })
@@ -289,6 +346,22 @@ fun Cube222Screen(
                     axis, layer, dir
                 )
 
+            },
+
+            expectedMove = {
+                when {
+                    firstLayerMode -> Solver222.solutionMoves.getOrNull(Solver222.currentStep)
+                    customAlgorithmMode -> customMove ?: "__NO_CUSTOM_MOVE__"
+                    else -> null
+                }
+            },
+
+            onWrongMove = { actual, expected ->
+                wrongMoveMessage = if (expected == "__NO_CUSTOM_MOVE__") {
+                    "Set a CUSTOM MOVE first"
+                } else {
+                    "Wrong move: $actual   Expected: ${expected ?: "—"}"
+                }
             }
 
         )
@@ -343,9 +416,21 @@ fun Cube222Screen(
 
                     markers.clear()
 
-                    Solver222.currentStep++
-
-                    Solver222.showNextHint(markers)
+                    if (firstLayerMode) {
+                        Solver222.currentStep++
+                        if (Solver222.currentStep < Solver222.solutionMoves.size) {
+                            Solver222.showNextHint(markers)
+                        } else {
+                            firstLayerMode = false
+                            customAlgorithmMode = true
+                            updateCustomCase()
+                        }
+                    } else if (customAlgorithmMode) {
+                        updateCustomCase()
+                    } else {
+                        Solver222.currentStep++
+                        Solver222.showNextHint(markers)
+                    }
                 }
             )
         }
@@ -513,6 +598,158 @@ fun Cube222Screen(
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    // Manual teaching set for the second layer.
+    // ALG2 is the user's second algorithm; we call it ALG2 here so it
+    // is not confused with the B-face rotation buttons.
+    val algorithmA = listOf("D", "L", "B", "L'", "B'", "D'")
+    val algorithm2 = listOf("L'", "B'", "L", "B", "L", "D'", "B'", "D")
+    val algorithmC = listOf(
+        "F", "L", "F", "L",
+        "F", "L", "F", "L",
+        "F", "L", "F", "L",
+        "F", "L", "F", "L",
+        "L", "R", "R", "U'", "D"
+    )
+
+    suspend fun runManualMove(move: String) = suspendCancellableCoroutine<Unit> { cont ->
+        val finish = {
+            animAxis = null
+            animLayers = emptyList()
+            animAngle = 0f
+            markers.clear()
+            Solver222.onCubeChanged(
+                CubeState222(
+                    cubelets = cubelets,
+                    cornersPos = buildCornersPos(cubelets),
+                    cornersAxes = buildCornerAxes(cubelets)
+                )
+            )
+            if (cont.isActive) cont.resume(Unit) {}
+        }
+
+        val rotate: (Vec3, Float, Float) -> Unit = { axis, layer, dir ->
+            scope.launch {
+                rotateLayer222(
+                    cubelets = cubelets,
+                    axis = axis,
+                    layer = layer,
+                    dir = dir,
+                    onStart = {
+                        animAxis = axis
+                        animLayers = listOf(layer)
+                    },
+                    onStep = { animAngle = it },
+                    onEnd = finish
+                )
+            }
+        }
+
+        when (move) {
+            "R" -> rotate(Vec3(1f,0f,0f), 0.5f, -1f)
+            "R'" -> rotate(Vec3(1f,0f,0f), 0.5f, 1f)
+            "L" -> rotate(Vec3(1f,0f,0f), -0.5f, 1f)
+            "L'" -> rotate(Vec3(1f,0f,0f), -0.5f, -1f)
+            "U" -> rotate(Vec3(0f,1f,0f), 0.5f, -1f)
+            "U'" -> rotate(Vec3(0f,1f,0f), 0.5f, 1f)
+            "D" -> rotate(Vec3(0f,1f,0f), -0.5f, 1f)
+            "D'" -> rotate(Vec3(0f,1f,0f), -0.5f, -1f)
+            "F" -> rotate(Vec3(0f,0f,1f), 0.5f, -1f)
+            "F'" -> rotate(Vec3(0f,0f,1f), 0.5f, 1f)
+            "B" -> rotate(Vec3(0f,0f,1f), -0.5f, 1f)
+            "B'" -> rotate(Vec3(0f,0f,1f), -0.5f, -1f)
+            else -> if (cont.isActive) cont.resume(Unit) {}
+        }
+    }
+
+    fun runManualSequence(name: String, sequence: List<String>) {
+        if (animAxis != null) return
+
+        val text = sequence.joinToString(" ")
+        manualSolutionLog = if (manualSolutionLog.isBlank()) name else "$manualSolutionLog $name"
+
+        Log.d("ALG222", "USER SOLUTION STEP: $name = $text")
+        Log.d("ALG222", "USER SOLUTION SO FAR: $manualSolutionLog")
+
+        scope.launch {
+            sequence.forEachIndexed { index, move ->
+                Log.d("ALG222", "$name step ${index + 1}/${sequence.size}: $move")
+                runManualMove(move)
+            }
+
+            val solvedState = CubeState222(
+                cubelets = cubelets,
+                cornersPos = buildCornersPos(cubelets),
+                cornersAxes = buildCornerAxes(cubelets)
+            )
+
+            if (Solver222.isFullySolved(solvedState)) {
+                val finalLog = "CUSTOM CASE: ${firstLayerCase.ifBlank { customCase }}  SOLUTION: $manualSolutionLog"
+                Solver222.numLog(finalLog)
+                Log.d("ALG222", finalLog)
+            } else {
+                Solver222.numLog("CUSTOM CASE: ${firstLayerCase.ifBlank { customCase }}  SOLUTION: $manualSolutionLog")
+            }
+        }
+    }
+
+    suspend fun solveFirstLayerAutomatically() {
+        if (animAxis != null) return
+
+        markers.clear()
+        wrongMoveMessage = ""
+        customAlgorithmMode = false
+
+        val state = CubeState222(
+            cubelets = cubelets,
+            cornersPos = buildCornersPos(cubelets),
+            cornersAxes = buildCornerAxes(cubelets)
+        )
+
+        // solve3() searches only with L/L', D/D' and B/B', and its goal is
+        // exactly the first assembled layer (isSolved3).
+        val firstLayerSolution = withContext(Dispatchers.Default) {
+            Solver222.getFirstLayerSolution(state)
+        }
+
+        if (firstLayerSolution.isEmpty()) {
+            // Empty means the first layer is already assembled, or no path
+            // was found. In both cases inspect the current state below.
+            val after = CubeState222(
+                cubelets = cubelets,
+                cornersPos = buildCornersPos(cubelets),
+                cornersAxes = buildCornerAxes(cubelets)
+            )
+            if (!Solver222.isFirstLayerSolved(after)) {
+                Solver222.numLog("Solve 1st: solution not found")
+                return
+            }
+        }
+
+        // Execute the solver's moves, one animated move at a time. No arrow
+        // hints are used for this stage.
+        firstLayerSolution.forEach { move ->
+            runManualMove(move)
+        }
+
+        val after = CubeState222(
+            cubelets = cubelets,
+            cornersPos = buildCornersPos(cubelets),
+            cornersAxes = buildCornerAxes(cubelets)
+        )
+
+        if (!Solver222.isFirstLayerSolved(after)) {
+            Solver222.numLog("Solve 1st: first layer was not completed")
+            return
+        }
+
+        firstLayerCase = Algorithm222.detectCase(after)
+        customCase = firstLayerCase
+        customAlgorithmMode = true
+        markers.clear()
+        Solver222.numLog("CUSTOM CASE: $firstLayerCase  SOLUTION: —")
+        Log.d("CUSTOM222", "CUSTOM CASE: $firstLayerCase")
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -612,218 +849,131 @@ fun Cube222Screen(
         }
 
 
-        Row {
+        // Compact bottom controls. Every button gets an equal share of the
+        // row width, so none of the bottom buttons can collapse into a strip.
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 4.dp, vertical = 2.dp)
+        ) {
+            Row(Modifier.fillMaxWidth()) {
+                Button(
+                    modifier = Modifier.weight(1f).padding(2.dp),
+                    onClick = {
+                        val n = 60
+                        Solver222.numLog("Scramble depth: $n")
+                        cubelets.clear()
+                        markers.clear()
+                        cubelets.addAll(createCubelets(config))
+                        Moves222.scramble(cubelets, n)
+                        customAlgorithmMode = false
+                        firstLayerMode = false
+                        customCase = ""
+                        firstLayerCase = ""
+                        customMove = null
+                        wrongMoveMessage = ""
+                        manualSolutionLog = ""
+                    }
+                ) { Text("Scrmbl") }
 
+                Button(
+                    modifier = Modifier.weight(1f).padding(2.dp),
+                    onClick = {
+                        scope.launch(Dispatchers.Default) {
+                            // This is the original working 1st-layer flow.
+                            // init() prepares the cube orientation/state before
+                            // getSolutionRGW3() searches for the arrow solution.
+                            init()
 
-            Button(
-                onClick = {
-                    var n = 60
-                    Solver222.numLog("Scramble depth: ${n}")
-                    cubelets.clear()
-                    markers.clear()
-                    cubelets.addAll(createCubelets(config))
-                    Moves222.scramble(cubelets, n)
-
-                }) {
-                Text("Scramble")
-            }
-
-
-            Button(
-                onClick = {
-                    scope.launch(Dispatchers.Default) {
-
-                        init()
-
-                        val state = CubeState222(
-                            cubelets,
-                            cornersPos = buildCornersPos(cubelets),
-                            cornersAxes = buildCornerAxes(cubelets)
-                        )
-
-                        Solver222.getSolutionRGW3(state)
-                        Solver222.getSolutionRGW4(state)
-
-                        withContext(Dispatchers.Main) {
-                            Solver222.showNextHintRGW(
+                            val state = CubeState222(
                                 cubelets,
-                                markers
+                                cornersPos = buildCornersPos(cubelets),
+                                cornersAxes = buildCornerAxes(cubelets)
                             )
+
+                            Solver222.getSolutionRGW3(state)
+
+                            withContext(Dispatchers.Main) {
+                                firstLayerMode = true
+                                customAlgorithmMode = false
+                                Solver222.currentStep = 0
+                                markers.clear()
+
+                                if (Solver222.solutionMoves.isEmpty()) {
+                                    firstLayerMode = false
+                                    Solver222.numLog("1st layer: solution not found")
+                                } else {
+                                    Solver222.showNextHint(markers)
+                                    Solver222.numLog(
+                                        "1st layer: ${Solver222.solutionMoves.joinToString(" \u200b")}"
+                                            .replace("\u200b", "")
+                                    )
+                                }
+                            }
                         }
                     }
-                }
-            ) {
-                Text("Solve")
-            }
-            Text(" ")
+                ) { Text("Solve") }
 
+                Button(
+                    modifier = Modifier.weight(1f).padding(2.dp),
+                    onClick = {
+
+                        scope.launch {
+                            init()
+                            solveFirstLayerAutomatically()
+                        }
+                    }
+                ) { Text("Auto") }
+            }
+
+            if (wrongMoveMessage.isNotBlank()) {
+                Text(text = wrongMoveMessage, color = Color.Red)
+            }
+
+            if (customCase.isNotBlank()) {
+                Text(text = "CUSTOM CASE: $customCase", color = Color.White)
+            }
+
+            Row(Modifier.fillMaxWidth()) {
+                Button(
+                    modifier = Modifier.weight(1f).padding(2.dp),
+                    onClick = { runManualSequence("6", algorithmA) }
+                ) { Text("6") }
+                Button(
+                    modifier = Modifier.weight(1f).padding(2.dp),
+                    onClick = { runManualSequence("7", algorithm2) }
+                ) { Text("8") }
+                Button(
+                    modifier = Modifier.weight(1f).padding(2.dp),
+                    onClick = { runManualSequence("15", algorithmC) }
+                ) { Text("15") }
+            }
+
+            Row(Modifier.fillMaxWidth()) {
+                Button(
+                    modifier = Modifier.weight(1f).padding(2.dp),
+                    onClick = { runManualSequence("B", listOf("B")) }
+                ) { Text("B") }
+                Button(
+                    modifier = Modifier.weight(1f).padding(2.dp),
+                    onClick = { runManualSequence("B'", listOf("B'")) }
+                ) { Text("B'") }
+                Button(
+                    modifier = Modifier.weight(1f).padding(2.dp),
+                    onClick = { runManualSequence("B2", listOf("B", "B")) }
+                ) { Text("B2") }
+            }
 
             Text(
-                "   " + Solver222.logText.value + " \n ",
-                color = Color.White
+                text = "SOLUTION: ${manualSolutionLog.ifBlank { "—" }}",
+                color = Color.Yellow
             )
-        }
 
-        Row {
-
-            Button(
-                onClick = {
-                    scope.launch(Dispatchers.Default) {
-
-                        init()
-
-                        val state = CubeState222(
-                            cubelets,
-                            cornersPos = buildCornersPos(cubelets),
-                            cornersAxes = buildCornerAxes(cubelets)
-                        )
-                        Log.d("SOLVER", "Test  ->  " + state.cornersPos.joinToString())
-                        Log.d("SOLVER", "Test  ->  " + state.cornersAxes.joinToString())
-
-                        // Solver222.getSolutionRGW3(state)
-                        //  Solver2a.get2a (state)
-                        // Solver222.getSolutionRGW4(state)
-
-                        //  Solver2a.applyMoves(state,"R U R' U'")
-
-
-                        withContext(Dispatchers.Main) {
-                            Solver222.showNextHintRGW(
-                                cubelets,
-                                markers
-                            )
-                        }
-                    }
-                }
-            ) {
-                Text("Test")
-            }
-            Text(" ")
-            Button(
-                onClick = {
-                    scope.launch(Dispatchers.Default) {
-                        init()
-                        val state = CubeState222(
-                            cubelets,
-                            cornersPos = buildCornersPos(cubelets),
-                            cornersAxes = buildCornerAxes(cubelets)
-                        )
-                        Log.d("SOLVER", "INIT " + state.cornersPos.joinToString())
-                        Log.d("SOLVER", "INIT " + state.cornersAxes.joinToString())
-
-                    }
-                }
-            ) {
-                Text("Init")
-            }
-            Text(" ")
-            Button(
-                onClick = {
-                    scope.launch(Dispatchers.Default) {
-
-                        val state = CubeState222(
-                            cubelets,
-                            cornersPos = buildCornersPos(cubelets),
-                            cornersAxes = buildCornerAxes(cubelets)
-                        )
-
-                        Solver222.getSolutionRGW(state)
-
-                        withContext(Dispatchers.Main) {
-                            Solver222.showNextHintRGW(
-                                cubelets,
-                                markers
-                            )
-                        }
-                    }
-                }
-            ) {
-                Text("SLV")
-            }
-
-            Text(" ")
-
-
-            Button(
-                onClick = {
-                    scope.launch(Dispatchers.Default) {
-
-                        val state = CubeState222(
-                            cubelets,
-                            cornersPos = buildCornersPos(cubelets),
-                            cornersAxes = buildCornerAxes(cubelets)
-                        )
-
-                        Solver222.getArrows()
-
-                        withContext(Dispatchers.Main) {
-                            Solver222.showNextHintRGW(
-                                cubelets,
-                                markers
-                            )
-                        }
-                    }
-                }
-            ) {
-                Text("Arr")
-            }
-        }
-
-        Row {
-            Button(
-                onClick = {
-                    scope.launch(Dispatchers.Default) {
-
-                        init()
-
-                        val state = CubeState222(
-                            cubelets,
-                            cornersPos = buildCornersPos(cubelets),
-                            cornersAxes = buildCornerAxes(cubelets)
-                        )
-
-                        Solver222.getSolutionRGW3(state)
-                        //Solver222.getSolutionRGW4(state)
-
-                        withContext(Dispatchers.Main) {
-                            Solver222.showNextHintRGW(
-                                cubelets,
-                                markers
-                            )
-                        }
-                    }
-                }
-            ) {
-                Text("1st Layer")
-            }
-            Text(" ")
-            Button(
-                onClick = {
-                    scope.launch(Dispatchers.Default) {
-                        val state = CubeState222(
-                            cubelets,
-                            cornersPos = buildCornersPos(cubelets),
-                            cornersAxes = buildCornerAxes(cubelets)
-                        )
-
-
-                        Solver2a.get2a(state)
-
-
-                        Log.d("SOLVER", "Button(slv2a)  " + state.cornersPos.joinToString())
-                        Log.d("SOLVER", "Button(slv2a)  " + state.cornersAxes.joinToString())
-                        withContext(Dispatchers.Main) {
-                            Solver222.showNextHintRGW(
-                                cubelets,
-                                markers
-                            )
-                        }
-                    }
-                }
-            ) {
-                Text("slv2a")
-            }
-
+            Text(
+                text = Solver222.logText.value,
+                color = Color.LightGray
+            )
         }
     }
 

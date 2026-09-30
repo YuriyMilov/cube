@@ -116,88 +116,89 @@ fun Cube333Screen(
         }
     }
 
-    val gestureState = remember {
+        val gestureState = remember {
 
-        GestureState333(
+            GestureState333(
 
-            rotateAll = { dx, dy ->
+                rotateAll = { dx, dy ->
 
-                rotY += dx * 0.01f
-                rotX -= dy * 0.01f
-            },
+                    rotY += dx * 0.01f
+                    rotX -= dy * 0.01f
+                },
 
-            startRotation = { axis, layer, dir ->
+                startRotation = { axis, layer, dir ->
 
-                startRotation(
-                    axis,
-                    layer,
-                    dir
-                )
-            }
-        )
-    }
+                    startRotation(
+                        axis,
+                        layer,
+                        dir
+                    )
+                }
 
-    gestureState.yaw = rotY
-    gestureState.pitch = rotX
+            )
+        }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF101010))
-            .windowInsetsPadding(WindowInsets.safeDrawing)
-    ) {
+        gestureState.yaw = rotY
+        gestureState.pitch = rotX
 
-        TopBar(goMenu = goMenu, onReset = ::resetCube)
-
-        Box(
+        Column(
             modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-
-            contentAlignment = Alignment.Center
+                .fillMaxSize()
+                .background(Color(0xFF101010))
+                .windowInsetsPadding(WindowInsets.safeDrawing)
         ) {
 
-            Canvas(
+            TopBar(goMenu = goMenu, onReset = ::resetCube)
+
+            Box(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .weight(1f)
+                    .fillMaxWidth(),
 
-                    .onSizeChanged {
-                        canvasSize = it
-                    }
-
-                    .cubeGestures333(
-                        state = gestureState,
-                        canvasSize = canvasSize
-                    )
+                contentAlignment = Alignment.Center
             ) {
 
-                CubeRendererNew.drawNew(
-                    config=config,
-                    cubelets = cubelets,
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxSize()
 
-                    rotX = rotX,
-                    rotY = rotY,
+                        .onSizeChanged {
+                            canvasSize = it
+                        }
 
-                    animAxis = animAxis,
-                    animLayer = animLayer,
-                    animAngle = animAngle,
+                        .cubeGestures333(
+                            state = gestureState,
+                            canvasSize = canvasSize
+                        )
+                ) {
 
-                    //visibleFaces = visibleFaces,
+                    CubeRendererNew.drawNew(
+                        config=config,
+                        cubelets = cubelets,
 
-                    drawScope = this
-                )
+                        rotX = rotX,
+                        rotY = rotY,
+
+                        animAxis = animAxis,
+                        animLayer = animLayer,
+                        animAngle = animAngle,
+
+                        //visibleFaces = visibleFaces,
+
+                        drawScope = this
+                    )
 
 
 
-                   /*  InputCube333.drawInputCube(
-                                   drawScope = this,
-                                   yaw = rotY,
-                                   pitch = rotX,
-                                   w = size.width,
-                                   h = size.height
-                               )*/
+                       /*  InputCube333.drawInputCube(
+                                       drawScope = this,
+                                       yaw = rotY,
+                                       pitch = rotX,
+                                       w = size.width,
+                                       h = size.height
+                                   )*/
 
+                }
             }
-        }
     }
 }

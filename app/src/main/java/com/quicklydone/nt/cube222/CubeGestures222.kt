@@ -55,13 +55,22 @@ fun Modifier.cubeGestures222(
                 )
 
                 val move = mapInputToRotation222(cell, swipe)
+                val moveName = move.notation()
+                val expected = state.expectedMove()
 
-                // 👉 запускаем поворот + передаём имя хода
+                // During a guided solve, a face turn is allowed only when it
+                // exactly matches the move shown by the solver. A wrong move
+                // never reaches the cube model, so it cannot damage the state.
+                if (expected != null && moveName != expected) {
+                    state.onWrongMove(moveName, expected)
+                    state.dragLocked = true
+                    return@detectDragGestures
+                }
+
                 state.startRotation(
                     move.axis,
                     move.layer,
-                    move.dir,
-                    //move.name
+                    move.dir
                 )
 
                 state.dragLocked = true

@@ -68,6 +68,8 @@ data class GestureState222(
 
     val rotateAll: (Float, Float) -> Unit,
     val startRotation: (Vec3, Float, Float) -> Unit,
+    val expectedMove: () -> String?,
+    val onWrongMove: (String, String?) -> Unit,
 
     var yaw: Float = 0f,
     var pitch: Float = 0f,

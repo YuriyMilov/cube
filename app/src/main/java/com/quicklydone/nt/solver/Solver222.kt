@@ -136,13 +136,20 @@ object Solver222 {
             "SOLVER",
             "Solver222.onCubeChanged() " + state.cornersPos.joinToString()
         )
-
-     /*   Log.d(
+        Log.d(
             "SOLVER",
-            "Solver222.onCubeChanged() " + state.cornersAxes.joinToString()
-        )*/
+            " ----->  " + state.cornersAxes.joinToString()
+        )
+
+        /*   Log.d(
+               "SOLVER",
+               "Solver222.onCubeChanged() " + state.cornersAxes.joinToString()
+           )*/
 
 
+        Log.d(
+            "SOLVER",
+            "qqqqqqq   >>>>    " +state.cornersAxes[0]   )
     }
 
     fun applyRotation(
@@ -302,6 +309,39 @@ object Solver222 {
         solutionMoves.addAll(result)
 
         currentStep = 0
+    }
+
+    /** Search only for the first-layer state used by dfs3/isSolved3. */
+    fun getFirstLayerSolution(state: CubeState222): List<String> {
+        val start = SolverState(
+            pos = state.cornersPos.copyOf(),
+            ori = state.cornersAxes.copyOf()
+        )
+        return solve3(start)
+    }
+
+    fun isFirstLayerSolved(state: CubeState222): Boolean =
+        isSolved3(
+            SolverState(
+                pos = state.cornersPos.copyOf(),
+                ori = state.cornersAxes.copyOf()
+            )
+        )
+
+    fun isFullySolved(state: CubeState222): Boolean {
+        val solvedPos = intArrayOf(0, 4, 2, 6, 1, 5, 3, 7)
+        if (!state.cornersPos.contentEquals(solvedPos)) return false
+
+        // In the factory state every corner starts with the canonical
+        // +X/+Y/+Z local axes: 0,2,4.
+        for (i in 0 until 8) {
+            val k = i * 3
+            if (state.cornersAxes[k] != 0 ||
+                state.cornersAxes[k + 1] != 2 ||
+                state.cornersAxes[k + 2] != 4
+            ) return false
+        }
+        return true
     }
 
 
